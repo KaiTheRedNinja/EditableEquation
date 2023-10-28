@@ -14,6 +14,7 @@
 		93E9F98C2AECB698006FF515 /* Hierarchy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E9F98B2AECB698006FF515 /* Hierarchy.swift */; };
 		93E9F98E2AED4628006FF515 /* Insertion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E9F98D2AED4628006FF515 /* Insertion.swift */; };
 		93E9F9902AED482F006FF515 /* TokenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E9F98F2AED482F006FF515 /* TokenView.swift */; };
+		93E9F9922AED5018006FF515 /* EquationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E9F9912AED5018006FF515 /* EquationView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,6 +26,7 @@
 		93E9F98B2AECB698006FF515 /* Hierarchy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hierarchy.swift; sourceTree = "<group>"; };
 		93E9F98D2AED4628006FF515 /* Insertion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Insertion.swift; sourceTree = "<group>"; };
 		93E9F98F2AED482F006FF515 /* TokenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenView.swift; sourceTree = "<group>"; };
+		93E9F9912AED5018006FF515 /* EquationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EquationView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,6 +59,7 @@
 		93E9F97C2AECB666006FF515 /* EditableEquation */ = {
 			isa = PBXGroup;
 			children = (
+				93E9F9912AED5018006FF515 /* EquationView.swift */,
 				93E9F97D2AECB666006FF515 /* EditableEquationApp.swift */,
 				93E9F97F2AECB666006FF515 /* ContentView.swift */,
 				93E9F98F2AED482F006FF515 /* TokenView.swift */,
@@ -150,6 +153,7 @@
 				93E9F98E2AED4628006FF515 /* Insertion.swift in Sources */,
 				93E9F9902AED482F006FF515 /* TokenView.swift in Sources */,
 				93E9F9802AECB666006FF515 /* ContentView.swift in Sources */,
+				93E9F9922AED5018006FF515 /* EquationView.swift in Sources */,
 				93E9F97E2AECB666006FF515 /* EditableEquationApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -10,14 +10,14 @@ import SwiftUI
 struct ContentView: View {
     var body: some View {
         VStack {
-            TokenView(
-                token: .linearGroup(LinearGroup(contents: [
+            EquationView(
+                root: LinearGroup(contents: [
                     .number(.init(digit: 69)),
                     .linearOperation(.init(operation: .minus)),
                     .number(.init(digit: 420)),
                     .linearOperation(.init(operation: .divide)),
                     .number(.init(digit: 12))
-                ]))
+                ])
             )
             .font(.title2)
 

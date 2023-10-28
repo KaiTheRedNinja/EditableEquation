@@ -22,6 +22,44 @@ struct TokenView: View {
     }
 }
 
+struct SimpleLeadingTrailingDropOverlay: View {
+    @Binding var dropHighlight: InsertionPoint.InsertionLocation?
+
+    @EnvironmentObject var manager: EquationManager
+
+    var body: some View {
+        HStack(spacing: 0) {
+            if dropHighlight == .leading {
+                RoundedRectangle(cornerRadius: 3)
+                    .fill(Color.accentColor)
+                    .frame(width: 3)
+            }
+            Color.blue.opacity(0.0001)
+                .dropDestination(for: String.self) { items, location in
+                    print("Dropped \(items) on \(location)")
+                    return false
+                } isTargeted: { isTargeted in
+                    print("Is targeted: \(isTargeted)")
+                    dropHighlight = isTargeted ? .leading : nil
+                }
+
+            Color.red.opacity(0.0001)
+                .dropDestination(for: String.self) { items, location in
+                    print("Dropped \(items) on \(location)")
+                    return false
+                } isTargeted: { isTargeted in
+                    print("Is targeted: \(isTargeted)")
+                    dropHighlight = isTargeted ? .trailing : nil
+                }
+            if dropHighlight == .trailing {
+                RoundedRectangle(cornerRadius: 3)
+                    .fill(Color.accentColor)
+                    .frame(width: 3)
+            }
+        }
+    }
+}
+
 struct NumberTokenView: View {
     var number: NumberToken
 
@@ -31,35 +69,7 @@ struct NumberTokenView: View {
         Text("\(number.digit)")
             .padding(.horizontal, 3)
             .overlay {
-                HStack(spacing: 0) {
-                    if dropHighlight == .leading {
-                        RoundedRectangle(cornerRadius: 3)
-                            .fill(Color.accentColor)
-                            .frame(width: 3)
-                    }
-                    Color.blue.opacity(0.0001)
-                        .dropDestination(for: String.self) { items, location in
-                            print("Dropped \(items) on \(location)")
-                            return false
-                        } isTargeted: { isTargeted in
-                            print("Is targeted: \(isTargeted)")
-                            dropHighlight = isTargeted ? .leading : nil
-                        }
-
-                    Color.red.opacity(0.0001)
-                        .dropDestination(for: String.self) { items, location in
-                            print("Dropped \(items) on \(location)")
-                            return false
-                        } isTargeted: { isTargeted in
-                            print("Is targeted: \(isTargeted)")
-                            dropHighlight = isTargeted ? .trailing : nil
-                        }
-                    if dropHighlight == .trailing {
-                        RoundedRectangle(cornerRadius: 3)
-                            .fill(Color.accentColor)
-                            .frame(width: 3)
-                    }
-                }
+                SimpleLeadingTrailingDropOverlay(dropHighlight: $dropHighlight)
             }
     }
 }
@@ -73,35 +83,7 @@ struct LinearOperationView: View {
         Text(operationText)
             .padding(.horizontal, 3)
             .overlay {
-                HStack(spacing: 0) {
-                    if dropHighlight == .leading {
-                        RoundedRectangle(cornerRadius: 3)
-                            .fill(Color.accentColor)
-                            .frame(width: 3)
-                    }
-                    Color.blue.opacity(0.0001)
-                        .dropDestination(for: String.self) { items, location in
-                            print("Dropped \(items) on \(location)")
-                            return false
-                        } isTargeted: { isTargeted in
-                            print("Is targeted: \(isTargeted)")
-                            dropHighlight = isTargeted ? .leading : nil
-                        }
-
-                    Color.red.opacity(0.0001)
-                        .dropDestination(for: String.self) { items, location in
-                            print("Dropped \(items) on \(location)")
-                            return false
-                        } isTargeted: { isTargeted in
-                            print("Is targeted: \(isTargeted)")
-                            dropHighlight = isTargeted ? .trailing : nil
-                        }
-                    if dropHighlight == .trailing {
-                        RoundedRectangle(cornerRadius: 3)
-                            .fill(Color.accentColor)
-                            .frame(width: 3)
-                    }
-                }
+                SimpleLeadingTrailingDropOverlay(dropHighlight: $dropHighlight)
             }
     }
 
