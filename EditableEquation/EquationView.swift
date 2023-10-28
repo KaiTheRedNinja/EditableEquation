@@ -14,11 +14,25 @@ class EquationManager: ObservableObject {
         self.root = root
     }
 
-    func insert(token: EquationToken, at: InsertionPoint) {
-
+    /// A function that chooses either `insert` or `moved` based on the data provided
+    func manage(data: Data, droppedAt insertionPoint: InsertionPoint) {
+        if let token = try? JSONDecoder().decode(EquationToken.self, from: data) {
+            insert(token: token, at: insertionPoint)
+        }
+        if let location = try? JSONDecoder().decode(TokenTreeLocation.self, from: data) {
+            move(from: location, to: insertionPoint)
+        }
     }
 
-    func remove(at: TokenTreeLocation) {
+    func insert(token: EquationToken, at insertionPoint: InsertionPoint) {
+        print("Inserting \(token) at \(insertionPoint)")
+    }
+
+    func move(from initialLocation: TokenTreeLocation, to insertionPoint: InsertionPoint) {
+        print("Moving \(initialLocation) to \(insertionPoint)")
+    }
+
+    func remove(at location: TokenTreeLocation) {
 
     }
 }
@@ -31,7 +45,10 @@ struct EquationView: View {
     }
 
     var body: some View {
-        TokenView(token: .linearGroup(equationManager.root))
-            .environmentObject(equationManager)
+        TokenView(
+            token: .linearGroup(equationManager.root),
+            treeLocation: .init(pathComponents: [])
+        )
+        .environmentObject(equationManager)
     }
 }

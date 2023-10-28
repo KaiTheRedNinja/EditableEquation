@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum EquationToken: Identifiable {
+enum EquationToken: Identifiable, Codable {
     case number(NumberToken)
     case linearOperation(LinearOperationToken)
 
@@ -30,23 +30,23 @@ enum EquationToken: Identifiable {
     }
 }
 
-struct NumberToken: Identifiable {
+struct NumberToken: Identifiable, Codable {
     var id: UUID = .init()
 
     var digit: Int
 }
 
-struct LinearOperationToken: Identifiable {
+struct LinearOperationToken: Identifiable, Codable {
     var id: UUID = .init()
 
     var operation: LinearOperation
 
-    enum LinearOperation {
+    enum LinearOperation: Codable {
         case plus, minus, times, divide
     }
 }
 
-struct LinearGroup: Identifiable {
+struct LinearGroup: Identifiable, Codable {
     var id: UUID = .init()
 
     var contents: [EquationToken]

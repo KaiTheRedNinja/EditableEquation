@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct TokenTreeLocation {
+struct TokenTreeLocation: Codable {
     private(set) var pathComponents: [UUID]
 
     func adding(pathComponent: UUID) -> TokenTreeLocation {

@@ -23,8 +23,11 @@ struct ContentView: View {
 
             Spacer().frame(height: 100)
 
-            Text("HI")
-                .draggable("this is fun")
+            Text("42")
+                .draggable({ () -> Data in
+                    let token = NumberToken(digit: 42)
+                    return (try? JSONEncoder().encode(token)) ?? .init()
+                }())
 
             Color.gray.frame(width: 100, height: 100)
                 .dropDestination(for: String.self) { items, location in
