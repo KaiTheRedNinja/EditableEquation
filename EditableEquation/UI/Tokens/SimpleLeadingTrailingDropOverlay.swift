@@ -14,12 +14,6 @@ struct SimpleLeadingTrailingDropOverlay: View {
 
     var body: some View {
         HStack(spacing: 0) {
-            if manager.insertionPoint?.treeLocation == treeLocation &&
-                manager.insertionPoint?.insertionLocation == .leading {
-                RoundedRectangle(cornerRadius: 3)
-                    .fill(Color.accentColor)
-                    .frame(width: 3)
-            }
             Color.blue.opacity(0.0001)
                 .dropDestination(for: Data.self) { items, location in
                     for item in items {
@@ -41,6 +35,14 @@ struct SimpleLeadingTrailingDropOverlay: View {
                 }
                 .onTapGesture {
                     manager.insertionPoint = .init(treeLocation: treeLocation, insertionLocation: .leading)
+                }
+                .background(alignment: .leading) {
+                    if manager.insertionPoint?.treeLocation == treeLocation &&
+                        manager.insertionPoint?.insertionLocation == .leading {
+                        RoundedRectangle(cornerRadius: 3)
+                            .fill(Color.accentColor)
+                            .frame(width: 3)
+                    }
                 }
 
             Color.red.opacity(0.0001)
@@ -65,12 +67,14 @@ struct SimpleLeadingTrailingDropOverlay: View {
                 .onTapGesture {
                     manager.insertionPoint = .init(treeLocation: treeLocation, insertionLocation: .trailing)
                 }
-            if manager.insertionPoint?.treeLocation == treeLocation &&
-                manager.insertionPoint?.insertionLocation == .trailing {
-                RoundedRectangle(cornerRadius: 3)
-                    .fill(Color.accentColor)
-                    .frame(width: 3)
-            }
+                .background(alignment: .trailing) {
+                    if manager.insertionPoint?.treeLocation == treeLocation &&
+                        manager.insertionPoint?.insertionLocation == .trailing {
+                        RoundedRectangle(cornerRadius: 3)
+                            .fill(Color.accentColor)
+                            .frame(width: 3)
+                    }
+                }
         }
     }
 }

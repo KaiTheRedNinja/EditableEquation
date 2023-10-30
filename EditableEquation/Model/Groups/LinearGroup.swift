@@ -81,41 +81,45 @@ struct LinearGroup: GroupEquationToken {
         return .init(id: self.id, contents: contentsCopy)
     }
 
-    mutating func insert(token: EquationToken, at insertionPoint: InsertionPoint) {
+    func inserting(token: EquationToken, at insertionPoint: InsertionPoint) -> LinearGroup {
+        var mutableSelf = self
+
         guard let id = insertionPoint.treeLocation.pathComponents.first,
               let insertionIndex = contents.firstIndex(where: { $0.id == id })
-        else { return }
+        else { return mutableSelf }
 
         // If theres only one item in the path, its a direct child of this linear group
         if insertionPoint.treeLocation.pathComponents.count == 1 {
             switch insertionPoint.insertionLocation {
             case .leading:
-                contents.insert(token, at: insertionIndex)
+                mutableSelf.contents.insert(token, at: insertionIndex)
             case .trailing:
-                contents.insert(token, at: insertionIndex+1)
+                mutableSelf.contents.insert(token, at: insertionIndex+1)
             case .within:
-                switch contents[insertionIndex] {
+                switch mutableSelf.contents[insertionIndex] {
                 case .linearGroup(var group):
-                    guard group.contents.isEmpty else { return }
+                    guard group.contents.isEmpty else { return mutableSelf }
                     group.contents = [token]
-                    contents[insertionIndex] = .linearGroup(group)
-                default: return
+                    mutableSelf.contents[insertionIndex] = .linearGroup(group)
+                default: return mutableSelf
                 }
             }
         }
 
         // Else, there must be more. Recursively call the function.
-        switch contents[insertionIndex] {
+        switch mutableSelf.contents[insertionIndex] {
         case .linearGroup(var linearGroup):
-            linearGroup.insert(token: token, at: .init(
+            mutableSelf.contents[insertionIndex] = .linearGroup(linearGroup.inserting(token: token, at: .init(
                 treeLocation: insertionPoint.treeLocation.removingFirstPathComponent(),
                 insertionLocation: insertionPoint.insertionLocation)
-            )
-        default: return
+            ))
+        default: return mutableSelf
         }
+
+        return mutableSelf
     }
 
-    func remove(at location: TokenTreeLocation) {
-
+    func removing(at location: TokenTreeLocation) -> LinearGroup {
+        return self
     }
 }

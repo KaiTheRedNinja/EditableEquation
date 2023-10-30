@@ -17,10 +17,10 @@ protocol GroupEquationToken: SingleEquationToken {
     func optimised() -> Self
 
     /// Inserts a token at an insertion point relative to the token
-    mutating func insert(token: EquationToken, at insertionPoint: InsertionPoint)
+    func inserting(token: EquationToken, at insertionPoint: InsertionPoint) -> Self
 
     /// Removes a token at a location relative to the token
-    mutating func remove(at location: TokenTreeLocation)
+    func removing(at location: TokenTreeLocation) -> Self
 }
 
 enum EquationToken: Identifiable, Codable {

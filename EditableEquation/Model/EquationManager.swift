@@ -31,7 +31,7 @@ class EquationManager: ObservableObject {
             return
         }
         print("Inserting \(token) at \(destination)'s \(insertionPoint.insertionLocation)")
-        root.insert(token: token, at: insertionPoint)
+        root = root.inserting(token: token, at: insertionPoint)
 
         root = root.optimised()
     }
