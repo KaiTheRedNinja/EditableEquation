@@ -25,7 +25,7 @@ struct ContentView: View {
 
             Text("42")
                 .draggable({ () -> Data in
-                    let token = NumberToken(digit: 42)
+                    let token = EquationToken.number(NumberToken(digit: 42))
                     return (try? JSONEncoder().encode(token)) ?? .init()
                 }())
 

@@ -15,6 +15,18 @@ struct TokenTreeLocation: Codable {
         mutableSelf.pathComponents.append(pathComponent)
         return mutableSelf
     }
+
+    func removingLastPathComponent() -> TokenTreeLocation {
+        var mutableSelf = self
+        _ = mutableSelf.pathComponents.removeLast()
+        return mutableSelf
+    }
+
+    func removingFirstPathComponent() -> TokenTreeLocation {
+        var mutableSelf = self
+        _ = mutableSelf.pathComponents.removeFirst()
+        return mutableSelf
+    }
 }
 
 struct InsertionPoint {

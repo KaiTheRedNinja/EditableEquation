@@ -7,10 +7,25 @@
 
 import Foundation
 
+protocol SingleEquationToken: Identifiable, Codable {}
+
+protocol GroupEquationToken: SingleEquationToken {
+    /// Returns a boolean value representing if the token is in the correct format
+    func validate() -> Bool
+
+    /// Modifies the token to optimise its data representation, safe to call during any equation edit
+    func optimised() -> Self
+
+    /// Inserts a token at an insertion point relative to the token
+    mutating func insert(token: EquationToken, at insertionPoint: InsertionPoint)
+
+    /// Removes a token at a location relative to the token
+    mutating func remove(at location: TokenTreeLocation)
+}
+
 enum EquationToken: Identifiable, Codable {
     case number(NumberToken)
     case linearOperation(LinearOperationToken)
-
     case linearGroup(LinearGroup)
 
     var id: UUID {
@@ -25,18 +40,19 @@ enum EquationToken: Identifiable, Codable {
         switch self {
         case .linearGroup(let linearGroup):
             return .linearGroup(linearGroup.optimised())
-        default: return self
+        default:
+            return self
         }
     }
 }
 
-struct NumberToken: Identifiable, Codable {
+struct NumberToken: SingleEquationToken {
     var id: UUID = .init()
 
     var digit: Int
 }
 
-struct LinearOperationToken: Identifiable, Codable {
+struct LinearOperationToken: SingleEquationToken {
     var id: UUID = .init()
 
     var operation: LinearOperation
@@ -46,7 +62,7 @@ struct LinearOperationToken: Identifiable, Codable {
     }
 }
 
-struct LinearGroup: Identifiable, Codable {
+struct LinearGroup: GroupEquationToken {
     var id: UUID = .init()
 
     var contents: [EquationToken]
@@ -108,5 +124,43 @@ struct LinearGroup: Identifiable, Codable {
         }
 
         return .init(id: self.id, contents: contentsCopy)
+    }
+
+    mutating func insert(token: EquationToken, at insertionPoint: InsertionPoint) {
+        guard let id = insertionPoint.treeLocation.pathComponents.first,
+              let insertionIndex = contents.firstIndex(where: { $0.id == id })
+        else { return }
+
+        // If theres only one item in the path, its a direct child of this linear group
+        if insertionPoint.treeLocation.pathComponents.count == 1 {
+            switch insertionPoint.insertionLocation {
+            case .leading:
+                contents.insert(token, at: insertionIndex)
+            case .trailing:
+                contents.insert(token, at: insertionIndex+1)
+            case .within:
+                switch contents[insertionIndex] {
+                case .linearGroup(var group):
+                    guard group.contents.isEmpty else { return }
+                    group.contents = [token]
+                    contents[insertionIndex] = .linearGroup(group)
+                default: return
+                }
+            }
+        }
+
+        // Else, there must be more. Recursively call the function.
+        switch contents[insertionIndex] {
+        case .linearGroup(var linearGroup):
+            linearGroup.insert(token: token, at: .init(
+                treeLocation: insertionPoint.treeLocation.removingFirstPathComponent(),
+                insertionLocation: insertionPoint.insertionLocation)
+            )
+        default: return
+        }
+    }
+
+    func remove(at location: TokenTreeLocation) {
+
     }
 }
