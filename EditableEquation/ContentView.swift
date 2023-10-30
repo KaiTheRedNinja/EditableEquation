@@ -8,16 +8,22 @@
 import SwiftUI
 
 struct ContentView: View {
+    @ObservedObject var manager: EquationManager = .init(
+        root: LinearGroup(
+            contents: [
+            .number(.init(digit: 69)),
+            .linearOperation(.init(operation: .minus)),
+            .number(.init(digit: 420)),
+            .linearOperation(.init(operation: .divide)),
+            .number(.init(digit: 12))
+            ]
+        )
+    )
+
     var body: some View {
         VStack {
             EquationView(
-                root: LinearGroup(contents: [
-                    .number(.init(digit: 69)),
-                    .linearOperation(.init(operation: .minus)),
-                    .number(.init(digit: 420)),
-                    .linearOperation(.init(operation: .divide)),
-                    .number(.init(digit: 12))
-                ])
+                manager: manager
             )
             .font(.title2)
 
@@ -28,13 +34,11 @@ struct ContentView: View {
                     let token = EquationToken.number(NumberToken(digit: 42))
                     return (try? JSONEncoder().encode(token)) ?? .init()
                 }())
-
-            Color.gray.frame(width: 100, height: 100)
-                .dropDestination(for: String.self) { items, location in
-                    print("Dropped \(items) on \(location)")
-                    return false
-                } isTargeted: { isTargeted in
-                    print("Is targeted: \(isTargeted)")
+                .onTapGesture {
+                    guard let insertionPoint = manager.insertionPoint else { return }
+                    withAnimation {
+                        manager.insert(token: EquationToken.number(NumberToken(digit: 42)), at: insertionPoint)
+                    }
                 }
         }
     }

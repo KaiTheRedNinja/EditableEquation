@@ -8,10 +8,14 @@
 import SwiftUI
 
 struct EquationView: View {
-    @StateObject var equationManager: EquationManager
+    @ObservedObject var equationManager: EquationManager
 
     init(root: LinearGroup) {
-        self._equationManager = .init(wrappedValue: .init(root: root))
+        self.equationManager = .init(root: root)
+    }
+
+    init(manager: EquationManager) {
+        self.equationManager = manager
     }
 
     var body: some View {

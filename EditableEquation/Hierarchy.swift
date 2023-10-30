@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CoreGraphics
 
 protocol SingleEquationToken: Identifiable, Codable {}
 
@@ -114,7 +115,17 @@ struct LinearGroup: GroupEquationToken {
                 if let lastNumberToken {
                     // get the last token, and integrate it into this token. Simple string concat.
                     contentsCopy.remove(at: index+1)
-                    contentsCopy[index] = .number(NumberToken(digit: Int("\(number.digit)\(lastNumberToken)")!))
+
+                    let lastNumberTokenMagnitude = Int(log(Double(lastNumberToken))/log(10))
+
+                    let newDigit = lastNumberToken + number.digit * Int(pow(10, Double(1 + lastNumberTokenMagnitude)))
+
+                    contentsCopy[index] = .number(
+                        NumberToken(
+                            id: contentsCopy[index].id,
+                            digit: newDigit
+                        )
+                    )
                 }
                 lastNumberToken = number.digit
             default:

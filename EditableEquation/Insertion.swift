@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct TokenTreeLocation: Codable {
+struct TokenTreeLocation: Codable, Hashable {
     private(set) var pathComponents: [UUID]
 
     func adding(pathComponent: UUID) -> TokenTreeLocation {
@@ -29,13 +29,13 @@ struct TokenTreeLocation: Codable {
     }
 }
 
-struct InsertionPoint {
+struct InsertionPoint: Hashable {
     /// The item's location within a token tree
     var treeLocation: TokenTreeLocation
     /// Where the insertion point is, relative to the tree location
     var insertionLocation: InsertionLocation
 
-    enum InsertionLocation {
+    enum InsertionLocation: Hashable {
         /// The insertion point is positioned before the token
         case leading
         /// The insertion point is positioned after the token

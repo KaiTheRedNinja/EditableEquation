@@ -26,13 +26,12 @@ struct TokenView: View {
 struct SimpleLeadingTrailingDropOverlay: View {
     var treeLocation: TokenTreeLocation
 
-    @Binding var dropHighlight: InsertionPoint.InsertionLocation?
-
     @EnvironmentObject var manager: EquationManager
 
     var body: some View {
         HStack(spacing: 0) {
-            if dropHighlight == .leading {
+            if manager.insertionPoint?.treeLocation == treeLocation &&
+               manager.insertionPoint?.insertionLocation == .leading {
                 RoundedRectangle(cornerRadius: 3)
                     .fill(Color.accentColor)
                     .frame(width: 3)
@@ -40,25 +39,50 @@ struct SimpleLeadingTrailingDropOverlay: View {
             Color.blue.opacity(0.0001)
                 .dropDestination(for: Data.self) { items, location in
                     for item in items {
-                        manager.manage(data: item, droppedAt: .init(treeLocation: treeLocation, insertionLocation: .leading))
+                        withAnimation {
+                            manager.manage(
+                                data: item,
+                                droppedAt: .init(treeLocation: treeLocation, insertionLocation: .leading)
+                            )
+                        }
                     }
                     return true
                 } isTargeted: { isTargeted in
                     print("Is targeted: \(isTargeted)")
-                    dropHighlight = isTargeted ? .leading : nil
+                    if isTargeted {
+                        manager.insertionPoint = .init(treeLocation: treeLocation, insertionLocation: .leading)
+                    } else {
+                        manager.insertionPoint = nil
+                    }
+                }
+                .onTapGesture {
+                    manager.insertionPoint = .init(treeLocation: treeLocation, insertionLocation: .leading)
                 }
 
             Color.red.opacity(0.0001)
                 .dropDestination(for: Data.self) { items, location in
                     for item in items {
-                        manager.manage(data: item, droppedAt: .init(treeLocation: treeLocation, insertionLocation: .trailing))
+                        withAnimation {
+                            manager.manage(
+                                data: item,
+                                droppedAt: .init(treeLocation: treeLocation, insertionLocation: .trailing)
+                            )
+                        }
                     }
                     return true
                 } isTargeted: { isTargeted in
                     print("Is targeted: \(isTargeted)")
-                    dropHighlight = isTargeted ? .trailing : nil
+                    if isTargeted {
+                        manager.insertionPoint = .init(treeLocation: treeLocation, insertionLocation: .trailing)
+                    } else {
+                        manager.insertionPoint = nil
+                    }
                 }
-            if dropHighlight == .trailing {
+                .onTapGesture {
+                    manager.insertionPoint = .init(treeLocation: treeLocation, insertionLocation: .trailing)
+                }
+            if manager.insertionPoint?.treeLocation == treeLocation &&
+                manager.insertionPoint?.insertionLocation == .trailing {
                 RoundedRectangle(cornerRadius: 3)
                     .fill(Color.accentColor)
                     .frame(width: 3)
@@ -71,13 +95,11 @@ struct NumberTokenView: View {
     var number: NumberToken
     var treeLocation: TokenTreeLocation
 
-    @State var dropHighlight: InsertionPoint.InsertionLocation?
-
     var body: some View {
         Text("\(number.digit)")
             .padding(.horizontal, 3)
             .overlay {
-                SimpleLeadingTrailingDropOverlay(treeLocation: treeLocation, dropHighlight: $dropHighlight)
+                SimpleLeadingTrailingDropOverlay(treeLocation: treeLocation)
             }
     }
 }
@@ -86,13 +108,11 @@ struct LinearOperationView: View {
     var linearOperation: LinearOperationToken
     var treeLocation: TokenTreeLocation
 
-    @State var dropHighlight: InsertionPoint.InsertionLocation?
-
     var body: some View {
         Text(operationText)
             .padding(.horizontal, 3)
             .overlay {
-                SimpleLeadingTrailingDropOverlay(treeLocation: treeLocation, dropHighlight: $dropHighlight)
+                SimpleLeadingTrailingDropOverlay(treeLocation: treeLocation)
             }
     }
 

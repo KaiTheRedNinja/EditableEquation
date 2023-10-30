@@ -9,6 +9,7 @@ import Foundation
 
 class EquationManager: ObservableObject {
     @Published var root: LinearGroup
+    @Published var insertionPoint: InsertionPoint?
 
     init(root: LinearGroup) {
         self.root = root
@@ -31,14 +32,17 @@ class EquationManager: ObservableObject {
         }
         print("Inserting \(token) at \(destination)'s \(insertionPoint.insertionLocation)")
         root.insert(token: token, at: insertionPoint)
+
+        root = root.optimised()
     }
 
     func move(from initialLocation: TokenTreeLocation, to insertionPoint: InsertionPoint) {
         print("Moving \(initialLocation) to \(insertionPoint)")
+        root = root.optimised()
     }
 
     func remove(at location: TokenTreeLocation) {
-
+        root = root.optimised()
     }
 }
 
