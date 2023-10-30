@@ -21,6 +21,21 @@ protocol GroupEquationToken: SingleEquationToken {
 
     /// Removes a token at a location relative to the token
     func removing(at location: TokenTreeLocation) -> Self
+
+    /// Returns the token for an ID representing a direct child within this group token, if it exists
+    func child(with id: UUID) -> EquationToken?
+
+    /// Returns the token for an ID representing the child left of a direct child within this group token, if one exists
+    func child(leftOf id: UUID) -> EquationToken?
+
+    /// Returns the token for an ID representing the child right of a direct child within this group token, if one exists
+    func child(rightOf id: UUID) -> EquationToken?
+
+    /// Returns the first child
+    func firstChild() -> EquationToken?
+
+    /// Returns the last child
+    func lastChild() -> EquationToken?
 }
 
 enum EquationToken: Identifiable, Codable {
@@ -45,12 +60,12 @@ enum EquationToken: Identifiable, Codable {
         }
     }
 
-    func validate() -> Bool {
+    var groupRepresentation: (any GroupEquationToken)? {
         switch self {
         case .linearGroup(let linearGroup):
-            return linearGroup.validate()
+            return linearGroup
         default:
-            return true
+            return nil
         }
     }
 }

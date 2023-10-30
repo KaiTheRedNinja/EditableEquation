@@ -38,7 +38,7 @@ struct LinearGroup: GroupEquationToken {
             default: lastTokenWasOperation = false
             }
 
-            if !content.validate() {
+            if !(content.groupRepresentation?.validate() ?? true) {
                 return false
             }
         }
@@ -60,12 +60,30 @@ struct LinearGroup: GroupEquationToken {
     /// This function is to be called every time the equation is modified, and has no effects on the equation's appearance.
     func optimised() -> LinearGroup {
         var contentsCopy = contents
-        // Iterate over the array backwards, to prevent access errors
-        var lastNumberToken: Int? = nil
 
+        // optimise everything
+        for index in 0..<contentsCopy.count {
+            contentsCopy[index] = contentsCopy[index].optimised()
+        }
+
+        // For some of these, we iterate over the array backwards, to prevent access errors
+
+        // break out non-bracket LinearGroups
         for index in (0..<contentsCopy.count).reversed() {
             switch contentsCopy[index] {
-            // Turn consecutive number tokens into a single token
+            case .linearGroup(let linearGroup):
+                if !linearGroup.hasBrackets {
+                    contentsCopy.remove(at: index)
+                    contentsCopy.insert(contentsOf: linearGroup.optimised().contents, at: index)
+                }
+            default: continue
+            }
+        }
+
+        // Turn consecutive number tokens into a single token
+        var lastNumberToken: Int? = nil
+        for index in (0..<contentsCopy.count).reversed() {
+            switch contentsCopy[index] {
             case .number(let number):
                 if let lastNumberToken {
                     // get the last token, and integrate it into this token. Simple string concat.
@@ -83,17 +101,7 @@ struct LinearGroup: GroupEquationToken {
                     )
                 }
                 lastNumberToken = number.digit
-            // Break out non-bracket LinearGroups
-            case .linearGroup(let linearGroup):
-                if !linearGroup.hasBrackets {
-                    contentsCopy.remove(at: index)
-                    contentsCopy.insert(contentsOf: linearGroup.optimised().contents, at: index)
-                } else {
-                    contentsCopy[index] = contentsCopy[index].optimised()
-                }
-                lastNumberToken = nil
             default:
-                contentsCopy[index] = contentsCopy[index].optimised()
                 lastNumberToken = nil
             }
         }
@@ -168,5 +176,27 @@ struct LinearGroup: GroupEquationToken {
         }
 
         return mutableSelf
+    }
+
+    func child(with id: UUID) -> EquationToken? {
+        return contents.first(where: { $0.id == id })
+    }
+
+    func child(leftOf id: UUID) -> EquationToken? {
+        guard let index = contents.firstIndex(where: { $0.id == id }), index > 0 else { return nil }
+        return contents[index-1]
+    }
+
+    func child(rightOf id: UUID) -> EquationToken? {
+        guard let index = contents.firstIndex(where: { $0.id == id }), index < contents.count-1 else { return nil }
+        return contents[index+1]
+    }
+
+    func firstChild() -> EquationToken? {
+        contents.first
+    }
+
+    func lastChild() -> EquationToken? {
+        contents.last
     }
 }
