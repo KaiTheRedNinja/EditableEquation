@@ -7,25 +7,33 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		934566652AEF4E0600E3A619 /* EquationToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934566642AEF4E0600E3A619 /* EquationToken.swift */; };
+		934566672AEF4E1600E3A619 /* NumberToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934566662AEF4E1600E3A619 /* NumberToken.swift */; };
+		934566692AEF4E2400E3A619 /* LinearOperationToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934566682AEF4E2400E3A619 /* LinearOperationToken.swift */; };
+		9345666B2AEF4E3200E3A619 /* LinearGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9345666A2AEF4E3200E3A619 /* LinearGroup.swift */; };
+		934566702AEF4E8B00E3A619 /* TokenTreeLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9345666F2AEF4E8B00E3A619 /* TokenTreeLocation.swift */; };
+		934566722AEF4E9700E3A619 /* InsertionPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934566712AEF4E9700E3A619 /* InsertionPoint.swift */; };
 		93E9F97E2AECB666006FF515 /* EditableEquationApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E9F97D2AECB666006FF515 /* EditableEquationApp.swift */; };
 		93E9F9802AECB666006FF515 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E9F97F2AECB666006FF515 /* ContentView.swift */; };
 		93E9F9822AECB667006FF515 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 93E9F9812AECB667006FF515 /* Assets.xcassets */; };
 		93E9F9852AECB667006FF515 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 93E9F9842AECB667006FF515 /* Preview Assets.xcassets */; };
-		93E9F98C2AECB698006FF515 /* Hierarchy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E9F98B2AECB698006FF515 /* Hierarchy.swift */; };
-		93E9F98E2AED4628006FF515 /* Insertion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E9F98D2AED4628006FF515 /* Insertion.swift */; };
 		93E9F9902AED482F006FF515 /* TokenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E9F98F2AED482F006FF515 /* TokenView.swift */; };
 		93E9F9922AED5018006FF515 /* EquationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E9F9912AED5018006FF515 /* EquationView.swift */; };
 		93E9F9952AEE162F006FF515 /* EquationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E9F9942AEE162F006FF515 /* EquationManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		934566642AEF4E0600E3A619 /* EquationToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EquationToken.swift; sourceTree = "<group>"; };
+		934566662AEF4E1600E3A619 /* NumberToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberToken.swift; sourceTree = "<group>"; };
+		934566682AEF4E2400E3A619 /* LinearOperationToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinearOperationToken.swift; sourceTree = "<group>"; };
+		9345666A2AEF4E3200E3A619 /* LinearGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinearGroup.swift; sourceTree = "<group>"; };
+		9345666F2AEF4E8B00E3A619 /* TokenTreeLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenTreeLocation.swift; sourceTree = "<group>"; };
+		934566712AEF4E9700E3A619 /* InsertionPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsertionPoint.swift; sourceTree = "<group>"; };
 		93E9F97A2AECB666006FF515 /* EditableEquation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EditableEquation.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		93E9F97D2AECB666006FF515 /* EditableEquationApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditableEquationApp.swift; sourceTree = "<group>"; };
 		93E9F97F2AECB666006FF515 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		93E9F9812AECB667006FF515 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		93E9F9842AECB667006FF515 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		93E9F98B2AECB698006FF515 /* Hierarchy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hierarchy.swift; sourceTree = "<group>"; };
-		93E9F98D2AED4628006FF515 /* Insertion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Insertion.swift; sourceTree = "<group>"; };
 		93E9F98F2AED482F006FF515 /* TokenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenView.swift; sourceTree = "<group>"; };
 		93E9F9912AED5018006FF515 /* EquationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EquationView.swift; sourceTree = "<group>"; };
 		93E9F9942AEE162F006FF515 /* EquationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EquationManager.swift; sourceTree = "<group>"; };
@@ -42,6 +50,64 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		934566622AEF4DB300E3A619 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				93E9F9942AEE162F006FF515 /* EquationManager.swift */,
+				9345666C2AEF4E4600E3A619 /* Tokens */,
+				9345666D2AEF4E5600E3A619 /* Groups */,
+				9345666E2AEF4E7500E3A619 /* Insertion */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		934566632AEF4DB600E3A619 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				93E9F9912AED5018006FF515 /* EquationView.swift */,
+				93E9F98F2AED482F006FF515 /* TokenView.swift */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		9345666C2AEF4E4600E3A619 /* Tokens */ = {
+			isa = PBXGroup;
+			children = (
+				934566642AEF4E0600E3A619 /* EquationToken.swift */,
+				934566662AEF4E1600E3A619 /* NumberToken.swift */,
+			);
+			path = Tokens;
+			sourceTree = "<group>";
+		};
+		9345666D2AEF4E5600E3A619 /* Groups */ = {
+			isa = PBXGroup;
+			children = (
+				934566682AEF4E2400E3A619 /* LinearOperationToken.swift */,
+				9345666A2AEF4E3200E3A619 /* LinearGroup.swift */,
+			);
+			path = Groups;
+			sourceTree = "<group>";
+		};
+		9345666E2AEF4E7500E3A619 /* Insertion */ = {
+			isa = PBXGroup;
+			children = (
+				9345666F2AEF4E8B00E3A619 /* TokenTreeLocation.swift */,
+				934566712AEF4E9700E3A619 /* InsertionPoint.swift */,
+			);
+			path = Insertion;
+			sourceTree = "<group>";
+		};
+		934566732AEF4EA400E3A619 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				93E9F9832AECB667006FF515 /* Preview Content */,
+				93E9F97D2AECB666006FF515 /* EditableEquationApp.swift */,
+				93E9F97F2AECB666006FF515 /* ContentView.swift */,
+				93E9F9812AECB667006FF515 /* Assets.xcassets */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
 		93E9F9712AECB666006FF515 = {
 			isa = PBXGroup;
 			children = (
@@ -61,15 +127,9 @@
 		93E9F97C2AECB666006FF515 /* EditableEquation */ = {
 			isa = PBXGroup;
 			children = (
-				93E9F9912AED5018006FF515 /* EquationView.swift */,
-				93E9F9942AEE162F006FF515 /* EquationManager.swift */,
-				93E9F97D2AECB666006FF515 /* EditableEquationApp.swift */,
-				93E9F97F2AECB666006FF515 /* ContentView.swift */,
-				93E9F98F2AED482F006FF515 /* TokenView.swift */,
-				93E9F98B2AECB698006FF515 /* Hierarchy.swift */,
-				93E9F98D2AED4628006FF515 /* Insertion.swift */,
-				93E9F9812AECB667006FF515 /* Assets.xcassets */,
-				93E9F9832AECB667006FF515 /* Preview Content */,
+				934566732AEF4EA400E3A619 /* App */,
+				934566632AEF4DB600E3A619 /* UI */,
+				934566622AEF4DB300E3A619 /* Model */,
 			);
 			path = EditableEquation;
 			sourceTree = "<group>";
@@ -152,11 +212,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				93E9F98C2AECB698006FF515 /* Hierarchy.swift in Sources */,
+				934566722AEF4E9700E3A619 /* InsertionPoint.swift in Sources */,
 				93E9F9952AEE162F006FF515 /* EquationManager.swift in Sources */,
-				93E9F98E2AED4628006FF515 /* Insertion.swift in Sources */,
+				934566672AEF4E1600E3A619 /* NumberToken.swift in Sources */,
+				934566692AEF4E2400E3A619 /* LinearOperationToken.swift in Sources */,
+				9345666B2AEF4E3200E3A619 /* LinearGroup.swift in Sources */,
 				93E9F9902AED482F006FF515 /* TokenView.swift in Sources */,
+				934566702AEF4E8B00E3A619 /* TokenTreeLocation.swift in Sources */,
 				93E9F9802AECB666006FF515 /* ContentView.swift in Sources */,
+				934566652AEF4E0600E3A619 /* EquationToken.swift in Sources */,
 				93E9F9922AED5018006FF515 /* EquationView.swift in Sources */,
 				93E9F97E2AECB666006FF515 /* EditableEquationApp.swift in Sources */,
 			);
@@ -291,7 +355,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"EditableEquation/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"EditableEquation/App/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -319,7 +383,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"EditableEquation/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"EditableEquation/App/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;

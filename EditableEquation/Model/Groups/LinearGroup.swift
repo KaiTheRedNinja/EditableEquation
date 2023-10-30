@@ -1,67 +1,11 @@
 //
-//  Hierarchy.swift
+//  LinearGroup.swift
 //  EditableEquation
 //
-//  Created by Kai Quan Tay on 28/10/23.
+//  Created by Kai Quan Tay on 30/10/23.
 //
 
 import Foundation
-import CoreGraphics
-
-protocol SingleEquationToken: Identifiable, Codable {}
-
-protocol GroupEquationToken: SingleEquationToken {
-    /// Returns a boolean value representing if the token is in the correct format
-    func validate() -> Bool
-
-    /// Modifies the token to optimise its data representation, safe to call during any equation edit
-    func optimised() -> Self
-
-    /// Inserts a token at an insertion point relative to the token
-    mutating func insert(token: EquationToken, at insertionPoint: InsertionPoint)
-
-    /// Removes a token at a location relative to the token
-    mutating func remove(at location: TokenTreeLocation)
-}
-
-enum EquationToken: Identifiable, Codable {
-    case number(NumberToken)
-    case linearOperation(LinearOperationToken)
-    case linearGroup(LinearGroup)
-
-    var id: UUID {
-        switch self {
-        case .number(let numberToken): numberToken.id
-        case .linearOperation(let operationToken): operationToken.id
-        case .linearGroup(let linearGroup): linearGroup.id
-        }
-    }
-
-    func optimised() -> EquationToken {
-        switch self {
-        case .linearGroup(let linearGroup):
-            return .linearGroup(linearGroup.optimised())
-        default:
-            return self
-        }
-    }
-}
-
-struct NumberToken: SingleEquationToken {
-    var id: UUID = .init()
-
-    var digit: Int
-}
-
-struct LinearOperationToken: SingleEquationToken {
-    var id: UUID = .init()
-
-    var operation: LinearOperation
-
-    enum LinearOperation: Codable {
-        case plus, minus, times, divide
-    }
-}
 
 struct LinearGroup: GroupEquationToken {
     var id: UUID = .init()
