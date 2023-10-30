@@ -11,11 +11,20 @@ struct ContentView: View {
     @ObservedObject var manager: EquationManager = .init(
         root: LinearGroup(
             contents: [
-            .number(.init(digit: 69)),
-            .linearOperation(.init(operation: .minus)),
-            .number(.init(digit: 420)),
-            .linearOperation(.init(operation: .divide)),
-            .number(.init(digit: 12))
+                .number(.init(digit: 69)),
+                .linearOperation(.init(operation: .minus)),
+                .number(.init(digit: 420)),
+                .linearOperation(.init(operation: .divide)),
+                .linearGroup(.init(
+                    contents: [
+                        .number(.init(digit: 5)),
+                        .linearOperation(.init(operation: .plus)),
+                        .number(.init(digit: 10))
+                    ],
+                    hasBrackets: true
+                )),
+                .linearOperation(.init(operation: .times)),
+                .number(.init(digit: 12))
             ]
         )
     )

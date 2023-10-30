@@ -13,8 +13,14 @@ struct LinearGroupView: View {
 
     var body: some View {
         HStack(spacing: 0) {
+            if linearGroup.hasBrackets {
+                Text("(")
+            }
             ForEach(linearGroup.contents) { content in
                 TokenView(token: content, treeLocation: self.treeLocation.adding(pathComponent: content.id))
+            }
+            if linearGroup.hasBrackets {
+                Text(")")
             }
         }
     }

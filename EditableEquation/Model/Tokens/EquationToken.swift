@@ -44,4 +44,13 @@ enum EquationToken: Identifiable, Codable {
             return self
         }
     }
+
+    func validate() -> Bool {
+        switch self {
+        case .linearGroup(let linearGroup):
+            return linearGroup.validate()
+        default:
+            return true
+        }
+    }
 }

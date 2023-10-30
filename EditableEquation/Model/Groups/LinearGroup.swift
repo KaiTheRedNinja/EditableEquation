@@ -11,13 +11,21 @@ struct LinearGroup: GroupEquationToken {
     var id: UUID = .init()
 
     var contents: [EquationToken]
+    var hasBrackets: Bool
 
-    /// Checks if the LinearGroup is valid
+    init(id: UUID = .init(), contents: [EquationToken], hasBrackets: Bool = false) {
+        self.id = id
+        self.contents = contents
+        self.hasBrackets = hasBrackets
+    }
+
+    /// Checks if the LinearGroup is valid. Assumes the LinearGroup is optimised.
     func validate() -> Bool {
         // an empty linear group is invalid
         guard !contents.isEmpty else { return false }
 
         // 1. only one linear operation between any two non-linear-operation, unless the second and onwards operations are minus
+        // 2. all subtokens must be valid
         var lastTokenWasOperation: Bool = false
 
         for content in contents {
@@ -28,6 +36,10 @@ struct LinearGroup: GroupEquationToken {
                 }
                 lastTokenWasOperation = true
             default: lastTokenWasOperation = false
+            }
+
+            if !content.validate() {
+                return false
             }
         }
 
@@ -46,8 +58,6 @@ struct LinearGroup: GroupEquationToken {
 
     /// Optimises the LinearGroup's representation. It returns a modified version of this instance, keeping the ID the same.
     /// This function is to be called every time the equation is modified, and has no effects on the equation's appearance.
-    ///
-    /// This works by turning consecutive number tokens into a single token
     func optimised() -> LinearGroup {
         var contentsCopy = contents
         // Iterate over the array backwards, to prevent access errors
@@ -55,6 +65,7 @@ struct LinearGroup: GroupEquationToken {
 
         for index in (0..<contentsCopy.count).reversed() {
             switch contentsCopy[index] {
+            // Turn consecutive number tokens into a single token
             case .number(let number):
                 if let lastNumberToken {
                     // get the last token, and integrate it into this token. Simple string concat.
@@ -72,13 +83,22 @@ struct LinearGroup: GroupEquationToken {
                     )
                 }
                 lastNumberToken = number.digit
+            // Break out non-bracket LinearGroups
+            case .linearGroup(let linearGroup):
+                if !linearGroup.hasBrackets {
+                    contentsCopy.remove(at: index)
+                    contentsCopy.insert(contentsOf: linearGroup.optimised().contents, at: index)
+                } else {
+                    contentsCopy[index] = contentsCopy[index].optimised()
+                }
+                lastNumberToken = nil
             default:
                 contentsCopy[index] = contentsCopy[index].optimised()
                 lastNumberToken = nil
             }
         }
 
-        return .init(id: self.id, contents: contentsCopy)
+        return .init(id: self.id, contents: contentsCopy, hasBrackets: self.hasBrackets)
     }
 
     func inserting(token: EquationToken, at insertionPoint: InsertionPoint) -> LinearGroup {
@@ -110,7 +130,7 @@ struct LinearGroup: GroupEquationToken {
 
         // Else, there must be more. Recursively call the function.
         switch mutableSelf.contents[insertionIndex] {
-        case .linearGroup(var linearGroup):
+        case .linearGroup(let linearGroup):
             mutableSelf.contents[insertionIndex] = .linearGroup(linearGroup.inserting(
                 token: token,
                 at: .init(
@@ -140,7 +160,7 @@ struct LinearGroup: GroupEquationToken {
 
         // Else, there must be more. Recursively call the function.
         switch mutableSelf.contents[removalIndex] {
-        case .linearGroup(var linearGroup):
+        case .linearGroup(let linearGroup):
             mutableSelf.contents[removalIndex] = .linearGroup(linearGroup.removing(
                 at: location.removingFirstPathComponent()
             ))
