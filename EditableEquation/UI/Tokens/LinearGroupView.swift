@@ -15,17 +15,18 @@ struct LinearGroupView: View {
         HStack(spacing: 0) {
             if linearGroup.hasBrackets {
                 Text("(")
+                    .overlay {
+                        SimpleDropOverlay(insertionPoint: .init(treeLocation: treeLocation, insertionLocation: .leading))
+                    }
             }
             ForEach(linearGroup.contents) { content in
                 TokenView(token: content, treeLocation: self.treeLocation.adding(pathComponent: content.id))
             }
             if linearGroup.hasBrackets {
                 Text(")")
-            }
-        }
-        .overlay {
-            if linearGroup.hasBrackets {
-                SimpleLeadingTrailingDropOverlay(treeLocation: treeLocation)
+                    .overlay {
+                        SimpleDropOverlay(insertionPoint: .init(treeLocation: treeLocation, insertionLocation: .trailing))
+                    }
             }
         }
     }

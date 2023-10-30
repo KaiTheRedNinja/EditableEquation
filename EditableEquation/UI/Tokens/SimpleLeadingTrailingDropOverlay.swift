@@ -14,67 +14,57 @@ struct SimpleLeadingTrailingDropOverlay: View {
 
     var body: some View {
         HStack(spacing: 0) {
-            Color.blue.opacity(0.0001)
-                .dropDestination(for: Data.self) { items, location in
-                    for item in items {
-                        withAnimation {
-                            manager.manage(
-                                data: item,
-                                droppedAt: .init(treeLocation: treeLocation, insertionLocation: .leading)
-                            )
-                        }
-                    }
-                    return true
-                } isTargeted: { isTargeted in
-                    print("Is targeted: \(isTargeted)")
-                    if isTargeted {
-                        manager.insertionPoint = .init(treeLocation: treeLocation, insertionLocation: .leading)
-                    } else {
-                        manager.insertionPoint = nil
-                    }
-                }
-                .onTapGesture {
-                    manager.insertionPoint = .init(treeLocation: treeLocation, insertionLocation: .leading)
-                }
-                .background(alignment: .leading) {
-                    if manager.insertionPoint?.treeLocation == treeLocation &&
-                        manager.insertionPoint?.insertionLocation == .leading {
-                        RoundedRectangle(cornerRadius: 3)
-                            .fill(Color.accentColor)
-                            .frame(width: 3)
-                    }
-                }
+            SimpleDropOverlay(insertionPoint: .init(treeLocation: treeLocation, insertionLocation: .leading))
+            SimpleDropOverlay(insertionPoint: .init(treeLocation: treeLocation, insertionLocation: .trailing))
+        }
+    }
+}
 
-            Color.red.opacity(0.0001)
-                .dropDestination(for: Data.self) { items, location in
-                    for item in items {
-                        withAnimation {
-                            manager.manage(
-                                data: item,
-                                droppedAt: .init(treeLocation: treeLocation, insertionLocation: .trailing)
-                            )
-                        }
-                    }
-                    return true
-                } isTargeted: { isTargeted in
-                    print("Is targeted: \(isTargeted)")
-                    if isTargeted {
-                        manager.insertionPoint = .init(treeLocation: treeLocation, insertionLocation: .trailing)
-                    } else {
-                        manager.insertionPoint = nil
+struct SimpleDropOverlay: View {
+    var insertionPoint: InsertionPoint
+
+    @EnvironmentObject var manager: EquationManager
+
+    var body: some View {
+        Color.blue.opacity(0.0001)
+            .dropDestination(for: Data.self) { items, location in
+                for item in items {
+                    withAnimation {
+                        manager.manage(
+                            data: item,
+                            droppedAt: insertionPoint
+                        )
                     }
                 }
-                .onTapGesture {
-                    manager.insertionPoint = .init(treeLocation: treeLocation, insertionLocation: .trailing)
+                return true
+            } isTargeted: { isTargeted in
+                print("Is targeted: \(isTargeted)")
+                if isTargeted {
+                    manager.insertionPoint = insertionPoint
+                } else {
+                    manager.insertionPoint = nil
                 }
-                .background(alignment: .trailing) {
-                    if manager.insertionPoint?.treeLocation == treeLocation &&
-                        manager.insertionPoint?.insertionLocation == .trailing {
-                        RoundedRectangle(cornerRadius: 3)
-                            .fill(Color.accentColor)
-                            .frame(width: 3)
-                    }
+            }
+            .onTapGesture {
+                manager.insertionPoint = insertionPoint
+            }
+            .background(alignment: cursorAlignment) {
+                if manager.insertionPoint == insertionPoint {
+                    RoundedRectangle(cornerRadius: 3)
+                        .fill(Color.accentColor)
+                        .frame(width: 3)
                 }
+            }
+    }
+
+    var cursorAlignment: Alignment {
+        switch insertionPoint.insertionLocation {
+        case .leading:
+            return .leading
+        case .trailing:
+            return .trailing
+        case .within:
+            return .center
         }
     }
 }
