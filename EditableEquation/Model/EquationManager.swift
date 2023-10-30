@@ -47,12 +47,32 @@ class EquationManager: ObservableObject {
 
     func moveLeft() {
         guard let insertionPoint else { return }
-        self.insertionPoint = insertionLeft(of: insertionPoint)
+        var newInsertion = insertionLeft(of: insertionPoint)
+        while true { // NOTE: Check this code to ensure it can never cause infinite recursion
+            // Make sure the token exists. If it doesnt, something has gone very wrong.
+            guard let token = tokenAt(location: newInsertion.treeLocation) else { return }
+            if token.groupRepresentation?.canInsert(at: insertionPoint.insertionLocation) ?? true {
+                break
+            } else {
+                newInsertion = insertionLeft(of: newInsertion)
+            }
+        }
+        self.insertionPoint = newInsertion
     }
 
     func moveRight() {
         guard let insertionPoint else { return }
-        self.insertionPoint = insertionRight(of: insertionPoint)
+        var newInsertion = insertionRight(of: insertionPoint)
+        while true { // NOTE: Check this code to ensure it can never cause infinite recursion
+            // Make sure the token exists. If it doesnt, something has gone very wrong.
+            guard let token = tokenAt(location: newInsertion.treeLocation) else { return }
+            if token.groupRepresentation?.canInsert(at: insertionPoint.insertionLocation) ?? true {
+                break
+            } else {
+                newInsertion = insertionRight(of: newInsertion)
+            }
+        }
+        self.insertionPoint = newInsertion
     }
 }
 
