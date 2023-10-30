@@ -49,6 +49,15 @@ struct ContentView: View {
                         manager.insert(token: EquationToken.number(NumberToken(digit: 42)), at: insertionPoint)
                     }
                 }
+
+            HStack {
+                Button("<") {
+                    manager.moveLeft()
+                }
+                Button(">") {
+                    manager.moveRight()
+                }
+            }
         }
     }
 }

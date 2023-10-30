@@ -17,12 +17,14 @@ struct TokenTreeLocation: Codable, Hashable {
     }
 
     func removingLastPathComponent() -> TokenTreeLocation {
+        guard !pathComponents.isEmpty else { return self }
         var mutableSelf = self
         _ = mutableSelf.pathComponents.removeLast()
         return mutableSelf
     }
 
     func removingFirstPathComponent() -> TokenTreeLocation {
+        guard !pathComponents.isEmpty else { return self }
         var mutableSelf = self
         _ = mutableSelf.pathComponents.removeFirst()
         return mutableSelf

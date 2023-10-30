@@ -44,6 +44,16 @@ class EquationManager: ObservableObject {
     func remove(at location: TokenTreeLocation) {
         root = root.optimised()
     }
+
+    func moveLeft() {
+        guard let insertionPoint else { return }
+        self.insertionPoint = insertionLeft(of: insertionPoint)
+    }
+
+    func moveRight() {
+        guard let insertionPoint else { return }
+        self.insertionPoint = insertionRight(of: insertionPoint)
+    }
 }
 
 extension EquationManager {
@@ -63,5 +73,103 @@ extension EquationManager {
         }
 
         return currentToken
+    }
+
+    /// The token to the left of the location, if it exists
+    private func tokenLeading(location: TokenTreeLocation) -> EquationToken? {
+        guard let lastItemID = location.pathComponents.last else { return nil }
+
+        let parentItem: EquationToken
+
+        if location.pathComponents.count == 1 {
+            parentItem = .linearGroup(root)
+        } else {
+            guard let parentOfLocation = tokenAt(location: location.removingLastPathComponent()) else { return nil }
+            parentItem = parentOfLocation
+        }
+
+        switch parentItem {
+        case .linearGroup(let linearGroup):
+            guard let locationIndex = linearGroup.contents.firstIndex(where: { $0.id == lastItemID }),
+                  locationIndex > 0
+            else { return nil }
+
+            return linearGroup.contents[locationIndex-1]
+        default: return nil
+        }
+    }
+
+    /// The token to the right of the location, if it exists
+    private func tokenTrailing(location: TokenTreeLocation) -> EquationToken? {
+        guard let lastItemID = location.pathComponents.last else { return nil }
+
+        let parentItem: EquationToken
+
+        if location.pathComponents.count == 1 {
+            parentItem = .linearGroup(root)
+        } else {
+            guard let parentOfLocation = tokenAt(location: location.removingLastPathComponent()) else { return nil }
+            parentItem = parentOfLocation
+        }
+
+        switch parentItem {
+        case .linearGroup(let linearGroup):
+            guard let locationIndex = linearGroup.contents.firstIndex(where: { $0.id == lastItemID }),
+                  locationIndex < linearGroup.contents.count-1
+            else { return nil }
+
+            return linearGroup.contents[locationIndex+1]
+        default: return nil
+        }
+    }
+
+    /// The new insertion point if moved to the left
+    private func insertionLeft(of insertionPoint: InsertionPoint) -> InsertionPoint {
+        var mutableInsertionPoint = insertionPoint
+
+        // there are some situations where you only need to change the insertion location
+        switch insertionPoint.insertionLocation {
+        case .trailing, .within:
+            mutableInsertionPoint.insertionLocation = .leading
+            return mutableInsertionPoint
+        default: break
+        }
+
+        // if a token exists to the left of the insertion point, use it
+        if let leadingToken = tokenLeading(location: insertionPoint.treeLocation) {
+            let newTreeLocation = mutableInsertionPoint.treeLocation.removingLastPathComponent().adding(pathComponent: leadingToken.id)
+            mutableInsertionPoint.treeLocation = newTreeLocation
+            return mutableInsertionPoint
+        }
+
+        // else, the location is the parent's leading
+        let newTreeLocation = mutableInsertionPoint.treeLocation.removingLastPathComponent()
+        mutableInsertionPoint.treeLocation = newTreeLocation
+        return mutableInsertionPoint
+    }
+
+    /// The new insertion point if moved to the right
+    private func insertionRight(of insertionPoint: InsertionPoint) -> InsertionPoint {
+        var mutableInsertionPoint = insertionPoint
+
+        // there are some situations where you only need to change the insertion location
+        switch insertionPoint.insertionLocation {
+        case .leading, .within:
+            mutableInsertionPoint.insertionLocation = .trailing
+            return mutableInsertionPoint
+        default: break
+        }
+
+        // if a token exists to the right of the insertion point, use it
+        if let trailingToken = tokenTrailing(location: insertionPoint.treeLocation) {
+            let newTreeLocation = mutableInsertionPoint.treeLocation.removingLastPathComponent().adding(pathComponent: trailingToken.id)
+            mutableInsertionPoint.treeLocation = newTreeLocation
+            return mutableInsertionPoint
+        }
+
+        // else, the location is the parent's trailing
+        let newTreeLocation = mutableInsertionPoint.treeLocation.removingLastPathComponent()
+        mutableInsertionPoint.treeLocation = newTreeLocation
+        return mutableInsertionPoint
     }
 }

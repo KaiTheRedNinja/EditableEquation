@@ -23,5 +23,10 @@ struct LinearGroupView: View {
                 Text(")")
             }
         }
+        .overlay {
+            if linearGroup.hasBrackets {
+                SimpleLeadingTrailingDropOverlay(treeLocation: treeLocation)
+            }
+        }
     }
 }
