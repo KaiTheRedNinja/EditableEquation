@@ -67,6 +67,28 @@ enum EquationToken: Identifiable, Codable {
         }
     }
 
+    func inserting(token: EquationToken, at insertionPoint: InsertionPoint) -> EquationToken {
+        switch self {
+        case .number, .linearOperation:
+            return self
+        case .linearGroup(let linearGroup):
+            return .linearGroup(linearGroup.inserting(token: token, at: insertionPoint))
+        case .divisionGroup(let divisionGroup):
+            return .divisionGroup(divisionGroup.inserting(token: token, at: insertionPoint))
+        }
+    }
+
+    func removing(at location: TokenTreeLocation) -> EquationToken {
+        switch self {
+        case .number, .linearOperation:
+            return self
+        case .linearGroup(let linearGroup):
+            return .linearGroup(linearGroup.removing(at: location))
+        case .divisionGroup(let divisionGroup):
+            return .divisionGroup(divisionGroup.removing(at: location))
+        }
+    }
+
     var groupRepresentation: (any GroupEquationToken)? {
         switch self {
         case .linearGroup(let linearGroup):
