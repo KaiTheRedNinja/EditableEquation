@@ -19,8 +19,15 @@ struct LinearGroupView: View {
                         SimpleDropOverlay(insertionPoint: .init(treeLocation: treeLocation, insertionLocation: .leading))
                     }
             }
-            ForEach(linearGroup.contents) { content in
-                TokenView(token: content, treeLocation: self.treeLocation.adding(pathComponent: content.id))
+            if linearGroup.contents.isEmpty {
+                Text("_")
+                    .overlay {
+                        SimpleDropOverlay(insertionPoint: .init(treeLocation: treeLocation, insertionLocation: .within))
+                    }
+            } else {
+                ForEach(linearGroup.contents) { content in
+                    TokenView(token: content, treeLocation: self.treeLocation.adding(pathComponent: content.id))
+                }
             }
             if linearGroup.hasBrackets {
                 Text(")")

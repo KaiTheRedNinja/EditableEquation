@@ -109,6 +109,15 @@ struct LinearGroup: GroupEquationToken {
         return .init(id: self.id, contents: contentsCopy, hasBrackets: self.hasBrackets)
     }
 
+    func canInsert(at insertionLocation: InsertionPoint.InsertionLocation) -> Bool {
+        switch insertionLocation {
+        case .leading, .trailing:
+            return hasBrackets
+        case .within:
+            return contents.isEmpty
+        }
+    }
+
     func inserting(token: EquationToken, at insertionPoint: InsertionPoint) -> LinearGroup {
         var mutableSelf = self
 

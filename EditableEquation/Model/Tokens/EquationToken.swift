@@ -16,6 +16,9 @@ protocol GroupEquationToken: SingleEquationToken {
     /// Modifies the token to optimise its data representation, safe to call during any equation edit
     func optimised() -> Self
 
+    /// Returns a boolean representing if the insertion location is valid. If it is invalid, it will be moved until it reaches a valid location.
+    func canInsert(at insertionLocation: InsertionPoint.InsertionLocation) -> Bool
+
     /// Inserts a token at an insertion point relative to the token
     func inserting(token: EquationToken, at insertionPoint: InsertionPoint) -> Self
 

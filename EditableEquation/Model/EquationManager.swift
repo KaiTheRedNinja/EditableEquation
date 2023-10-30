@@ -60,7 +60,8 @@ extension EquationManager {
     private func tokenAt(location: TokenTreeLocation) -> EquationToken? {
         var currentToken: EquationToken = .linearGroup(root)
 
-        guard let lastItem = location.pathComponents.last else { return nil }
+        // If theres no last item, the path components is empty and it refers to root
+        guard let lastItem = location.pathComponents.last else { return .linearGroup(root) }
 
         for component in location.pathComponents.dropLast(1) {
             guard let newCurrentToken = currentToken.groupRepresentation?.child(with: component) else { return nil }
@@ -100,11 +101,151 @@ extension EquationManager {
 
     /// The new insertion point if moved to the left
     private func insertionLeft(of insertionPoint: InsertionPoint) -> InsertionPoint {
-        return insertionPoint
+        // If its within, it just changes to a leading
+        if insertionPoint.insertionLocation == .within {
+            return .init(
+                treeLocation: insertionPoint.treeLocation,
+                insertionLocation: .leading
+            )
+        }
+
+        // If its the trailing of a group token, try and enter it.
+        if insertionPoint.insertionLocation == .trailing,
+           let token = tokenAt(location: insertionPoint.treeLocation),
+           let lastChild = token.groupRepresentation?.lastChild() {
+            return .init(
+                treeLocation: insertionPoint.treeLocation.adding(pathComponent: lastChild.id),
+                insertionLocation: .trailing
+            )
+        }
+
+        // Get the parent of the item
+        guard let item = insertionPoint.treeLocation.pathComponents.last,
+              let parent = tokenAt(location: insertionPoint.treeLocation.removingLastPathComponent()),
+              let parentGroup = parent.groupRepresentation else {
+            print("Somehow this token has no parent")
+            return insertionPoint
+        }
+
+        // Get the previous child
+        if let prevChild = parentGroup.child(leftOf: item) {
+            // If the current insertion point is a trailng, go to the trailing of the previous child
+            if insertionPoint.insertionLocation == .trailing {
+                return .init(
+                    treeLocation: insertionPoint.treeLocation.removingLastPathComponent().adding(pathComponent: prevChild.id),
+                    insertionLocation: .trailing
+                )
+            }
+
+            // If the current insertion point is a leading, try and enter the child
+            if insertionPoint.insertionLocation == .leading,
+               let childGroup = prevChild.groupRepresentation {
+                if let lastChild = childGroup.lastChild() {
+                    return .init(
+                        treeLocation: insertionPoint.treeLocation.removingLastPathComponent().adding(pathComponent: prevChild.id).adding(pathComponent: lastChild.id),
+                        insertionLocation: .trailing
+                    )
+                } else {
+                    return .init(
+                        treeLocation: insertionPoint.treeLocation.removingLastPathComponent().adding(pathComponent: prevChild.id),
+                        insertionLocation: .within
+                    )
+                }
+            } else {
+                // If it can't be entered, go to the leading of the child
+                return .init(
+                    treeLocation: insertionPoint.treeLocation.removingLastPathComponent().adding(pathComponent: prevChild.id),
+                    insertionLocation: .leading
+                )
+            }
+        } else {
+            // If its the first item in a group and a trailing, go to leading
+            if insertionPoint.insertionLocation == .trailing {
+                return .init(
+                    treeLocation: insertionPoint.treeLocation,
+                    insertionLocation: .leading
+                )
+            } else { // if its a leading, break out to the group's leading
+                return .init(
+                    treeLocation: insertionPoint.treeLocation.removingLastPathComponent(),
+                    insertionLocation: .leading
+                )
+            }
+        }
     }
 
     /// The new insertion point if moved to the right
     private func insertionRight(of insertionPoint: InsertionPoint) -> InsertionPoint {
-        return insertionPoint
+        // If its within, it just changes to a trailing
+        if insertionPoint.insertionLocation == .within {
+            return .init(
+                treeLocation: insertionPoint.treeLocation,
+                insertionLocation: .trailing
+            )
+        }
+
+        // If its the leading of a group token, try and enter it.
+        if insertionPoint.insertionLocation == .leading,
+           let token = tokenAt(location: insertionPoint.treeLocation),
+           let firstChild = token.groupRepresentation?.firstChild() {
+            return .init(
+                treeLocation: insertionPoint.treeLocation.adding(pathComponent: firstChild.id),
+                insertionLocation: .leading
+            )
+        }
+
+        // Get the parent of the item
+        guard let item = insertionPoint.treeLocation.pathComponents.last,
+              let parent = tokenAt(location: insertionPoint.treeLocation.removingLastPathComponent()),
+              let parentGroup = parent.groupRepresentation else {
+            print("Somehow this token has no parent")
+            return insertionPoint
+        }
+
+        // Get the next child
+        if let nextChild = parentGroup.child(rightOf: item) {
+            // If the current insertion point is a leading, go to the leading of the next child
+            if insertionPoint.insertionLocation == .leading {
+                return .init(
+                    treeLocation: insertionPoint.treeLocation.removingLastPathComponent().adding(pathComponent: nextChild.id),
+                    insertionLocation: .leading
+                )
+            }
+
+            // If the current insertion point is a trailing, try and enter the child
+            if insertionPoint.insertionLocation == .trailing,
+                let childGroup = nextChild.groupRepresentation {
+                if let firstChild = childGroup.firstChild() {
+                    return .init(
+                        treeLocation: insertionPoint.treeLocation.removingLastPathComponent().adding(pathComponent: nextChild.id).adding(pathComponent: firstChild.id),
+                        insertionLocation: .leading
+                    )
+                } else {
+                    return .init(
+                        treeLocation: insertionPoint.treeLocation.removingLastPathComponent().adding(pathComponent: nextChild.id),
+                        insertionLocation: .within
+                    )
+                }
+            } else {
+                // If it can't be entered, go to the trailing of the child
+                return .init(
+                    treeLocation: insertionPoint.treeLocation.removingLastPathComponent().adding(pathComponent: nextChild.id),
+                    insertionLocation: .trailing
+                )
+            }
+        } else {
+            // If its the last item in a group and a leading, go to trailing
+            if insertionPoint.insertionLocation == .leading {
+                return .init(
+                    treeLocation: insertionPoint.treeLocation,
+                    insertionLocation: .trailing
+                )
+            } else { // if its a trailing, break out to the group's trailing
+                return .init(
+                    treeLocation: insertionPoint.treeLocation.removingLastPathComponent(),
+                    insertionLocation: .trailing
+                )
+            }
+        }
     }
 }
