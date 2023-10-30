@@ -45,12 +45,14 @@ enum EquationToken: Identifiable, Codable {
     case number(NumberToken)
     case linearOperation(LinearOperationToken)
     case linearGroup(LinearGroup)
+    case divisionGroup(DivisionGroup)
 
     var id: UUID {
         switch self {
         case .number(let numberToken): numberToken.id
         case .linearOperation(let operationToken): operationToken.id
         case .linearGroup(let linearGroup): linearGroup.id
+        case .divisionGroup(let divisionGroup): divisionGroup.id
         }
     }
 
@@ -58,6 +60,8 @@ enum EquationToken: Identifiable, Codable {
         switch self {
         case .linearGroup(let linearGroup):
             return .linearGroup(linearGroup.optimised())
+        case .divisionGroup(let divisionGroup):
+            return .divisionGroup(divisionGroup.optimised())
         default:
             return self
         }
@@ -67,6 +71,8 @@ enum EquationToken: Identifiable, Codable {
         switch self {
         case .linearGroup(let linearGroup):
             return linearGroup
+        case .divisionGroup(let divisionGroup):
+            return divisionGroup
         default:
             return nil
         }

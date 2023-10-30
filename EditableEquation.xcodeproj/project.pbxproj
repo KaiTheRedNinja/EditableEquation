@@ -17,6 +17,8 @@
 		934566782AEF520F00E3A619 /* NumberTokenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934566772AEF520F00E3A619 /* NumberTokenView.swift */; };
 		9345667A2AEF522400E3A619 /* LinearOperationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934566792AEF522400E3A619 /* LinearOperationView.swift */; };
 		9345667C2AEF523400E3A619 /* LinearGroupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9345667B2AEF523400E3A619 /* LinearGroupView.swift */; };
+		9345667E2AEFE98700E3A619 /* DivisionGroupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9345667D2AEFE98700E3A619 /* DivisionGroupView.swift */; };
+		934566802AEFE99F00E3A619 /* DivisionGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9345667F2AEFE99F00E3A619 /* DivisionGroup.swift */; };
 		93E9F97E2AECB666006FF515 /* EditableEquationApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E9F97D2AECB666006FF515 /* EditableEquationApp.swift */; };
 		93E9F9802AECB666006FF515 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E9F97F2AECB666006FF515 /* ContentView.swift */; };
 		93E9F9822AECB667006FF515 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 93E9F9812AECB667006FF515 /* Assets.xcassets */; };
@@ -37,6 +39,8 @@
 		934566772AEF520F00E3A619 /* NumberTokenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberTokenView.swift; sourceTree = "<group>"; };
 		934566792AEF522400E3A619 /* LinearOperationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinearOperationView.swift; sourceTree = "<group>"; };
 		9345667B2AEF523400E3A619 /* LinearGroupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinearGroupView.swift; sourceTree = "<group>"; };
+		9345667D2AEFE98700E3A619 /* DivisionGroupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DivisionGroupView.swift; sourceTree = "<group>"; };
+		9345667F2AEFE99F00E3A619 /* DivisionGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DivisionGroup.swift; sourceTree = "<group>"; };
 		93E9F97A2AECB666006FF515 /* EditableEquation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EditableEquation.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		93E9F97D2AECB666006FF515 /* EditableEquationApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditableEquationApp.swift; sourceTree = "<group>"; };
 		93E9F97F2AECB666006FF515 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -83,6 +87,7 @@
 			children = (
 				934566642AEF4E0600E3A619 /* EquationToken.swift */,
 				934566662AEF4E1600E3A619 /* NumberToken.swift */,
+				934566682AEF4E2400E3A619 /* LinearOperationToken.swift */,
 			);
 			path = Tokens;
 			sourceTree = "<group>";
@@ -90,8 +95,8 @@
 		9345666D2AEF4E5600E3A619 /* Groups */ = {
 			isa = PBXGroup;
 			children = (
-				934566682AEF4E2400E3A619 /* LinearOperationToken.swift */,
 				9345666A2AEF4E3200E3A619 /* LinearGroup.swift */,
+				9345667F2AEFE99F00E3A619 /* DivisionGroup.swift */,
 			);
 			path = Groups;
 			sourceTree = "<group>";
@@ -124,6 +129,7 @@
 				934566772AEF520F00E3A619 /* NumberTokenView.swift */,
 				934566792AEF522400E3A619 /* LinearOperationView.swift */,
 				9345667B2AEF523400E3A619 /* LinearGroupView.swift */,
+				9345667D2AEFE98700E3A619 /* DivisionGroupView.swift */,
 			);
 			path = Tokens;
 			sourceTree = "<group>";
@@ -233,6 +239,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9345667C2AEF523400E3A619 /* LinearGroupView.swift in Sources */,
+				934566802AEFE99F00E3A619 /* DivisionGroup.swift in Sources */,
 				934566752AEF518E00E3A619 /* SimpleLeadingTrailingDropOverlay.swift in Sources */,
 				9345667A2AEF522400E3A619 /* LinearOperationView.swift in Sources */,
 				934566722AEF4E9700E3A619 /* InsertionPoint.swift in Sources */,
@@ -247,6 +254,7 @@
 				934566782AEF520F00E3A619 /* NumberTokenView.swift in Sources */,
 				93E9F9922AED5018006FF515 /* EquationView.swift in Sources */,
 				93E9F97E2AECB666006FF515 /* EditableEquationApp.swift in Sources */,
+				9345667E2AEFE98700E3A619 /* DivisionGroupView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -132,11 +132,18 @@ extension EquationManager {
         // If its the trailing of a group token, try and enter it.
         if insertionPoint.insertionLocation == .trailing,
            let token = tokenAt(location: insertionPoint.treeLocation),
-           let lastChild = token.groupRepresentation?.lastChild() {
-            return .init(
-                treeLocation: insertionPoint.treeLocation.adding(pathComponent: lastChild.id),
-                insertionLocation: .trailing
-            )
+           let tokenGroup = token.groupRepresentation {
+            if let lastChild = tokenGroup.lastChild() {
+                return .init(
+                    treeLocation: insertionPoint.treeLocation.adding(pathComponent: lastChild.id),
+                    insertionLocation: .trailing
+                )
+            } else {
+                return .init(
+                    treeLocation: insertionPoint.treeLocation,
+                    insertionLocation: .within
+                )
+            }
         }
 
         // Get the parent of the item
@@ -227,11 +234,18 @@ extension EquationManager {
         // If its the leading of a group token, try and enter it.
         if insertionPoint.insertionLocation == .leading,
            let token = tokenAt(location: insertionPoint.treeLocation),
-           let firstChild = token.groupRepresentation?.firstChild() {
-            return .init(
-                treeLocation: insertionPoint.treeLocation.adding(pathComponent: firstChild.id),
-                insertionLocation: .leading
-            )
+           let tokenGroup = token.groupRepresentation {
+            if let firstChild = tokenGroup.firstChild() {
+                return .init(
+                    treeLocation: insertionPoint.treeLocation.adding(pathComponent: firstChild.id),
+                    insertionLocation: .leading
+                )
+            } else {
+                return .init(
+                    treeLocation: insertionPoint.treeLocation,
+                    insertionLocation: .within
+                )
+            }
         }
 
         // Get the parent of the item

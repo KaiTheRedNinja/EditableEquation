@@ -17,13 +17,15 @@ struct ContentView: View {
                 .linearOperation(.init(operation: .divide)),
                 .linearGroup(.init(
                     contents: [
-                        .linearGroup(.init(
-                            contents: [
+                        .divisionGroup(.init(
+                            numerator: [
                                 .number(.init(digit: 4)),
                                 .linearOperation(.init(operation: .minus)),
                                 .number(.init(digit: 9))
                             ],
-                            hasBrackets: true
+                            denominator: [
+                                .number(.init(digit: 5))
+                            ]
                         )),
                         .linearOperation(.init(operation: .times)),
                         .linearGroup(.init(

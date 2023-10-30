@@ -19,6 +19,8 @@ struct TokenView: View {
             LinearOperationView(linearOperation: linearOperationToken, treeLocation: treeLocation)
         case .linearGroup(let linearGroup):
             LinearGroupView(linearGroup: linearGroup, treeLocation: treeLocation)
+        case .divisionGroup(let divisionGroup):
+            DivisionGroupView(divisionGroup: divisionGroup, treeLocation: treeLocation)
         }
     }
 }

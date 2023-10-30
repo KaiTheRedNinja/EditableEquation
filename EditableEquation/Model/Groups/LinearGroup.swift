@@ -146,9 +146,18 @@ struct LinearGroup: GroupEquationToken {
         }
 
         // Else, there must be more. Recursively call the function.
+        // TODO: Update this to not be a switch case, and instead do type casting or smth like that
         switch mutableSelf.contents[insertionIndex] {
         case .linearGroup(let linearGroup):
             mutableSelf.contents[insertionIndex] = .linearGroup(linearGroup.inserting(
+                token: token,
+                at: .init(
+                    treeLocation: insertionPoint.treeLocation.removingFirstPathComponent(),
+                    insertionLocation: insertionPoint.insertionLocation)
+                )
+            )
+        case .divisionGroup(let divisionGroup):
+            mutableSelf.contents[insertionIndex] = .divisionGroup(divisionGroup.inserting(
                 token: token,
                 at: .init(
                     treeLocation: insertionPoint.treeLocation.removingFirstPathComponent(),
