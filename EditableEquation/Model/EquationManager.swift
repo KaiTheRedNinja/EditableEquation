@@ -101,6 +101,26 @@ extension EquationManager {
 
     /// The new insertion point if moved to the left
     private func insertionLeft(of insertionPoint: InsertionPoint) -> InsertionPoint {
+        // If the tree location is the root's first item
+        if insertionPoint.treeLocation.pathComponents.count == 1,
+           insertionPoint.treeLocation.pathComponents.first == root.firstChild()?.id {
+            // if its the trailing, then switch to leading
+            if insertionPoint.insertionLocation == .trailing {
+                return .init(
+                    treeLocation: insertionPoint.treeLocation,
+                    insertionLocation: .leading
+                )
+            }
+
+            // if its the leading, then wrap around to the other end
+            if insertionPoint.insertionLocation == .leading {
+                return .init(
+                    treeLocation: .init(pathComponents: [root.lastChild()!.id]),
+                    insertionLocation: .trailing
+                )
+            }
+        }
+
         // If its within, it just changes to a leading
         if insertionPoint.insertionLocation == .within {
             return .init(
@@ -176,6 +196,26 @@ extension EquationManager {
 
     /// The new insertion point if moved to the right
     private func insertionRight(of insertionPoint: InsertionPoint) -> InsertionPoint {
+        // If the tree location is the root's last item
+        if insertionPoint.treeLocation.pathComponents.count == 1,
+           insertionPoint.treeLocation.pathComponents.first == root.lastChild()?.id {
+            // if its the leading, then switch to trailing
+            if insertionPoint.insertionLocation == .leading {
+                return .init(
+                    treeLocation: insertionPoint.treeLocation,
+                    insertionLocation: .trailing
+                )
+            }
+
+            // if its the trailing, then wrap around to the other end
+            if insertionPoint.insertionLocation == .trailing {
+                return .init(
+                    treeLocation: .init(pathComponents: [root.firstChild()!.id]),
+                    insertionLocation: .leading
+                )
+            }
+        }
+
         // If its within, it just changes to a trailing
         if insertionPoint.insertionLocation == .within {
             return .init(

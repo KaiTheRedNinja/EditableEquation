@@ -17,6 +17,20 @@ struct ContentView: View {
                 .linearOperation(.init(operation: .divide)),
                 .linearGroup(.init(
                     contents: [
+                        .linearGroup(.init(
+                            contents: [
+                                .number(.init(digit: 4)),
+                                .linearOperation(.init(operation: .minus)),
+                                .number(.init(digit: 9))
+                            ],
+                            hasBrackets: true
+                        )),
+                        .linearOperation(.init(operation: .times)),
+                        .linearGroup(.init(
+                            contents: [],
+                            hasBrackets: true
+                        )),
+                        .linearOperation(.init(operation: .times)),
                         .number(.init(digit: 5)),
                         .linearOperation(.init(operation: .plus)),
                         .number(.init(digit: 10))
@@ -31,10 +45,12 @@ struct ContentView: View {
 
     var body: some View {
         VStack {
-            EquationView(
-                manager: manager
-            )
-            .font(.title2)
+            ScrollView(.horizontal) {
+                EquationView(
+                    manager: manager
+                )
+                .font(.title2)
+            }
 
             Spacer().frame(height: 100)
 
@@ -58,6 +74,8 @@ struct ContentView: View {
                     manager.moveRight()
                 }
             }
+
+            Text("Is valid: \(manager.root.validate().description)")
         }
     }
 }
