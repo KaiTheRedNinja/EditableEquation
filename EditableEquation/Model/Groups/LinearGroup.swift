@@ -104,15 +104,20 @@ struct LinearGroup: GroupEquationToken {
                 default: return mutableSelf
                 }
             }
+
+            return mutableSelf
         }
 
         // Else, there must be more. Recursively call the function.
         switch mutableSelf.contents[insertionIndex] {
         case .linearGroup(var linearGroup):
-            mutableSelf.contents[insertionIndex] = .linearGroup(linearGroup.inserting(token: token, at: .init(
-                treeLocation: insertionPoint.treeLocation.removingFirstPathComponent(),
-                insertionLocation: insertionPoint.insertionLocation)
-            ))
+            mutableSelf.contents[insertionIndex] = .linearGroup(linearGroup.inserting(
+                token: token,
+                at: .init(
+                    treeLocation: insertionPoint.treeLocation.removingFirstPathComponent(),
+                    insertionLocation: insertionPoint.insertionLocation)
+                )
+            )
         default: return mutableSelf
         }
 
@@ -120,6 +125,28 @@ struct LinearGroup: GroupEquationToken {
     }
 
     func removing(at location: TokenTreeLocation) -> LinearGroup {
-        return self
+        var mutableSelf = self
+
+        guard let id = location.pathComponents.first,
+              let removalIndex = mutableSelf.contents.firstIndex(where: { $0.id == id })
+        else { return mutableSelf }
+
+        // If theres only one item in the path, its a direct child of this linear group
+        if location.pathComponents.count == 1 {
+            mutableSelf.contents.remove(at: removalIndex)
+
+            return mutableSelf
+        }
+
+        // Else, there must be more. Recursively call the function.
+        switch mutableSelf.contents[removalIndex] {
+        case .linearGroup(var linearGroup):
+            mutableSelf.contents[removalIndex] = .linearGroup(linearGroup.removing(
+                at: location.removingFirstPathComponent()
+            ))
+        default: return mutableSelf
+        }
+
+        return mutableSelf
     }
 }
