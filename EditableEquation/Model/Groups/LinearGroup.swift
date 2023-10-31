@@ -19,42 +19,48 @@ struct LinearGroup: GroupEquationToken {
         self.hasBrackets = hasBrackets
     }
 
-    /// Checks if the LinearGroup is valid. Assumes the LinearGroup is optimised.
-    func validate() -> Bool {
-        // an empty linear group is invalid
-        guard !contents.isEmpty else { return false }
-
-        // 1. only one linear operation between any two non-linear-operation, unless the second and onwards operations are minus
-        // 2. all subtokens must be valid
-        var lastTokenWasOperation: Bool = false
-
-        for content in contents {
-            switch content {
-            case .linearOperation(let linearOperationToken):
-                if lastTokenWasOperation == true && linearOperationToken.operation != .minus {
-                    return false
-                }
-                lastTokenWasOperation = true
-            default: lastTokenWasOperation = false
-            }
-
-            if !(content.groupRepresentation?.validate() ?? true) {
-                return false
-            }
-        }
-
-        // 2. the equation cannot start with an operation, except plus and minus
-        switch contents.first! {
-        case .linearOperation(let token):
-            switch token.operation {
-            case .minus, .plus: break
-            default: return false
-            }
+    func canPrecede(_ other: EquationToken?) -> Bool {
+        guard let other else { return true } // LinearGroups can always start or end groups
+        if !hasBrackets { return false } // LinearGroups need brackets to go before others
+        
+        // LinearGroups can always precede operations
+        switch other {
+        case .linearOperation:
+            return true
         default: break
         }
 
-        return true
+        // LinearGroups can precede bracketed things
+        if other.groupRepresentation?.canDirectlyMultiply() ?? false {
+            return true
+        }
+
+        // Else, no
+        return false
     }
+
+    func canSucceed(_ other: EquationToken?) -> Bool {
+        guard let other else { return true } // LinearGroups can always start or end groups
+        if !hasBrackets { return false } // LinearGroups need brackets to go after others
+
+        // LinearGroups can always succeed operations
+        switch other {
+        case .linearOperation:
+            return true
+        default: break
+        }
+
+        // LinearGroups can succeed bracketed things
+        if other.groupRepresentation?.canDirectlyMultiply() ?? false {
+            return true
+        }
+
+        // Else, no
+        return false
+    }
+
+    func validWhenChildrenValid() -> Bool { false }
+    func canDirectlyMultiply() -> Bool { hasBrackets }
 
     /// Optimises the LinearGroup's representation. It returns a modified version of this instance, keeping the ID the same.
     /// This function is to be called every time the equation is modified, and has no effects on the equation's appearance.

@@ -25,9 +25,11 @@ struct DivisionGroup: GroupEquationToken {
         self.denominator = denominator
     }
 
-    func validate() -> Bool {
-        return numerator.validate() && denominator.validate()
-    }
+    // no special rules apply
+    func canPrecede(_ other: EquationToken?) -> Bool { true }
+    func canSucceed(_ other: EquationToken?) -> Bool { true }
+    func validWhenChildrenValid() -> Bool { true }
+    func canDirectlyMultiply() -> Bool { false }
 
     func optimised() -> DivisionGroup {
         return .init(

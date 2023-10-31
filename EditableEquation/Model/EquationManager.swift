@@ -74,6 +74,49 @@ class EquationManager: ObservableObject {
         }
         self.insertionPoint = newInsertion
     }
+
+    func validate(token: EquationToken) -> Bool {
+        if let groupRepresentation = token.groupRepresentation {
+            // If the token is a group, check its childrens' individual validity
+            var child = groupRepresentation.firstChild()
+
+            // An empty group is always invalid
+            guard child != nil else { return false }
+
+            while let validChild = child {
+                if validate(token: validChild) == false { return false }
+                child = groupRepresentation.child(rightOf: validChild.id)
+            }
+
+            // Check if the children can exist together
+            if groupRepresentation.validWhenChildrenValid() { return true }
+
+            var leftChild = groupRepresentation.firstChild()
+            var rightChild = groupRepresentation.child(rightOf: leftChild!.id)
+
+            // check that left child can be on the extreme left
+            if leftChild?.canSucceed(nil) == false {
+                return false
+            }
+
+            while let validLeftChild = leftChild, let validRightChild = rightChild {
+                if validLeftChild.canPrecede(validRightChild) == false ||
+                    validRightChild.canSucceed(validLeftChild) == false {
+                    return false
+                }
+
+                leftChild = validRightChild
+                rightChild = groupRepresentation.child(rightOf: validRightChild.id)
+            }
+
+            // check that right child can be on the extreme right
+            if groupRepresentation.lastChild()?.canPrecede(nil) == false {
+                return false
+            }
+        }
+
+        return true
+    }
 }
 
 extension EquationManager {

@@ -7,11 +7,23 @@
 
 import Foundation
 
-protocol SingleEquationToken: Identifiable, Codable {}
+protocol SingleEquationToken: Identifiable, Codable {
+    /// Returns a boolean representing if this token can go before another toke
+    /// If the other token is nil, it is asking if the token can be last in the group
+    func canPrecede(_ other: EquationToken?) -> Bool
+
+    /// Returns a boolean representing if this token can go after another token
+    /// If the other token is nil, it is asking if the token can be first in the group
+    func canSucceed(_ other: EquationToken?) -> Bool
+}
 
 protocol GroupEquationToken: SingleEquationToken {
-    /// Returns a boolean value representing if the token is in the correct format
-    func validate() -> Bool
+    /// Returns a boolean representing, given all children token are valid, this token is valid.
+    /// If `true` is returned, `canPrecede` and `canSucceed` will not be called on this token's children.
+    func validWhenChildrenValid() -> Bool
+
+    /// If the token can be multiplied with other  tokens without a `*` in a LinearGroup.
+    func canDirectlyMultiply() -> Bool
 
     /// Modifies the token to optimise its data representation, safe to call during any equation edit
     func optimised() -> Self
@@ -64,6 +76,31 @@ enum EquationToken: Identifiable, Codable {
             return .divisionGroup(divisionGroup.optimised())
         default:
             return self
+        }
+    }
+
+    func canPrecede(_ other: EquationToken?) -> Bool {
+        switch self {
+        case .number(let numberToken):
+            numberToken.canPrecede(other)
+        case .linearOperation(let linearOperationToken):
+            linearOperationToken.canPrecede(other)
+        case .linearGroup(let linearGroup):
+            linearGroup.canPrecede(other)
+        case .divisionGroup(let divisionGroup):
+            divisionGroup.canPrecede(other)
+        }
+    }
+    func canSucceed(_ other: EquationToken?) -> Bool {
+        switch self {
+        case .number(let numberToken):
+            numberToken.canSucceed(other)
+        case .linearOperation(let linearOperationToken):
+            linearOperationToken.canSucceed(other)
+        case .linearGroup(let linearGroup):
+            linearGroup.canSucceed(other)
+        case .divisionGroup(let divisionGroup):
+            divisionGroup.canSucceed(other)
         }
     }
 

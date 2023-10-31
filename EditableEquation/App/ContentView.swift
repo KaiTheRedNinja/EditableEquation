@@ -77,7 +77,7 @@ struct ContentView: View {
                 }
             }
 
-            Text("Is valid: \(manager.root.validate().description)")
+            Text("Is valid: \(manager.validate(token: .linearGroup(manager.root)).description)")
         }
     }
 }
