@@ -70,10 +70,19 @@ struct ContentView: View {
 
             HStack {
                 Button("<") {
-                    manager.moveLeft()
+                    withAnimation {
+                        manager.moveLeft()
+                    }
+                }
+                Button("-") {
+                    withAnimation {
+                        manager.backspace()
+                    }
                 }
                 Button(">") {
-                    manager.moveRight()
+                    withAnimation {
+                        manager.moveRight()
+                    }
                 }
             }
 

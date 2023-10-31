@@ -26,26 +26,38 @@ class EquationManager: ObservableObject {
     }
 
     func insert(token: EquationToken, at insertionPoint: InsertionPoint) {
-        guard let destination = tokenAt(location: insertionPoint.treeLocation) else {
-            print("Destination invalid")
-            return
-        }
-        print("Inserting \(token) at \(destination)'s \(insertionPoint.insertionLocation)")
         root = root.inserting(token: token, at: insertionPoint)
-
         root = root.optimised()
     }
 
+    func backspace() {
+        guard let insertionPoint else { return }
+        switch insertionPoint.insertionLocation {
+        case .trailing, .within:
+            // if its trailing/within, just delete the tree location
+            // TODO: Fix this with division groups, removing `within` should delete the parent token
+            remove(at: insertionPoint.treeLocation)
+        default:
+            // else, go left and delete that
+            moveLeft()
+            guard let insertionPoint = self.insertionPoint else { return }
+            remove(at: insertionPoint.treeLocation)
+        }
+    }
+
     func remove(at location: TokenTreeLocation) {
+        root = root.removing(at: location)
         root = root.optimised()
     }
 
     func replace(token: EquationToken, at location: TokenTreeLocation) {
         root = root.replacing(token: token, at: location)
+        root = root.optimised()
     }
 
     func move(from initialLocation: TokenTreeLocation, to insertionPoint: InsertionPoint) {
-        print("Moving \(initialLocation) to \(insertionPoint)")
+        guard let token = tokenAt(location: initialLocation) else { return }
+        root = root.removing(at: initialLocation).inserting(token: token, at: insertionPoint)
         root = root.optimised()
     }
 
