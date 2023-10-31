@@ -80,6 +80,17 @@ enum EquationToken: Identifiable, Codable {
         }
     }
 
+    func replacing(token: EquationToken, at location: TokenTreeLocation) -> EquationToken {
+        switch self {
+        case .number, .linearOperation:
+            return self
+        case .linearGroup(let linearGroup):
+            return .linearGroup(linearGroup.replacing(token: token, at: location))
+        case .divisionGroup(let divisionGroup):
+            return .divisionGroup(divisionGroup.replacing(token: token, at: location))
+        }
+    }
+
     var groupRepresentation: (any GroupEquationToken)? {
         switch self {
         case .linearGroup(let linearGroup):

@@ -185,6 +185,29 @@ struct LinearGroup: GroupEquationToken {
         return mutableSelf
     }
 
+    func replacing(token: EquationToken, at location: TokenTreeLocation) -> LinearGroup {
+        var mutableSelf = self
+
+        guard let id = location.pathComponents.first,
+              let replacementIndex = mutableSelf.contents.firstIndex(where: { $0.id == id })
+        else { return mutableSelf }
+
+        // If theres only one item in the path, its a direct child of this linear group
+        if location.pathComponents.count == 1 {
+            mutableSelf.contents[replacementIndex] = token
+
+            return mutableSelf
+        }
+
+        // Else, there must be more. Recursively call the function.
+        mutableSelf.contents[replacementIndex] = mutableSelf.contents[replacementIndex].replacing(
+            token: token,
+            at: location.removingFirstPathComponent()
+        )
+
+        return mutableSelf
+    }
+
     func child(with id: UUID) -> EquationToken? {
         return contents.first(where: { $0.id == id })
     }

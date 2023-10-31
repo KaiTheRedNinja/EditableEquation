@@ -37,6 +37,9 @@ protocol GroupEquationToken: SingleEquationToken {
     /// Removes a token at a location relative to the token
     func removing(at location: TokenTreeLocation) -> Self
 
+    /// Replaces the token at `location` with `token`
+    func replacing(token: EquationToken, at location: TokenTreeLocation) -> Self
+
     /// Returns the token for an ID representing a direct child within this group token, if it exists
     func child(with id: UUID) -> EquationToken?
 

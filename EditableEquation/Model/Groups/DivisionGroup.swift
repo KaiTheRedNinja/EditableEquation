@@ -106,6 +106,50 @@ struct DivisionGroup: GroupEquationToken {
         return self
     }
 
+    func replacing(token: EquationToken, at location: TokenTreeLocation) -> DivisionGroup {
+        guard let firstItem = location.pathComponents.first else { return self }
+
+        let nextLocation = location.removingFirstPathComponent()
+
+        if location.pathComponents.count >= 2 {
+            if numerator.id == firstItem {
+                return .init(
+                    id: self.id,
+                    numerator: numerator.replacing(token: token, at: nextLocation),
+                    denominator: denominator
+                )
+            } else if denominator.id == firstItem {
+                return .init(
+                    id: self.id,
+                    numerator: numerator,
+                    denominator: denominator.replacing(token: token, at: nextLocation)
+                )
+            }
+        } else {
+            let linearGroup: LinearGroup
+            switch token {
+            case .linearGroup(let linearGroupToken):
+                linearGroup = linearGroupToken
+            default: return self
+            }
+            if numerator.id == firstItem {
+                return .init(
+                    id: self.id,
+                    numerator: linearGroup,
+                    denominator: denominator
+                )
+            } else if denominator.id == firstItem {
+                return .init(
+                    id: self.id,
+                    numerator: numerator,
+                    denominator: linearGroup
+                )
+            }
+        }
+
+        return self
+    }
+
     func child(with id: UUID) -> EquationToken? {
         if numerator.id == id {
             return .linearGroup(numerator)
