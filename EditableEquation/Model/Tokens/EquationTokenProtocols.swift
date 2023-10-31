@@ -8,6 +8,10 @@
 import Foundation
 
 protocol SingleEquationToken: Identifiable, Codable {
+    /// This should be a string unique to the *type*. For example, all `NumberToken`s should have the same `name`.
+    /// `name` cannot be a computed property nor immutable, as it needs to be encoded and decoded.
+    var name: String { get }
+
     /// Returns a boolean representing if this token can go before another toke
     /// If the other token is nil, it is asking if the token can be last in the group
     func canPrecede(_ other: EquationToken?) -> Bool

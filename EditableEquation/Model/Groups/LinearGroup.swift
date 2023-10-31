@@ -9,6 +9,7 @@ import Foundation
 
 struct LinearGroup: GroupEquationToken {
     var id: UUID = .init()
+    private(set) var name: String = "LinearGroup"
 
     var contents: [EquationToken]
     var hasBrackets: Bool

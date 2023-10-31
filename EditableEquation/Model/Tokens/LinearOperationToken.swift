@@ -9,6 +9,7 @@ import Foundation
 
 struct LinearOperationToken: SingleEquationToken {
     var id: UUID = .init()
+    private(set) var name: String = "LinearOperation"
 
     var operation: LinearOperation
 

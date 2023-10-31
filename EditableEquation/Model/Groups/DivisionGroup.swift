@@ -9,6 +9,7 @@ import Foundation
 
 struct DivisionGroup: GroupEquationToken {
     var id: UUID = .init()
+    private(set) var name: String = "DivisionGroup"
 
     var numerator: LinearGroup
     var denominator: LinearGroup

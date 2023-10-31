@@ -9,6 +9,7 @@ import Foundation
 
 struct NumberToken: SingleEquationToken {
     var id: UUID = .init()
+    private(set) var name: String = "Number"
 
     var digit: Int
 
