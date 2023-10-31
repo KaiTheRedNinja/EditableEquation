@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct LinearGroupView: View {
+struct LinearGroupView: TokenView {
     var linearGroup: LinearGroup
     var treeLocation: TokenTreeLocation
 
@@ -34,7 +34,7 @@ struct LinearGroupView: View {
                     }
             } else {
                 ForEach(linearGroup.contents) { content in
-                    TokenView(token: content, treeLocation: self.treeLocation.adding(pathComponent: content.id), namespace: namespace)
+                    GeneralTokenView(token: content, treeLocation: self.treeLocation.adding(pathComponent: content.id), namespace: namespace)
                 }
             }
             if linearGroup.hasBrackets {

@@ -21,7 +21,7 @@ struct EquationView: View {
     }
 
     var body: some View {
-        TokenView(
+        GeneralTokenView(
             token: .linearGroup(equationManager.root),
             treeLocation: .init(pathComponents: []),
             namespace: namespace

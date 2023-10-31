@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct DivisionGroupView: View {
+struct DivisionGroupView: TokenView {
     var divisionGroup: DivisionGroup
     var treeLocation: TokenTreeLocation
 

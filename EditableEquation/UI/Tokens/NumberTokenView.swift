@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct NumberTokenView: View {
+struct NumberTokenView: TokenView {
     var number: NumberToken
     var treeLocation: TokenTreeLocation
 

@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct LinearOperationView: View {
+struct LinearOperationView: TokenView {
     var linearOperation: LinearOperationToken
     var treeLocation: TokenTreeLocation
 

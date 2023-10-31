@@ -7,7 +7,12 @@
 
 import SwiftUI
 
-struct TokenView: View {
+protocol TokenView: View {
+    var treeLocation: TokenTreeLocation { get }
+    var namespace: Namespace.ID { get }
+}
+
+struct GeneralTokenView: TokenView {
     var token: EquationToken
     var treeLocation: TokenTreeLocation
 
