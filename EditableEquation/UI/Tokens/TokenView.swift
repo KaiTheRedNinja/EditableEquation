@@ -11,16 +11,18 @@ struct TokenView: View {
     var token: EquationToken
     var treeLocation: TokenTreeLocation
 
+    var namespace: Namespace.ID
+
     var body: some View {
         switch token {
         case .number(let numberToken):
-            NumberTokenView(number: numberToken, treeLocation: treeLocation)
+            NumberTokenView(number: numberToken, treeLocation: treeLocation, namespace: namespace)
         case .linearOperation(let linearOperationToken):
-            LinearOperationView(linearOperation: linearOperationToken, treeLocation: treeLocation)
+            LinearOperationView(linearOperation: linearOperationToken, treeLocation: treeLocation, namespace: namespace)
         case .linearGroup(let linearGroup):
-            LinearGroupView(linearGroup: linearGroup, treeLocation: treeLocation)
+            LinearGroupView(linearGroup: linearGroup, treeLocation: treeLocation, namespace: namespace)
         case .divisionGroup(let divisionGroup):
-            DivisionGroupView(divisionGroup: divisionGroup, treeLocation: treeLocation)
+            DivisionGroupView(divisionGroup: divisionGroup, treeLocation: treeLocation, namespace: namespace)
         }
     }
 }

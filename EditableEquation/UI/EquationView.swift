@@ -10,6 +10,8 @@ import SwiftUI
 struct EquationView: View {
     @ObservedObject var equationManager: EquationManager
 
+    @Namespace var namespace
+
     init(root: LinearGroup) {
         self.equationManager = .init(root: root)
     }
@@ -21,7 +23,8 @@ struct EquationView: View {
     var body: some View {
         TokenView(
             token: .linearGroup(equationManager.root),
-            treeLocation: .init(pathComponents: [])
+            treeLocation: .init(pathComponents: []),
+            namespace: namespace
         )
         .environmentObject(equationManager)
     }

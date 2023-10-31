@@ -10,18 +10,22 @@ import SwiftUI
 struct SimpleLeadingTrailingDropOverlay: View {
     var treeLocation: TokenTreeLocation
 
+    var namespace: Namespace.ID
+
     @EnvironmentObject var manager: EquationManager
 
     var body: some View {
         HStack(spacing: 0) {
-            SimpleDropOverlay(insertionPoint: .init(treeLocation: treeLocation, insertionLocation: .leading))
-            SimpleDropOverlay(insertionPoint: .init(treeLocation: treeLocation, insertionLocation: .trailing))
+            SimpleDropOverlay(insertionPoint: .init(treeLocation: treeLocation, insertionLocation: .leading), namespace: namespace)
+            SimpleDropOverlay(insertionPoint: .init(treeLocation: treeLocation, insertionLocation: .trailing), namespace: namespace)
         }
     }
 }
 
 struct SimpleDropOverlay: View {
     var insertionPoint: InsertionPoint
+
+    var namespace: Namespace.ID
 
     @EnvironmentObject var manager: EquationManager
 
@@ -53,6 +57,7 @@ struct SimpleDropOverlay: View {
                     RoundedRectangle(cornerRadius: 3)
                         .fill(Color.accentColor)
                         .frame(width: 3)
+                        .matchedGeometryEffect(id: "cursor", in: namespace)
                 }
             }
     }

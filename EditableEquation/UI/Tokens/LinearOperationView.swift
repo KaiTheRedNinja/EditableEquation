@@ -11,6 +11,8 @@ struct LinearOperationView: View {
     var linearOperation: LinearOperationToken
     var treeLocation: TokenTreeLocation
 
+    var namespace: Namespace.ID
+
     @EnvironmentObject var manager: EquationManager
 
     var body: some View {
@@ -18,9 +20,9 @@ struct LinearOperationView: View {
             .padding(.horizontal, 3)
             .overlay {
                 HStack(spacing: 0) {
-                    SimpleDropOverlay(insertionPoint: .init(treeLocation: treeLocation, insertionLocation: .leading))
+                    SimpleDropOverlay(insertionPoint: .init(treeLocation: treeLocation, insertionLocation: .leading), namespace: namespace)
                     transformTapSection
-                    SimpleDropOverlay(insertionPoint: .init(treeLocation: treeLocation, insertionLocation: .trailing))
+                    SimpleDropOverlay(insertionPoint: .init(treeLocation: treeLocation, insertionLocation: .trailing), namespace: namespace)
                 }
             }
     }

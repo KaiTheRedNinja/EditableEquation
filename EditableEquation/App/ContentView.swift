@@ -70,7 +70,7 @@ struct ContentView: View {
 
             HStack {
                 Button("<") {
-                    withAnimation {
+                    withAnimation(.easeInOut(duration: 0.25)) {
                         manager.moveLeft()
                     }
                 }
@@ -80,7 +80,7 @@ struct ContentView: View {
                     }
                 }
                 Button(">") {
-                    withAnimation {
+                    withAnimation(.easeInOut(duration: 0.25)) {
                         manager.moveRight()
                     }
                 }

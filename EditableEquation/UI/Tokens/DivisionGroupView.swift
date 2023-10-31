@@ -11,11 +11,14 @@ struct DivisionGroupView: View {
     var divisionGroup: DivisionGroup
     var treeLocation: TokenTreeLocation
 
+    var namespace: Namespace.ID
+
     var body: some View {
         VStack(spacing: 0) {
             LinearGroupView(
                 linearGroup: divisionGroup.numerator,
-                treeLocation: treeLocation.adding(pathComponent: divisionGroup.numerator.id)
+                treeLocation: treeLocation.adding(pathComponent: divisionGroup.numerator.id),
+                namespace: namespace
             )
             .overlay(alignment: .bottom) {
                 Color.black.frame(height: 2)
@@ -23,7 +26,8 @@ struct DivisionGroupView: View {
             }
             LinearGroupView(
                 linearGroup: divisionGroup.denominator,
-                treeLocation: treeLocation.adding(pathComponent: divisionGroup.denominator.id)
+                treeLocation: treeLocation.adding(pathComponent: divisionGroup.denominator.id),
+                namespace: namespace
             )
             .overlay(alignment: .top) {
                 Color.black.frame(height: 2)
@@ -33,11 +37,17 @@ struct DivisionGroupView: View {
         .padding(.horizontal, 2)
         .overlay {
             HStack {
-                SimpleDropOverlay(insertionPoint: .init(treeLocation: treeLocation, insertionLocation: .leading))
-                    .frame(width: 3)
+                SimpleDropOverlay(
+                    insertionPoint: .init(treeLocation: treeLocation, insertionLocation: .leading),
+                    namespace: namespace
+                )
+                .frame(width: 3)
                 Spacer()
-                SimpleDropOverlay(insertionPoint: .init(treeLocation: treeLocation, insertionLocation: .trailing))
-                    .frame(width: 3)
+                SimpleDropOverlay(
+                    insertionPoint: .init(treeLocation: treeLocation, insertionLocation: .trailing),
+                    namespace: namespace
+                )
+                .frame(width: 3)
             }
         }
     }
@@ -70,6 +80,7 @@ struct DivisionGroupView: View {
                 .linearOperation(.init(operation: .plus)),
                 .number(.init(digit: 10))
             ]),
-        treeLocation: .init(pathComponents: [])
+        treeLocation: .init(pathComponents: []),
+        namespace: Namespace().wrappedValue
     )
 }
