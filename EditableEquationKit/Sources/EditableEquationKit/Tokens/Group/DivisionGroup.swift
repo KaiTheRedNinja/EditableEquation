@@ -15,7 +15,7 @@ public struct DivisionGroup: GroupEquationToken {
     public var numerator: LinearGroup
     public var denominator: LinearGroup
 
-    public init(id: UUID = .init(), numerator: [any SingleEquationToken], denominator: [any SingleEquationToken]) {
+    public init(id: UUID = .init(), numerator: [any EquationToken], denominator: [any EquationToken]) {
         self.id = id
         self.numerator = .init(contents: numerator, hasBrackets: false)
         self.denominator = .init(contents: denominator, hasBrackets: false)
@@ -28,12 +28,12 @@ public struct DivisionGroup: GroupEquationToken {
     }
 
     // no special rules apply
-    public func canPrecede(_ other: (any SingleEquationToken)?) -> Bool { true }
-    public func canSucceed(_ other: (any SingleEquationToken)?) -> Bool { true }
+    public func canPrecede(_ other: (any EquationToken)?) -> Bool { true }
+    public func canSucceed(_ other: (any EquationToken)?) -> Bool { true }
     public func validWhenChildrenValid() -> Bool { true }
     public func canDirectlyMultiply() -> Bool { false }
 
-    public func optimised() -> any SingleEquationToken {
+    public func optimised() -> any EquationToken {
         guard let numeratorOptimised = numerator.optimised() as? LinearGroup,
               let denominatorOptimised = denominator.optimised() as? LinearGroup
         else { return self }
@@ -50,7 +50,7 @@ public struct DivisionGroup: GroupEquationToken {
         return insertionLocation != .within
     }
 
-    public func inserting(token: any SingleEquationToken, at insertionPoint: InsertionPoint) -> any SingleEquationToken {
+    public func inserting(token: any EquationToken, at insertionPoint: InsertionPoint) -> any EquationToken {
         guard insertionPoint.treeLocation.pathComponents.count >= 2,
               let firstItem = insertionPoint.treeLocation.pathComponents.first
         else {
@@ -91,7 +91,7 @@ public struct DivisionGroup: GroupEquationToken {
         return self
     }
 
-    public func removing(at location: TokenTreeLocation) -> any SingleEquationToken {
+    public func removing(at location: TokenTreeLocation) -> any EquationToken {
         guard location.pathComponents.count >= 2,
               let firstItem = location.pathComponents.first
         else { return self }
@@ -119,7 +119,7 @@ public struct DivisionGroup: GroupEquationToken {
         return self
     }
 
-    public func replacing(token: any SingleEquationToken, at location: TokenTreeLocation) -> any SingleEquationToken {
+    public func replacing(token: any EquationToken, at location: TokenTreeLocation) -> any EquationToken {
         guard let firstItem = location.pathComponents.first else { return self }
 
         let nextLocation = location.removingFirstPathComponent()
@@ -162,7 +162,7 @@ public struct DivisionGroup: GroupEquationToken {
         return self
     }
 
-    public func child(with id: UUID) -> (any SingleEquationToken)? {
+    public func child(with id: UUID) -> (any EquationToken)? {
         if numerator.id == id {
             return numerator
         } else if denominator.id == id {
@@ -172,7 +172,7 @@ public struct DivisionGroup: GroupEquationToken {
         return nil
     }
 
-    public func child(leftOf id: UUID) -> (any SingleEquationToken)? {
+    public func child(leftOf id: UUID) -> (any EquationToken)? {
         if denominator.id == id {
             return numerator
         }
@@ -180,7 +180,7 @@ public struct DivisionGroup: GroupEquationToken {
         return nil
     }
 
-    public func child(rightOf id: UUID) -> (any SingleEquationToken)? {
+    public func child(rightOf id: UUID) -> (any EquationToken)? {
         if numerator.id == id {
             return denominator
         }
@@ -188,11 +188,11 @@ public struct DivisionGroup: GroupEquationToken {
         return nil
     }
 
-    public func firstChild() -> (any SingleEquationToken)? {
+    public func firstChild() -> (any EquationToken)? {
         numerator
     }
 
-    public func lastChild() -> (any SingleEquationToken)? {
+    public func lastChild() -> (any EquationToken)? {
         denominator
     }
 }

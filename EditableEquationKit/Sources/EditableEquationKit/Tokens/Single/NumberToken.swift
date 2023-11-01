@@ -8,7 +8,7 @@
 import Foundation
 import EditableEquationCore
 
-public struct NumberToken: SingleEquationToken {
+public struct NumberToken: EquationToken {
     public var id: UUID = .init()
     public private(set) var name: String = "Number"
 
@@ -20,7 +20,7 @@ public struct NumberToken: SingleEquationToken {
     }
 
     // number tokens can go pretty much anywhere
-    public func canPrecede(_ other: (any SingleEquationToken)?) -> Bool { true }
+    public func canPrecede(_ other: (any EquationToken)?) -> Bool { true }
 
-    public func canSucceed(_ other: (any SingleEquationToken)?) -> Bool { true }
+    public func canSucceed(_ other: (any EquationToken)?) -> Bool { true }
 }

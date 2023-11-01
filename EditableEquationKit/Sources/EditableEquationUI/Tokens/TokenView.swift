@@ -15,12 +15,12 @@ public protocol TokenView: View {
 }
 
 public struct GeneralTokenView: TokenView {
-    public var token: any SingleEquationToken
+    public var token: any EquationToken
     public var treeLocation: TokenTreeLocation
 
     public var namespace: Namespace.ID
 
-    init(token: any SingleEquationToken, treeLocation: TokenTreeLocation, namespace: Namespace.ID) {
+    init(token: any EquationToken, treeLocation: TokenTreeLocation, namespace: Namespace.ID) {
         self.token = token
         self.treeLocation = treeLocation
         self.namespace = namespace

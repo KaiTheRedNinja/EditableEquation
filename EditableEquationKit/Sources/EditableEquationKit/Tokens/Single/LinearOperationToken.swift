@@ -8,7 +8,7 @@
 import Foundation
 import EditableEquationCore
 
-public struct LinearOperationToken: SingleEquationToken {
+public struct LinearOperationToken: EquationToken {
     public var id: UUID = .init()
     public private(set) var name: String = "LinearOperation"
 
@@ -23,7 +23,7 @@ public struct LinearOperationToken: SingleEquationToken {
         case plus, minus, times, divide
     }
 
-    public func canPrecede(_ other: (any SingleEquationToken)?) -> Bool {
+    public func canPrecede(_ other: (any EquationToken)?) -> Bool {
         if let other {
             if let linearOperation = other as? LinearOperationToken {
                 // A linear operation can only precede a minus operation
@@ -38,7 +38,7 @@ public struct LinearOperationToken: SingleEquationToken {
         }
     }
 
-    public func canSucceed(_ other: (any SingleEquationToken)?) -> Bool {
+    public func canSucceed(_ other: (any EquationToken)?) -> Bool {
         if let other {
             if other is LinearOperationToken {
                 return self.operation == .minus

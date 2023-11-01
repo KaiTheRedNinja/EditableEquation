@@ -8,22 +8,22 @@
 import Foundation
 
 public enum EquationTokenCoding: ProtocolCoding {
-    public typealias WrappedProtocol = any SingleEquationToken
+    public typealias WrappedProtocol = any EquationToken
     public typealias MinimalWrappedProtocol = MinimalEquationToken
 
     public static var registeredProviders: [String : ProtocolCodingProvider<WrappedProtocol>] = [:]
 
     public static var name: KeyPath<WrappedProtocol, String> = \.name
 
-    public struct MinimalEquationToken: SingleEquationToken {
+    public struct MinimalEquationToken: EquationToken {
         public var id: UUID
         public var name: String
-        public func canPrecede(_ other: (any SingleEquationToken)?) -> Bool { fatalError() }
-        public func canSucceed(_ other: (any SingleEquationToken)?) -> Bool { fatalError() }
+        public func canPrecede(_ other: (any EquationToken)?) -> Bool { fatalError() }
+        public func canSucceed(_ other: (any EquationToken)?) -> Bool { fatalError() }
     }
 }
 
-public extension Array<any SingleEquationToken> {
+public extension Array<any EquationToken> {
     func stringEncoded() -> String? {
         try? EquationTokenCoding.encode(package: self)
     }
