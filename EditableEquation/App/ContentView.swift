@@ -11,36 +11,36 @@ struct ContentView: View {
     @ObservedObject var manager: EquationManager = .init(
         root: LinearGroup(
             contents: [
-                .number(.init(digit: 69)),
-                .linearOperation(.init(operation: .minus)),
-                .number(.init(digit: 420)),
-                .linearOperation(.init(operation: .divide)),
-                .linearGroup(.init(
+                NumberToken(digit: 69),
+                LinearOperationToken(operation: .minus),
+                NumberToken(digit: 420),
+                LinearOperationToken(operation: .divide),
+                LinearGroup(
                     contents: [
-                        .divisionGroup(.init(
+                        DivisionGroup(
                             numerator: [
-                                .number(.init(digit: 4)),
-                                .linearOperation(.init(operation: .minus)),
-                                .number(.init(digit: 9))
+                                NumberToken(digit: 4),
+                                LinearOperationToken(operation: .minus),
+                                NumberToken(digit: 9)
                             ],
                             denominator: [
-                                .number(.init(digit: 5))
+                                NumberToken(digit: 5)
                             ]
-                        )),
-                        .linearOperation(.init(operation: .times)),
-                        .linearGroup(.init(
+                        ),
+                        LinearOperationToken(operation: .times),
+                        LinearGroup(
                             contents: [],
                             hasBrackets: true
-                        )),
-                        .linearOperation(.init(operation: .times)),
-                        .number(.init(digit: 5)),
-                        .linearOperation(.init(operation: .plus)),
-                        .number(.init(digit: 10))
+                        ),
+                        LinearOperationToken(operation: .times),
+                        NumberToken(digit: 5),
+                        LinearOperationToken(operation: .plus),
+                        NumberToken(digit: 10)
                     ],
                     hasBrackets: true
-                )),
-                .linearOperation(.init(operation: .times)),
-                .number(.init(digit: 12))
+                ),
+                LinearOperationToken(operation: .times),
+                NumberToken(digit: 12)
             ]
         )
     )
@@ -58,13 +58,13 @@ struct ContentView: View {
 
             Text("42")
                 .draggable({ () -> Data in
-                    let token = EquationToken.number(NumberToken(digit: 42))
+                    let token = NumberToken(digit: 42)
                     return (try? JSONEncoder().encode(token)) ?? .init()
                 }())
                 .onTapGesture {
                     guard let insertionPoint = manager.insertionPoint else { return }
                     withAnimation {
-                        manager.insert(token: EquationToken.number(NumberToken(digit: 42)), at: insertionPoint)
+                        manager.insert(token: NumberToken(digit: 42), at: insertionPoint)
                     }
                 }
 
@@ -86,7 +86,7 @@ struct ContentView: View {
                 }
             }
 
-            Text("Is valid: \(manager.validate(token: .linearGroup(manager.root)).description)")
+            Text("Is valid: \(manager.validate(token: manager.root).description)")
         }
     }
 }

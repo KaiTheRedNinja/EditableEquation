@@ -13,20 +13,22 @@ protocol TokenView: View {
 }
 
 struct GeneralTokenView: TokenView {
-    var token: EquationToken
+    var token: any SingleEquationToken
     var treeLocation: TokenTreeLocation
 
     var namespace: Namespace.ID
 
     var body: some View {
-        switch token {
-        case .number(let numberToken):
+        if let numberToken = token as? NumberToken {
             NumberTokenView(number: numberToken, treeLocation: treeLocation, namespace: namespace)
-        case .linearOperation(let linearOperationToken):
+        }
+        if let linearOperationToken = token as? LinearOperationToken {
             LinearOperationView(linearOperation: linearOperationToken, treeLocation: treeLocation, namespace: namespace)
-        case .linearGroup(let linearGroup):
+        }
+        if let linearGroup = token as? LinearGroup {
             LinearGroupView(linearGroup: linearGroup, treeLocation: treeLocation, namespace: namespace)
-        case .divisionGroup(let divisionGroup):
+        }
+        if let divisionGroup = token as? DivisionGroup {
             DivisionGroupView(divisionGroup: divisionGroup, treeLocation: treeLocation, namespace: namespace)
         }
     }

@@ -22,7 +22,7 @@ struct EquationView: View {
 
     var body: some View {
         GeneralTokenView(
-            token: .linearGroup(equationManager.root),
+            token: equationManager.root,
             treeLocation: .init(pathComponents: []),
             namespace: namespace
         )

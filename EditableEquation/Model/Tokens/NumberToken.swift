@@ -14,7 +14,7 @@ struct NumberToken: SingleEquationToken {
     var digit: Int
 
     // number tokens can go pretty much anywhere
-    func canPrecede(_ other: EquationToken?) -> Bool { true }
+    func canPrecede(_ other: (any SingleEquationToken)?) -> Bool { true }
 
-    func canSucceed(_ other: EquationToken?) -> Bool { true }
+    func canSucceed(_ other: (any SingleEquationToken)?) -> Bool { true }
 }

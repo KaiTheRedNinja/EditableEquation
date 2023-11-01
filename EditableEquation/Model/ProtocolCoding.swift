@@ -46,6 +46,29 @@ extension ProtocolCoding {
         registeredProviders[key] = .init(type: P.self)
     }
 
+    static func encodeSingle(item: WrappedProtocol) throws -> String {
+        guard let provider = registeredProviders[item[keyPath: name]],
+              let encoded = String(data: try provider.encode(item), encoding: .utf8) else {
+            throw ProtocolCodingError.unregisteredName
+        }
+
+        return encoded
+    }
+
+    static func decodeSingle(source: String) throws -> WrappedProtocol {
+        guard let itemData = source.data(using: .utf8) else {
+            throw ProtocolCodingError.decodingError
+        }
+        let minimal = try JSONDecoder().decode(MinimalWrappedProtocol.self, from: itemData)
+        guard let minimalCasted = minimal as? WrappedProtocol,
+              let provider = registeredProviders[minimalCasted[keyPath: name]]
+        else {
+            throw ProtocolCodingError.typeMismatch
+        }
+
+        return try provider.decode(itemData)
+    }
+
     static func encode(package: [WrappedProtocol]) throws -> String {
         var result: [String] = []
         for item in package {

@@ -7,18 +7,24 @@
 
 import Foundation
 
-protocol SingleEquationToken: Identifiable, Codable {
+protocol SingleEquationToken: Identifiable, Codable where ID == UUID {
     /// This should be a string unique to the *type*. For example, all `NumberToken`s should have the same `name`.
     /// `name` cannot be a computed property nor immutable, as it needs to be encoded and decoded.
     var name: String { get }
 
     /// Returns a boolean representing if this token can go before another toke
     /// If the other token is nil, it is asking if the token can be last in the group
-    func canPrecede(_ other: EquationToken?) -> Bool
+    func canPrecede(_ other: (any SingleEquationToken)?) -> Bool
 
     /// Returns a boolean representing if this token can go after another token
     /// If the other token is nil, it is asking if the token can be first in the group
-    func canSucceed(_ other: EquationToken?) -> Bool
+    func canSucceed(_ other: (any SingleEquationToken)?) -> Bool
+}
+
+extension SingleEquationToken {
+    var groupRepresentation: (any GroupEquationToken)? {
+        return self as? (any GroupEquationToken)
+    }
 }
 
 protocol GroupEquationToken: SingleEquationToken {
@@ -30,32 +36,32 @@ protocol GroupEquationToken: SingleEquationToken {
     func canDirectlyMultiply() -> Bool
 
     /// Modifies the token to optimise its data representation, safe to call during any equation edit
-    func optimised() -> Self
+    func optimised() -> any SingleEquationToken
 
     /// Returns a boolean representing if the insertion location is valid. If it is invalid, it will be moved until it reaches a valid location.
     func canInsert(at insertionLocation: InsertionPoint.InsertionLocation) -> Bool
 
     /// Inserts a token at an insertion point relative to the token
-    func inserting(token: EquationToken, at insertionPoint: InsertionPoint) -> Self
+    func inserting(token: any SingleEquationToken, at insertionPoint: InsertionPoint) -> any SingleEquationToken
 
     /// Removes a token at a location relative to the token
-    func removing(at location: TokenTreeLocation) -> Self
+    func removing(at location: TokenTreeLocation) -> any SingleEquationToken
 
     /// Replaces the token at `location` with `token`
-    func replacing(token: EquationToken, at location: TokenTreeLocation) -> Self
+    func replacing(token: any SingleEquationToken, at location: TokenTreeLocation) -> any SingleEquationToken
 
     /// Returns the token for an ID representing a direct child within this group token, if it exists
-    func child(with id: UUID) -> EquationToken?
+    func child(with id: UUID) -> (any SingleEquationToken)?
 
     /// Returns the token for an ID representing the child left of a direct child within this group token, if one exists
-    func child(leftOf id: UUID) -> EquationToken?
+    func child(leftOf id: UUID) -> (any SingleEquationToken)?
 
     /// Returns the token for an ID representing the child right of a direct child within this group token, if one exists
-    func child(rightOf id: UUID) -> EquationToken?
+    func child(rightOf id: UUID) -> (any SingleEquationToken)?
 
     /// Returns the first child
-    func firstChild() -> EquationToken?
+    func firstChild() -> (any SingleEquationToken)?
 
     /// Returns the last child
-    func lastChild() -> EquationToken?
+    func lastChild() -> (any SingleEquationToken)?
 }

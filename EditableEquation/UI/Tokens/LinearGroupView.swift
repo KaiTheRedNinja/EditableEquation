@@ -33,7 +33,8 @@ struct LinearGroupView: TokenView {
                         )
                     }
             } else {
-                ForEach(linearGroup.contents) { content in
+                ForEach(0..<linearGroup.contents.count, id: \.self) { index in
+                    let content = linearGroup.contents[index]
                     GeneralTokenView(token: content, treeLocation: self.treeLocation.adding(pathComponent: content.id), namespace: namespace)
                 }
             }

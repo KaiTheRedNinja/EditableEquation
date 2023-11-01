@@ -17,13 +17,12 @@ struct LinearOperationToken: SingleEquationToken {
         case plus, minus, times, divide
     }
 
-    func canPrecede(_ other: EquationToken?) -> Bool {
+    func canPrecede(_ other: (any SingleEquationToken)?) -> Bool {
         if let other {
-            switch other {
-            case .linearOperation(let linearOperation):
+            if let linearOperation = other as? LinearOperationToken {
                 // A linear operation can only precede a minus operation
                 return linearOperation.operation == .minus
-            default:
+            } else {
                 // Linear operations can go before numbers, or pretty much any other token
                 return true
             }
@@ -33,13 +32,11 @@ struct LinearOperationToken: SingleEquationToken {
         }
     }
 
-    func canSucceed(_ other: EquationToken?) -> Bool {
+    func canSucceed(_ other: (any SingleEquationToken)?) -> Bool {
         if let other {
-            switch other {
-            case .linearOperation:
-                // Only a minus can succeed a linear operation
+            if other is LinearOperationToken {
                 return self.operation == .minus
-            default:
+            } else {
                 // Linear operations can go after numbers, or pretty much any other token
                 return true
             }

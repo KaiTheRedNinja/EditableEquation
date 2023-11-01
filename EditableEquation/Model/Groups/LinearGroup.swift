@@ -11,24 +11,53 @@ struct LinearGroup: GroupEquationToken {
     var id: UUID = .init()
     private(set) var name: String = "LinearGroup"
 
-    var contents: [EquationToken]
+    var contents: [any SingleEquationToken]
     var hasBrackets: Bool
 
-    init(id: UUID = .init(), contents: [EquationToken], hasBrackets: Bool = false) {
+    init(id: UUID = .init(), contents: [any SingleEquationToken], hasBrackets: Bool = false) {
         self.id = id
         self.contents = contents
         self.hasBrackets = hasBrackets
     }
 
-    func canPrecede(_ other: EquationToken?) -> Bool {
+    // MARK: Codable
+    enum Keys: CodingKey {
+        case name, contents, hasBrackets
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: Keys.self)
+        try container.encode(name, forKey: .name)
+        try container.encode(contents.stringEncoded()?.data(using: .utf8), forKey: .contents)
+        try container.encode(hasBrackets, forKey: .hasBrackets)
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: Keys.self)
+
+        let contentsData = try container.decode(Data.self, forKey: .contents)
+        guard let contentsString = String(data: contentsData, encoding: .utf8),
+              let contents = [any SingleEquationToken](decoding: contentsString)
+        else {
+            throw DecodingError.valueNotFound(
+                Data.self,
+                .init(
+                    codingPath: decoder.codingPath,
+                    debugDescription: "No contents found"
+                )
+            )
+        }
+        self.contents = contents
+        self.hasBrackets = try container.decode(Bool.self, forKey: .hasBrackets)
+    }
+
+    func canPrecede(_ other: (any SingleEquationToken)?) -> Bool {
         guard let other else { return true } // LinearGroups can always start or end groups
         if !hasBrackets { return false } // LinearGroups need brackets to go before others
         
         // LinearGroups can always precede operations
-        switch other {
-        case .linearOperation:
+        if other is LinearOperationToken {
             return true
-        default: break
         }
 
         // LinearGroups can precede bracketed things
@@ -40,24 +69,12 @@ struct LinearGroup: GroupEquationToken {
         return false
     }
 
-    func canSucceed(_ other: EquationToken?) -> Bool {
-        guard let other else { return true } // LinearGroups can always start or end groups
+    func canSucceed(_ other: (any SingleEquationToken)?) -> Bool {
+        if other == nil { return true } // LinearGroups can always start or end groups
         if !hasBrackets { return false } // LinearGroups need brackets to go after others
 
-        // LinearGroups can always succeed operations
-        switch other {
-        case .linearOperation:
-            return true
-        default: break
-        }
-
-        // LinearGroups can succeed bracketed things
-        if other.groupRepresentation?.canDirectlyMultiply() ?? false {
-            return true
-        }
-
-        // Else, no
-        return false
+        // LinearGroups can succeed pretty much anything
+        return true
     }
 
     func validWhenChildrenValid() -> Bool { false }
@@ -65,33 +82,33 @@ struct LinearGroup: GroupEquationToken {
 
     /// Optimises the LinearGroup's representation. It returns a modified version of this instance, keeping the ID the same.
     /// This function is to be called every time the equation is modified, and has no effects on the equation's appearance.
-    func optimised() -> LinearGroup {
+    func optimised() -> any SingleEquationToken {
         var contentsCopy = contents
 
         // optimise everything
         for index in 0..<contentsCopy.count {
-            contentsCopy[index] = contentsCopy[index].optimised()
+            contentsCopy[index] = contentsCopy[index].groupRepresentation?.optimised() ?? contentsCopy[index]
         }
 
         // For some of these, we iterate over the array backwards, to prevent access errors
 
         // break out non-bracket LinearGroups
         for index in (0..<contentsCopy.count).reversed() {
-            switch contentsCopy[index] {
-            case .linearGroup(let linearGroup):
+            if let linearGroup = contentsCopy[index] as? LinearGroup {
                 if !linearGroup.hasBrackets {
                     contentsCopy.remove(at: index)
-                    contentsCopy.insert(contentsOf: linearGroup.optimised().contents, at: index)
+                    guard let linearOptimised = linearGroup.optimised() as? LinearGroup else {
+                        continue
+                    }
+                    contentsCopy.insert(contentsOf: linearOptimised.contents, at: index)
                 }
-            default: continue
             }
         }
 
         // Turn consecutive number tokens into a single token
         var lastNumberToken: Int? = nil
         for index in (0..<contentsCopy.count).reversed() {
-            switch contentsCopy[index] {
-            case .number(let number):
+            if let number = contentsCopy[index] as? NumberToken {
                 if let lastNumberToken {
                     // get the last token, and integrate it into this token. Simple string concat.
                     contentsCopy.remove(at: index+1)
@@ -100,20 +117,18 @@ struct LinearGroup: GroupEquationToken {
 
                     let newDigit = lastNumberToken + number.digit * Int(pow(10, Double(1 + lastNumberTokenMagnitude)))
 
-                    contentsCopy[index] = .number(
-                        NumberToken(
-                            id: contentsCopy[index].id,
-                            digit: newDigit
-                        )
+                    contentsCopy[index] = NumberToken(
+                        id: contentsCopy[index].id,
+                        digit: newDigit
                     )
                 }
                 lastNumberToken = number.digit
-            default:
+            } else {
                 lastNumberToken = nil
             }
         }
 
-        return .init(id: self.id, contents: contentsCopy, hasBrackets: self.hasBrackets)
+        return LinearGroup(id: self.id, contents: contentsCopy, hasBrackets: self.hasBrackets)
     }
 
     func canInsert(at insertionLocation: InsertionPoint.InsertionLocation) -> Bool {
@@ -125,46 +140,48 @@ struct LinearGroup: GroupEquationToken {
         }
     }
 
-    func inserting(token: EquationToken, at insertionPoint: InsertionPoint) -> LinearGroup {
+    func inserting(token: any SingleEquationToken, at insertionPoint: InsertionPoint) -> any SingleEquationToken {
         var mutableSelf = self
 
         guard let id = insertionPoint.treeLocation.pathComponents.first,
               let insertionIndex = contents.firstIndex(where: { $0.id == id })
-        else { return mutableSelf }
+        else {
+            // If there are no items in the path, it must be a `within`
+            if insertionPoint.treeLocation.pathComponents.isEmpty &&
+               insertionPoint.insertionLocation == .within &&
+               mutableSelf.contents.isEmpty {
+                mutableSelf.contents = [token]
+            }
+            return mutableSelf
+        }
 
         // If theres only one item in the path, its a direct child of this linear group
-        if insertionPoint.treeLocation.pathComponents.count == 1 {
+        // Except `within`, that is handled by the child itself.
+        if insertionPoint.treeLocation.pathComponents.count == 1 && insertionPoint.insertionLocation != .within {
             switch insertionPoint.insertionLocation {
             case .leading:
                 mutableSelf.contents.insert(token, at: insertionIndex)
             case .trailing:
                 mutableSelf.contents.insert(token, at: insertionIndex+1)
-            case .within:
-                switch mutableSelf.contents[insertionIndex] {
-                case .linearGroup(var group):
-                    guard group.contents.isEmpty else { return mutableSelf }
-                    group.contents = [token]
-                    mutableSelf.contents[insertionIndex] = .linearGroup(group)
-                default: return mutableSelf
-                }
+            default: fatalError() // should never reach here
             }
 
             return mutableSelf
         }
 
         // Else, there must be more. Recursively call the function.
-        mutableSelf.contents[insertionIndex] = mutableSelf.contents[insertionIndex].inserting(
+        mutableSelf.contents[insertionIndex] = mutableSelf.contents[insertionIndex].groupRepresentation?.inserting(
             token: token,
             at: .init(
                 treeLocation: insertionPoint.treeLocation.removingFirstPathComponent(),
                 insertionLocation: insertionPoint.insertionLocation
             )
-        )
+        ) ?? mutableSelf.contents[insertionIndex]
 
         return mutableSelf
     }
 
-    func removing(at location: TokenTreeLocation) -> LinearGroup {
+    func removing(at location: TokenTreeLocation) -> any SingleEquationToken {
         var mutableSelf = self
 
         guard let id = location.pathComponents.first,
@@ -179,14 +196,14 @@ struct LinearGroup: GroupEquationToken {
         }
 
         // Else, there must be more. Recursively call the function.
-        mutableSelf.contents[removalIndex] = mutableSelf.contents[removalIndex].removing(
+        mutableSelf.contents[removalIndex] = mutableSelf.contents[removalIndex].groupRepresentation?.removing(
             at: location.removingFirstPathComponent()
-        )
+        ) ?? mutableSelf.contents[removalIndex]
 
         return mutableSelf
     }
 
-    func replacing(token: EquationToken, at location: TokenTreeLocation) -> LinearGroup {
+    func replacing(token: any SingleEquationToken, at location: TokenTreeLocation) -> any SingleEquationToken {
         var mutableSelf = self
 
         guard let id = location.pathComponents.first,
@@ -201,33 +218,33 @@ struct LinearGroup: GroupEquationToken {
         }
 
         // Else, there must be more. Recursively call the function.
-        mutableSelf.contents[replacementIndex] = mutableSelf.contents[replacementIndex].replacing(
+        mutableSelf.contents[replacementIndex] = mutableSelf.contents[replacementIndex].groupRepresentation?.replacing(
             token: token,
             at: location.removingFirstPathComponent()
-        )
+        ) ?? mutableSelf.contents[replacementIndex]
 
         return mutableSelf
     }
 
-    func child(with id: UUID) -> EquationToken? {
+    func child(with id: UUID) -> (any SingleEquationToken)? {
         return contents.first(where: { $0.id == id })
     }
 
-    func child(leftOf id: UUID) -> EquationToken? {
+    func child(leftOf id: UUID) -> (any SingleEquationToken)? {
         guard let index = contents.firstIndex(where: { $0.id == id }), index > 0 else { return nil }
         return contents[index-1]
     }
 
-    func child(rightOf id: UUID) -> EquationToken? {
+    func child(rightOf id: UUID) -> (any SingleEquationToken)? {
         guard let index = contents.firstIndex(where: { $0.id == id }), index < contents.count-1 else { return nil }
         return contents[index+1]
     }
 
-    func firstChild() -> EquationToken? {
+    func firstChild() -> (any SingleEquationToken)? {
         contents.first
     }
 
-    func lastChild() -> EquationToken? {
+    func lastChild() -> (any SingleEquationToken)? {
         contents.last
     }
 }

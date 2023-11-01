@@ -23,8 +23,8 @@ enum EquationTokenCoding: ProtocolCoding {
     struct MinimalEquationToken: SingleEquationToken {
         var id: UUID
         var name: String
-        func canPrecede(_ other: EquationToken?) -> Bool { fatalError() }
-        func canSucceed(_ other: EquationToken?) -> Bool { fatalError() }
+        func canPrecede(_ other: (any SingleEquationToken)?) -> Bool { fatalError() }
+        func canSucceed(_ other: (any SingleEquationToken)?) -> Bool { fatalError() }
     }
 }
 

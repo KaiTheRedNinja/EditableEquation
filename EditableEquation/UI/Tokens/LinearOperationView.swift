@@ -31,11 +31,9 @@ struct LinearOperationView: TokenView {
         Color.red.opacity(0.0001).onTapGesture {
             withAnimation {
                 manager.replace(
-                    token: .linearOperation(
-                        .init(
-                            id: linearOperation.id,
-                            operation: linearOperation.operation.next()
-                        )
+                    token: LinearOperationToken(
+                        id: linearOperation.id,
+                        operation: linearOperation.operation.next()
                     ),
                     at: treeLocation
                 )

@@ -57,28 +57,28 @@ struct DivisionGroupView: TokenView {
     DivisionGroupView(
         divisionGroup: .init(
             numerator: [
-                .number(.init(digit: 69)),
-                .linearOperation(.init(operation: .minus)),
-                .number(.init(digit: 420)),
+                NumberToken(digit: 69),
+                LinearOperationToken(operation: .minus),
+                NumberToken(digit: 420)
             ],
             denominator: [
-                .linearGroup(.init(
+                LinearGroup(
                     contents: [
-                        .number(.init(digit: 4)),
-                        .linearOperation(.init(operation: .minus)),
-                        .number(.init(digit: 9))
+                        NumberToken(digit: 4),
+                        LinearOperationToken(operation: .minus),
+                        NumberToken(digit: 9)
                     ],
                     hasBrackets: true
-                )),
-                .linearOperation(.init(operation: .times)),
-                .linearGroup(.init(
+                ),
+                LinearOperationToken(operation: .times),
+                LinearGroup(
                     contents: [],
                     hasBrackets: true
-                )),
-                .linearOperation(.init(operation: .times)),
-                .number(.init(digit: 5)),
-                .linearOperation(.init(operation: .plus)),
-                .number(.init(digit: 10))
+                ),
+                LinearOperationToken(operation: .times),
+                NumberToken(digit: 5),
+                LinearOperationToken(operation: .plus),
+                NumberToken(digit: 10)
             ]),
         treeLocation: .init(pathComponents: []),
         namespace: Namespace().wrappedValue

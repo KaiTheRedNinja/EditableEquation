@@ -17,7 +17,8 @@ class EquationManager: ObservableObject {
 
     /// A function that chooses either `insert` or `moved` based on the data provided
     func manage(data: Data, droppedAt insertionPoint: InsertionPoint) {
-        if let token = try? JSONDecoder().decode(EquationToken.self, from: data) {
+        if let source = String(data: data, encoding: .utf8),
+           let token = try? EquationTokenCoding.decodeSingle(source: source) {
             insert(token: token, at: insertionPoint)
         }
         if let location = try? JSONDecoder().decode(TokenTreeLocation.self, from: data) {
@@ -25,9 +26,9 @@ class EquationManager: ObservableObject {
         }
     }
 
-    func insert(token: EquationToken, at insertionPoint: InsertionPoint) {
-        root = root.inserting(token: token, at: insertionPoint)
-        root = root.optimised()
+    func insert(token: any SingleEquationToken, at insertionPoint: InsertionPoint) {
+        root = (root.inserting(token: token, at: insertionPoint) as? LinearGroup) ?? root
+        root = (root.optimised() as? LinearGroup) ?? root
     }
 
     func backspace() {
@@ -46,19 +47,20 @@ class EquationManager: ObservableObject {
     }
 
     func remove(at location: TokenTreeLocation) {
-        root = root.removing(at: location)
-        root = root.optimised()
+        root = (root.removing(at: location) as? LinearGroup) ?? root
+        root = (root.optimised() as? LinearGroup) ?? root
     }
 
-    func replace(token: EquationToken, at location: TokenTreeLocation) {
-        root = root.replacing(token: token, at: location)
-        root = root.optimised()
+    func replace(token: any SingleEquationToken, at location: TokenTreeLocation) {
+        root = (root.replacing(token: token, at: location) as? LinearGroup) ?? root
+        root = (root.optimised() as? LinearGroup) ?? root
     }
 
     func move(from initialLocation: TokenTreeLocation, to insertionPoint: InsertionPoint) {
         guard let token = tokenAt(location: initialLocation) else { return }
-        root = root.removing(at: initialLocation).inserting(token: token, at: insertionPoint)
-        root = root.optimised()
+        root = (root.removing(at: initialLocation) as? LinearGroup) ?? root
+        root = (root.inserting(token: token, at: insertionPoint) as? LinearGroup) ?? root
+        root = (root.optimised() as? LinearGroup) ?? root
     }
 
     func moveLeft() {
@@ -91,7 +93,7 @@ class EquationManager: ObservableObject {
         self.insertionPoint = newInsertion
     }
 
-    func validate(token: EquationToken) -> Bool {
+    func validate(token: (any SingleEquationToken)) -> Bool {
         if let groupRepresentation = token.groupRepresentation {
             // If the token is a group, check its childrens' individual validity
             var child = groupRepresentation.firstChild()
@@ -136,11 +138,11 @@ class EquationManager: ObservableObject {
 }
 
 extension EquationManager {
-    private func tokenAt(location: TokenTreeLocation) -> EquationToken? {
-        var currentToken: EquationToken = .linearGroup(root)
+    private func tokenAt(location: TokenTreeLocation) -> (any SingleEquationToken)? {
+        var currentToken: any SingleEquationToken = root
 
         // If theres no last item, the path components is empty and it refers to root
-        guard let lastItem = location.pathComponents.last else { return .linearGroup(root) }
+        guard let lastItem = location.pathComponents.last else { return root }
 
         for component in location.pathComponents.dropLast(1) {
             guard let newCurrentToken = currentToken.groupRepresentation?.child(with: component) else { return nil }
@@ -151,8 +153,8 @@ extension EquationManager {
     }
 
     /// The token to the left of the location, if it exists
-    private func tokenLeading(location: TokenTreeLocation) -> EquationToken? {
-        var currentToken: EquationToken = .linearGroup(root)
+    private func tokenLeading(location: TokenTreeLocation) -> (any SingleEquationToken)? {
+        var currentToken: any SingleEquationToken = root
 
         guard let lastItem = location.pathComponents.last else { return nil }
 
@@ -165,8 +167,8 @@ extension EquationManager {
     }
 
     /// The token to the right of the location, if it exists
-    private func tokenTrailing(location: TokenTreeLocation) -> EquationToken? {
-        var currentToken: EquationToken = .linearGroup(root)
+    private func tokenTrailing(location: TokenTreeLocation) -> (any SingleEquationToken)? {
+        var currentToken: any SingleEquationToken = root
 
         guard let lastItem = location.pathComponents.last else { return nil }
 
