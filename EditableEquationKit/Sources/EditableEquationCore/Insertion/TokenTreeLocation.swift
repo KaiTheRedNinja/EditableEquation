@@ -7,23 +7,27 @@
 
 import Foundation
 
-struct TokenTreeLocation: Codable, Hashable {
-    private(set) var pathComponents: [UUID]
+public struct TokenTreeLocation: Codable, Hashable {
+    public private(set) var pathComponents: [UUID]
 
-    func adding(pathComponent: UUID) -> TokenTreeLocation {
+    public init(pathComponents: [UUID]) {
+        self.pathComponents = pathComponents
+    }
+
+    public func adding(pathComponent: UUID) -> TokenTreeLocation {
         var mutableSelf = self
         mutableSelf.pathComponents.append(pathComponent)
         return mutableSelf
     }
 
-    func removingLastPathComponent() -> TokenTreeLocation {
+    public func removingLastPathComponent() -> TokenTreeLocation {
         guard !pathComponents.isEmpty else { return self }
         var mutableSelf = self
         _ = mutableSelf.pathComponents.removeLast()
         return mutableSelf
     }
 
-    func removingFirstPathComponent() -> TokenTreeLocation {
+    public func removingFirstPathComponent() -> TokenTreeLocation {
         guard !pathComponents.isEmpty else { return self }
         var mutableSelf = self
         _ = mutableSelf.pathComponents.removeFirst()

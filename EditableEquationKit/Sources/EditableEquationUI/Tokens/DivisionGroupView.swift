@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import EditableEquationCore
+import EditableEquationKit
 
 struct DivisionGroupView: TokenView {
     var divisionGroup: DivisionGroup

@@ -6,21 +6,22 @@
 //
 
 import SwiftUI
+import EditableEquationKit
 
-struct EquationView: View {
+public struct EquationView: View {
     @ObservedObject var equationManager: EquationManager
 
     @Namespace var namespace
 
-    init(root: LinearGroup) {
+    public init(root: LinearGroup) {
         self.equationManager = .init(root: root)
     }
 
-    init(manager: EquationManager) {
+    public init(manager: EquationManager) {
         self.equationManager = manager
     }
 
-    var body: some View {
+    public var body: some View {
         GeneralTokenView(
             token: equationManager.root,
             treeLocation: .init(pathComponents: []),

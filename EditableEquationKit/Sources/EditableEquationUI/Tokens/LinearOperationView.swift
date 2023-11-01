@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import EditableEquationCore
+import EditableEquationKit
 
 struct LinearOperationView: TokenView {
     var linearOperation: LinearOperationToken

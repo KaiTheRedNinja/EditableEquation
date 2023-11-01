@@ -6,18 +6,24 @@
 //
 
 import Foundation
+import EditableEquationCore
 
-struct LinearOperationToken: SingleEquationToken {
-    var id: UUID = .init()
-    private(set) var name: String = "LinearOperation"
+public struct LinearOperationToken: SingleEquationToken {
+    public var id: UUID = .init()
+    public private(set) var name: String = "LinearOperation"
 
-    var operation: LinearOperation
+    public var operation: LinearOperation
 
-    enum LinearOperation: Codable {
+    public init(id: UUID = .init(), operation: LinearOperation) {
+        self.id = id
+        self.operation = operation
+    }
+
+    public enum LinearOperation: Codable {
         case plus, minus, times, divide
     }
 
-    func canPrecede(_ other: (any SingleEquationToken)?) -> Bool {
+    public func canPrecede(_ other: (any SingleEquationToken)?) -> Bool {
         if let other {
             if let linearOperation = other as? LinearOperationToken {
                 // A linear operation can only precede a minus operation
@@ -32,7 +38,7 @@ struct LinearOperationToken: SingleEquationToken {
         }
     }
 
-    func canSucceed(_ other: (any SingleEquationToken)?) -> Bool {
+    public func canSucceed(_ other: (any SingleEquationToken)?) -> Bool {
         if let other {
             if other is LinearOperationToken {
                 return self.operation == .minus

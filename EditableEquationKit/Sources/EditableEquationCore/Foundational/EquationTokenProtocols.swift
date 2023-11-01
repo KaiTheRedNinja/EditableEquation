@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol SingleEquationToken: Identifiable, Codable where ID == UUID {
+public protocol SingleEquationToken: Identifiable, Codable where ID == UUID {
     /// This should be a string unique to the *type*. For example, all `NumberToken`s should have the same `name`.
     /// `name` cannot be a computed property nor immutable, as it needs to be encoded and decoded.
     var name: String { get }
@@ -21,7 +21,7 @@ protocol SingleEquationToken: Identifiable, Codable where ID == UUID {
     func canSucceed(_ other: (any SingleEquationToken)?) -> Bool
 }
 
-extension SingleEquationToken {
+public extension SingleEquationToken {
     var groupRepresentation: (any GroupEquationToken)? {
         if self is (any GroupEquationToken) {
             print("\(name) is group")
@@ -31,7 +31,7 @@ extension SingleEquationToken {
     }
 }
 
-protocol GroupEquationToken: SingleEquationToken {
+public protocol GroupEquationToken: SingleEquationToken {
     /// Returns a boolean representing, given all children token are valid, this token is valid.
     /// If `true` is returned, `canPrecede` and `canSucceed` will not be called on this token's children.
     func validWhenChildrenValid() -> Bool

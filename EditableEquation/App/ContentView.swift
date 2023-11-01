@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import EditableEquationKit
+import EditableEquationUI
 
 struct ContentView: View {
     @ObservedObject var manager: EquationManager = .init(

@@ -6,19 +6,27 @@
 //
 
 import SwiftUI
+import EditableEquationCore
+import EditableEquationKit
 
-protocol TokenView: View {
+public protocol TokenView: View {
     var treeLocation: TokenTreeLocation { get }
     var namespace: Namespace.ID { get }
 }
 
-struct GeneralTokenView: TokenView {
-    var token: any SingleEquationToken
-    var treeLocation: TokenTreeLocation
+public struct GeneralTokenView: TokenView {
+    public var token: any SingleEquationToken
+    public var treeLocation: TokenTreeLocation
 
-    var namespace: Namespace.ID
+    public var namespace: Namespace.ID
 
-    var body: some View {
+    init(token: any SingleEquationToken, treeLocation: TokenTreeLocation, namespace: Namespace.ID) {
+        self.token = token
+        self.treeLocation = treeLocation
+        self.namespace = namespace
+    }
+
+    public var body: some View {
         if let numberToken = token as? NumberToken {
             NumberTokenView(number: numberToken, treeLocation: treeLocation, namespace: namespace)
         }

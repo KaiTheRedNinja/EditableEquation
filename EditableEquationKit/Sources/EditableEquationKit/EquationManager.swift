@@ -6,17 +6,24 @@
 //
 
 import Foundation
+import EditableEquationCore
 
-class EquationManager: ObservableObject {
-    @Published private(set) var root: LinearGroup
-    @Published var insertionPoint: InsertionPoint?
+public class EquationManager: ObservableObject {
+    @Published public private(set) var root: LinearGroup
+    @Published public var insertionPoint: InsertionPoint?
 
-    init(root: LinearGroup) {
+    public init(root: LinearGroup) {
         self.root = root
+
+        // register all the types for use
+        EquationTokenCoding.register(type: NumberToken.self, for: "Number")
+        EquationTokenCoding.register(type: LinearOperationToken.self, for: "LinearOperation")
+        EquationTokenCoding.register(type: LinearGroup.self, for: "LinearGroup")
+        EquationTokenCoding.register(type: DivisionGroup.self, for: "DivisionGroup")
     }
 
     /// A function that chooses either `insert` or `moved` based on the data provided
-    func manage(data: Data, droppedAt insertionPoint: InsertionPoint) {
+    public func manage(data: Data, droppedAt insertionPoint: InsertionPoint) {
         if let source = String(data: data, encoding: .utf8),
            let token = try? EquationTokenCoding.decodeSingle(source: source) {
             insert(token: token, at: insertionPoint)
@@ -26,12 +33,12 @@ class EquationManager: ObservableObject {
         }
     }
 
-    func insert(token: any SingleEquationToken, at insertionPoint: InsertionPoint) {
+    public func insert(token: any SingleEquationToken, at insertionPoint: InsertionPoint) {
         root = (root.inserting(token: token, at: insertionPoint) as? LinearGroup) ?? root
         root = (root.optimised() as? LinearGroup) ?? root
     }
 
-    func backspace() {
+    public func backspace() {
         guard let insertionPoint else { return }
         switch insertionPoint.insertionLocation {
         case .trailing, .within:
@@ -46,24 +53,24 @@ class EquationManager: ObservableObject {
         }
     }
 
-    func remove(at location: TokenTreeLocation) {
+    public func remove(at location: TokenTreeLocation) {
         root = (root.removing(at: location) as? LinearGroup) ?? root
         root = (root.optimised() as? LinearGroup) ?? root
     }
 
-    func replace(token: any SingleEquationToken, at location: TokenTreeLocation) {
+    public func replace(token: any SingleEquationToken, at location: TokenTreeLocation) {
         root = (root.replacing(token: token, at: location) as? LinearGroup) ?? root
         root = (root.optimised() as? LinearGroup) ?? root
     }
 
-    func move(from initialLocation: TokenTreeLocation, to insertionPoint: InsertionPoint) {
+    public func move(from initialLocation: TokenTreeLocation, to insertionPoint: InsertionPoint) {
         guard let token = tokenAt(location: initialLocation) else { return }
         root = (root.removing(at: initialLocation) as? LinearGroup) ?? root
         root = (root.inserting(token: token, at: insertionPoint) as? LinearGroup) ?? root
         root = (root.optimised() as? LinearGroup) ?? root
     }
 
-    func moveLeft() {
+    public func moveLeft() {
         guard let insertionPoint else { return }
         var newInsertion = insertionLeft(of: insertionPoint)
         while true { // NOTE: Check this code to ensure it can never cause infinite recursion
@@ -78,7 +85,7 @@ class EquationManager: ObservableObject {
         self.insertionPoint = newInsertion
     }
 
-    func moveRight() {
+    public func moveRight() {
         guard let insertionPoint else { return }
         var newInsertion = insertionRight(of: insertionPoint)
         while true { // NOTE: Check this code to ensure it can never cause infinite recursion
@@ -93,7 +100,7 @@ class EquationManager: ObservableObject {
         self.insertionPoint = newInsertion
     }
 
-    func validate(token: (any SingleEquationToken)) -> Bool {
+    public func validate(token: (any SingleEquationToken)) -> Bool {
         if let groupRepresentation = token.groupRepresentation {
             // If the token is a group, check its childrens' individual validity
             var child = groupRepresentation.firstChild()

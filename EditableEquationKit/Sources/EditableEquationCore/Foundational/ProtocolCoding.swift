@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum ProtocolCodingError: Error {
+public enum ProtocolCodingError: Error {
     case typeMismatch
     case eraseFailure
     case unregisteredName
@@ -15,8 +15,8 @@ enum ProtocolCodingError: Error {
     case decodingError
 }
 
-struct ProtocolCodingProvider<P> {
-    init<T: Codable>(type _: T.Type) {
+public struct ProtocolCodingProvider<P> {
+    public init<T: Codable>(type _: T.Type) {
         encode = { item in
             guard let item = item as? T else { throw ProtocolCodingError.typeMismatch }
             return try JSONEncoder().encode(item)
@@ -33,7 +33,7 @@ struct ProtocolCodingProvider<P> {
     var decode: (Data) throws -> P
 }
 
-protocol ProtocolCoding {
+public protocol ProtocolCoding {
     associatedtype WrappedProtocol
     /// A type conforming to `WrappedProtocol` that can be decoded and type casted to `WrappedProtocol`. Only needs to contain the name.
     associatedtype MinimalWrappedProtocol: Codable
@@ -41,7 +41,7 @@ protocol ProtocolCoding {
     static var name: KeyPath<WrappedProtocol, String> { get }
 }
 
-extension ProtocolCoding {
+public extension ProtocolCoding {
     static func register<P: Codable>(type _: P.Type, for key: String) {
         registeredProviders[key] = .init(type: P.self)
     }

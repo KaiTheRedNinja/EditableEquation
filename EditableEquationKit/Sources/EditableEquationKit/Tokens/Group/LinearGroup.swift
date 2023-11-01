@@ -6,22 +6,23 @@
 //
 
 import Foundation
+import EditableEquationCore
 
-struct LinearGroup: GroupEquationToken {
-    var id: UUID = .init()
-    private(set) var name: String = "LinearGroup"
+public struct LinearGroup: GroupEquationToken {
+    public var id: UUID = .init()
+    public private(set) var name: String = "LinearGroup"
 
-    var contents: [any SingleEquationToken]
-    var hasBrackets: Bool
+    public var contents: [any SingleEquationToken]
+    public var hasBrackets: Bool
 
-    init(id: UUID = .init(), contents: [any SingleEquationToken], hasBrackets: Bool = false) {
+    public init(id: UUID = .init(), contents: [any SingleEquationToken], hasBrackets: Bool = false) {
         self.id = id
         self.contents = contents
         self.hasBrackets = hasBrackets
     }
 
     // MARK: Codable
-    enum Keys: CodingKey {
+    public enum Keys: CodingKey {
         case name, contents, hasBrackets
     }
 
@@ -51,7 +52,7 @@ struct LinearGroup: GroupEquationToken {
         self.hasBrackets = try container.decode(Bool.self, forKey: .hasBrackets)
     }
 
-    func canPrecede(_ other: (any SingleEquationToken)?) -> Bool {
+    public func canPrecede(_ other: (any SingleEquationToken)?) -> Bool {
         guard let other else { return true } // LinearGroups can always start or end groups
         if !hasBrackets { return false } // LinearGroups need brackets to go before others
         
@@ -69,7 +70,7 @@ struct LinearGroup: GroupEquationToken {
         return false
     }
 
-    func canSucceed(_ other: (any SingleEquationToken)?) -> Bool {
+    public func canSucceed(_ other: (any SingleEquationToken)?) -> Bool {
         if other == nil { return true } // LinearGroups can always start or end groups
         if !hasBrackets { return false } // LinearGroups need brackets to go after others
 
@@ -77,12 +78,12 @@ struct LinearGroup: GroupEquationToken {
         return true
     }
 
-    func validWhenChildrenValid() -> Bool { false }
-    func canDirectlyMultiply() -> Bool { hasBrackets }
+    public func validWhenChildrenValid() -> Bool { false }
+    public func canDirectlyMultiply() -> Bool { hasBrackets }
 
     /// Optimises the LinearGroup's representation. It returns a modified version of this instance, keeping the ID the same.
     /// This function is to be called every time the equation is modified, and has no effects on the equation's appearance.
-    func optimised() -> any SingleEquationToken {
+    public func optimised() -> any SingleEquationToken {
         var contentsCopy = contents
 
         // optimise everything
@@ -131,7 +132,7 @@ struct LinearGroup: GroupEquationToken {
         return LinearGroup(id: self.id, contents: contentsCopy, hasBrackets: self.hasBrackets)
     }
 
-    func canInsert(at insertionLocation: InsertionPoint.InsertionLocation) -> Bool {
+    public func canInsert(at insertionLocation: InsertionPoint.InsertionLocation) -> Bool {
         switch insertionLocation {
         case .leading, .trailing:
             return hasBrackets
@@ -140,7 +141,7 @@ struct LinearGroup: GroupEquationToken {
         }
     }
 
-    func inserting(token: any SingleEquationToken, at insertionPoint: InsertionPoint) -> any SingleEquationToken {
+    public func inserting(token: any SingleEquationToken, at insertionPoint: InsertionPoint) -> any SingleEquationToken {
         var mutableSelf = self
 
         guard let id = insertionPoint.treeLocation.pathComponents.first,
@@ -181,7 +182,7 @@ struct LinearGroup: GroupEquationToken {
         return mutableSelf
     }
 
-    func removing(at location: TokenTreeLocation) -> any SingleEquationToken {
+    public func removing(at location: TokenTreeLocation) -> any SingleEquationToken {
         var mutableSelf = self
 
         guard let id = location.pathComponents.first,
@@ -203,7 +204,7 @@ struct LinearGroup: GroupEquationToken {
         return mutableSelf
     }
 
-    func replacing(token: any SingleEquationToken, at location: TokenTreeLocation) -> any SingleEquationToken {
+    public func replacing(token: any SingleEquationToken, at location: TokenTreeLocation) -> any SingleEquationToken {
         var mutableSelf = self
 
         guard let id = location.pathComponents.first,
@@ -226,25 +227,25 @@ struct LinearGroup: GroupEquationToken {
         return mutableSelf
     }
 
-    func child(with id: UUID) -> (any SingleEquationToken)? {
+    public func child(with id: UUID) -> (any SingleEquationToken)? {
         return contents.first(where: { $0.id == id })
     }
 
-    func child(leftOf id: UUID) -> (any SingleEquationToken)? {
+    public func child(leftOf id: UUID) -> (any SingleEquationToken)? {
         guard let index = contents.firstIndex(where: { $0.id == id }), index > 0 else { return nil }
         return contents[index-1]
     }
 
-    func child(rightOf id: UUID) -> (any SingleEquationToken)? {
+    public func child(rightOf id: UUID) -> (any SingleEquationToken)? {
         guard let index = contents.firstIndex(where: { $0.id == id }), index < contents.count-1 else { return nil }
         return contents[index+1]
     }
 
-    func firstChild() -> (any SingleEquationToken)? {
+    public func firstChild() -> (any SingleEquationToken)? {
         contents.first
     }
 
-    func lastChild() -> (any SingleEquationToken)? {
+    public func lastChild() -> (any SingleEquationToken)? {
         contents.last
     }
 }

@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import EditableEquationCore
+import EditableEquationKit
 
 struct NumberTokenView: TokenView {
     var number: NumberToken
