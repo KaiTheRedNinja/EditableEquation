@@ -86,7 +86,7 @@ struct ContentView: View {
                 }
             }
 
-            Text("Is valid: \(manager.validate(token: manager.root).description)")
+//            Text("Is valid: \(manager.validate(token: manager.root).description)")
         }
     }
 }

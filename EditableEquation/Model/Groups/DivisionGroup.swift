@@ -34,7 +34,7 @@ struct DivisionGroup: GroupEquationToken {
 
     func optimised() -> any SingleEquationToken {
         guard let numeratorOptimised = numerator.optimised() as? LinearGroup,
-              let denominatorOptimised = numerator.optimised() as? LinearGroup
+              let denominatorOptimised = denominator.optimised() as? LinearGroup
         else { return self }
 
         return DivisionGroup(

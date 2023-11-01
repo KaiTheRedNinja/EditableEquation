@@ -23,7 +23,11 @@ protocol SingleEquationToken: Identifiable, Codable where ID == UUID {
 
 extension SingleEquationToken {
     var groupRepresentation: (any GroupEquationToken)? {
-        return self as? (any GroupEquationToken)
+        if self is (any GroupEquationToken) {
+            print("\(name) is group")
+            return self as? (any GroupEquationToken)
+        }
+        return nil
     }
 }
 
