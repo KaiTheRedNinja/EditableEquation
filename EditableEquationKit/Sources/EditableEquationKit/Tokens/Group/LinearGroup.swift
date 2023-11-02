@@ -174,7 +174,7 @@ public struct LinearGroup: GroupEquationToken {
         mutableSelf.contents[insertionIndex] = mutableSelf.contents[insertionIndex].groupRepresentation?.inserting(
             token: token,
             at: .init(
-                treeLocation: insertionPoint.treeLocation.removingFirstPathComponent(),
+                treeLocation: insertionPoint.treeLocation.removingFirstParent(),
                 insertionLocation: insertionPoint.insertionLocation
             )
         ) ?? mutableSelf.contents[insertionIndex]
@@ -198,7 +198,7 @@ public struct LinearGroup: GroupEquationToken {
 
         // Else, there must be more. Recursively call the function.
         mutableSelf.contents[removalIndex] = mutableSelf.contents[removalIndex].groupRepresentation?.removing(
-            at: location.removingFirstPathComponent()
+            at: location.removingFirstParent()
         ) ?? mutableSelf.contents[removalIndex]
 
         return mutableSelf
@@ -221,7 +221,7 @@ public struct LinearGroup: GroupEquationToken {
         // Else, there must be more. Recursively call the function.
         mutableSelf.contents[replacementIndex] = mutableSelf.contents[replacementIndex].groupRepresentation?.replacing(
             token: token,
-            at: location.removingFirstPathComponent()
+            at: location.removingFirstParent()
         ) ?? mutableSelf.contents[replacementIndex]
 
         return mutableSelf

@@ -32,7 +32,15 @@ struct SimpleDropOverlay: View {
     @EnvironmentObject var manager: EquationManager
 
     var body: some View {
-        Color.blue.opacity(0.0001)
+        Color.red.opacity(manager.error == insertionPoint ? 1 : 0.0001)
+            .overlay(alignment: cursorAlignment) {
+                if manager.insertionPoint == insertionPoint {
+                    RoundedRectangle(cornerRadius: 3)
+                        .fill(Color.accentColor)
+                        .frame(width: 3)
+                        .matchedGeometryEffect(id: "cursor", in: namespace)
+                }
+            }
             .dropDestination(for: Data.self) { items, location in
                 for item in items {
                     withAnimation {
@@ -46,21 +54,15 @@ struct SimpleDropOverlay: View {
             } isTargeted: { isTargeted in
                 print("Is targeted: \(isTargeted)")
                 if isTargeted {
-                    manager.insertionPoint = insertionPoint
+                    withAnimation {
+                        manager.insertionPoint = insertionPoint
+                    }
                 } else {
                     manager.insertionPoint = nil
                 }
             }
             .onTapGesture {
                 manager.insertionPoint = insertionPoint
-            }
-            .background(alignment: cursorAlignment) {
-                if manager.insertionPoint == insertionPoint {
-                    RoundedRectangle(cornerRadius: 3)
-                        .fill(Color.accentColor)
-                        .frame(width: 3)
-                        .matchedGeometryEffect(id: "cursor", in: namespace)
-                }
             }
     }
 

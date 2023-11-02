@@ -14,20 +14,26 @@ public struct TokenTreeLocation: Codable, Hashable {
         self.pathComponents = pathComponents
     }
 
-    public func adding(pathComponent: UUID) -> TokenTreeLocation {
+    public func appending(child: UUID) -> TokenTreeLocation {
         var mutableSelf = self
-        mutableSelf.pathComponents.append(pathComponent)
+        mutableSelf.pathComponents.append(child)
         return mutableSelf
     }
 
-    public func removingLastPathComponent() -> TokenTreeLocation {
+    public func prepending(parent: UUID) -> TokenTreeLocation {
+        var mutableSelf = self
+        mutableSelf.pathComponents.insert(parent, at: 0)
+        return mutableSelf
+    }
+
+    public func removingLastChild() -> TokenTreeLocation {
         guard !pathComponents.isEmpty else { return self }
         var mutableSelf = self
         _ = mutableSelf.pathComponents.removeLast()
         return mutableSelf
     }
 
-    public func removingFirstPathComponent() -> TokenTreeLocation {
+    public func removingFirstParent() -> TokenTreeLocation {
         guard !pathComponents.isEmpty else { return self }
         var mutableSelf = self
         _ = mutableSelf.pathComponents.removeFirst()

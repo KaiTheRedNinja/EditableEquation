@@ -59,7 +59,7 @@ public struct DivisionGroup: GroupEquationToken {
         }
 
         let nextInsertionPoint = InsertionPoint(
-            treeLocation: insertionPoint.treeLocation.removingFirstPathComponent(),
+            treeLocation: insertionPoint.treeLocation.removingFirstParent(),
             insertionLocation: insertionPoint.insertionLocation
         )
 
@@ -96,7 +96,7 @@ public struct DivisionGroup: GroupEquationToken {
               let firstItem = location.pathComponents.first
         else { return self }
 
-        let nextLocation = location.removingFirstPathComponent()
+        let nextLocation = location.removingFirstParent()
 
         if numerator.id == firstItem,
             let newNumerator = numerator.removing(at: nextLocation) as? LinearGroup {
@@ -122,7 +122,7 @@ public struct DivisionGroup: GroupEquationToken {
     public func replacing(token: any EquationToken, at location: TokenTreeLocation) -> any EquationToken {
         guard let firstItem = location.pathComponents.first else { return self }
 
-        let nextLocation = location.removingFirstPathComponent()
+        let nextLocation = location.removingFirstParent()
 
         if location.pathComponents.count >= 2 {
             if numerator.id == firstItem,

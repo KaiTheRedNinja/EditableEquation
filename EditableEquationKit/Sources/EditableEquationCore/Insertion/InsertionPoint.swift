@@ -26,5 +26,11 @@ public struct InsertionPoint: Hashable {
         self.treeLocation = treeLocation
         self.insertionLocation = insertionLocation
     }
+
+    public func prepending(parent: UUID) -> InsertionPoint {
+        var mutableSelf = self
+        mutableSelf.treeLocation = mutableSelf.treeLocation.prepending(parent: parent)
+        return mutableSelf
+    }
 }
 

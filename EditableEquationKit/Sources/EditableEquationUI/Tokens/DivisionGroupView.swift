@@ -19,7 +19,7 @@ struct DivisionGroupView: TokenView {
         VStack(spacing: 0) {
             LinearGroupView(
                 linearGroup: divisionGroup.numerator,
-                treeLocation: treeLocation.adding(pathComponent: divisionGroup.numerator.id),
+                treeLocation: treeLocation.appending(child: divisionGroup.numerator.id),
                 namespace: namespace
             )
             .overlay(alignment: .bottom) {
@@ -28,7 +28,7 @@ struct DivisionGroupView: TokenView {
             }
             LinearGroupView(
                 linearGroup: divisionGroup.denominator,
-                treeLocation: treeLocation.adding(pathComponent: divisionGroup.denominator.id),
+                treeLocation: treeLocation.appending(child: divisionGroup.denominator.id),
                 namespace: namespace
             )
             .overlay(alignment: .top) {
