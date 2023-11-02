@@ -24,6 +24,10 @@ struct SimpleLeadingTrailingDropOverlay: View {
     }
 }
 
+/// A view intended to be used in overlays that manages:
+/// - The drop target
+/// - Showing the cursor
+/// - Showing errors
 struct SimpleDropOverlay: View {
     var insertionPoint: InsertionPoint
 

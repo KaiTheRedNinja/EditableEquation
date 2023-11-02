@@ -14,6 +14,7 @@ public protocol TokenView: View {
     var namespace: Namespace.ID { get }
 }
 
+/// A view that takes in `any EquationToken` and shows the correct view for it
 public struct GeneralTokenView: TokenView {
     public var token: any EquationToken
     public var treeLocation: TokenTreeLocation

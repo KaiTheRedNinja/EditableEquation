@@ -7,7 +7,9 @@
 
 import Foundation
 
+/// A struct representing the location of a token within a token tree
 public struct TokenTreeLocation: Codable, Hashable {
+    /// The path to the token
     public private(set) var pathComponents: [UUID]
 
     public init(pathComponents: [UUID]) {

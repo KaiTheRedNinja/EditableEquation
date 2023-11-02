@@ -8,6 +8,7 @@
 import Foundation
 import EditableEquationCore
 
+/// A token representing a linear operation, like add, subtract, multiply, divide
 public struct LinearOperationToken: EquationToken {
     public var id: UUID = .init()
     public private(set) var name: String = "LinearOperation"

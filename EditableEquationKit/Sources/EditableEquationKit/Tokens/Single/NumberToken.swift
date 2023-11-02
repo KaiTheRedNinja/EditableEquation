@@ -8,6 +8,7 @@
 import Foundation
 import EditableEquationCore
 
+/// A token representing a number
 public struct NumberToken: EquationToken {
     public var id: UUID = .init()
     public private(set) var name: String = "Number"

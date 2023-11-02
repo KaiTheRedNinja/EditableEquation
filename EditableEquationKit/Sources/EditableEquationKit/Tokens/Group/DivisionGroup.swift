@@ -8,6 +8,7 @@
 import Foundation
 import EditableEquationCore
 
+/// A group token representing a fraction
 public struct DivisionGroup: GroupEquationToken {
     public var id: UUID = .init()
     public private(set) var name: String = "DivisionGroup"

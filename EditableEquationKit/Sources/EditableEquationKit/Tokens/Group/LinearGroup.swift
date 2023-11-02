@@ -8,6 +8,7 @@
 import Foundation
 import EditableEquationCore
 
+/// A group token representing linear math. Most simple equations in traditional calculators are handled by LinearGroups
 public struct LinearGroup: GroupEquationToken {
     public var id: UUID = .init()
     public private(set) var name: String = "LinearGroup"

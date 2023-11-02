@@ -8,10 +8,14 @@
 import Foundation
 import EditableEquationCore
 
+/// A class that manages an Equation
 public class EquationManager: ObservableObject {
+    /// The root `LinearGroup` of the equation
     @Published public internal(set) var root: LinearGroup
+    /// The point at which the cursor is positioned
     @Published public var insertionPoint: InsertionPoint?
 
+    /// The location of any error
     @Published public internal(set) var error: InsertionPoint?
 
     public init(root: LinearGroup) {

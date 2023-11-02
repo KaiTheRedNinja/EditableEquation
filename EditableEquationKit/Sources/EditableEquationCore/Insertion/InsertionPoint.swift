@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// A struct representing an insertion point, being either before, inside, or after a token
 public struct InsertionPoint: Hashable {
     /// The item's location within a token tree
     public var treeLocation: TokenTreeLocation

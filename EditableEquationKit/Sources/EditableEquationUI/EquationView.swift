@@ -8,6 +8,7 @@
 import SwiftUI
 import EditableEquationKit
 
+/// A view that manages an Equation
 public struct EquationView: View {
     @ObservedObject var equationManager: EquationManager
 

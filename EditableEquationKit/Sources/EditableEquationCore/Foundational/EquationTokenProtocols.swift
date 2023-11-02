@@ -7,6 +7,12 @@
 
 import Foundation
 
+/// A protocol for a token in an equation.
+///
+/// It is not advised to implement this protocol. Instead, implement ``GroupEquationToken``.
+///
+/// EditableEquationKit only expects `NumberToken` or `LinearOperationToken` to conform to only `EquationToken`,
+/// and any custom `EquationToken`s may have unexpected behaviour.
 public protocol EquationToken: Identifiable, Codable where ID == UUID {
     /// This should be a string unique to the *type*. For example, all `NumberToken`s should have the same `name`.
     /// `name` cannot be a computed property nor immutable, as it needs to be encoded and decoded.
@@ -22,15 +28,18 @@ public protocol EquationToken: Identifiable, Codable where ID == UUID {
 }
 
 public extension EquationToken {
+    /// Type casts the `EquationToken` to a ``GroupEquationToken``, if possible.
     var groupRepresentation: (any GroupEquationToken)? {
         if self is (any GroupEquationToken) {
-            print("\(name) is group")
             return self as? (any GroupEquationToken)
         }
         return nil
     }
 }
 
+/// A protocol for a token containing other tokens
+///
+/// Implement this protocol to add custom tokens that contain other tokens.
 public protocol GroupEquationToken: EquationToken {
     /// Returns a boolean representing, given all children token are valid, this token is valid.
     /// If `true` is returned, `canPrecede` and `canSucceed` will not be called on this token's children.
@@ -63,9 +72,9 @@ public protocol GroupEquationToken: EquationToken {
     /// Returns the token for an ID representing the child right of a direct child within this group token, if one exists
     func child(rightOf id: UUID) -> (any EquationToken)?
 
-    /// Returns the first child
+    /// Returns the first child, if one exists
     func firstChild() -> (any EquationToken)?
 
-    /// Returns the last child
+    /// Returns the last child, if one exists
     func lastChild() -> (any EquationToken)?
 }
