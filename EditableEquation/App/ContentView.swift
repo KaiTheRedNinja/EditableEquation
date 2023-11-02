@@ -88,7 +88,9 @@ struct ContentView: View {
                 }
             }
 
-            Text("Errors: \(manager.error.debugDescription)")
+            if let error = manager.error?.error.description {
+                Text("ERROR: \(error)")
+            }
         }
     }
 }

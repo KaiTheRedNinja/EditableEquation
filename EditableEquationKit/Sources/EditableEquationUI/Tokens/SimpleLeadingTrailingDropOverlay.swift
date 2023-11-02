@@ -36,7 +36,7 @@ struct SimpleDropOverlay: View {
     @EnvironmentObject var manager: EquationManager
 
     var body: some View {
-        Color.red.opacity(manager.error == insertionPoint ? 0.7 : 0.0001)
+        Color.red.opacity(manager.error?.insertionPoint == insertionPoint ? 0.7 : 0.0001)
             .clipShape(RoundedRectangle(cornerRadius: 3))
             .overlay(alignment: cursorAlignment) {
                 if manager.insertionPoint == insertionPoint {

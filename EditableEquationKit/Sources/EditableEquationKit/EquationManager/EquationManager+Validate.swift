@@ -8,25 +8,60 @@
 import Foundation
 import EditableEquationCore
 
-extension EquationManager {
-    public func updateErrors() {
+public extension EquationManager {
+    func updateErrors() {
         error = findErrors(in: root)
+    }
+}
+
+public struct EquationError {
+    public var insertionPoint: InsertionPoint
+    public var error: EquationErrorDetails
+
+    public enum EquationErrorDetails {
+        case cannotBeEmpty(String)
+        case cannotStartGroup(String)
+        case cannotEndGroup(String)
+        case cannotCoexist(String, String)
+
+        public var description: String {
+            switch self {
+            case .cannotBeEmpty(let string):
+                "\(string) cannot be empty"
+            case .cannotStartGroup(let string):
+                "\(string) cannot be at the start"
+            case .cannotEndGroup(let string):
+                "\(string) cannot be at the end"
+            case .cannotCoexist(let string1, let string2):
+                "\(string1) and \(string2) cannot be next to each other"
+            }
+        }
+    }
+
+    public func prepending(parent: UUID) -> EquationError {
+        return .init(
+            insertionPoint: insertionPoint.prepending(parent: parent),
+            error: error
+        )
     }
 }
 
 extension EquationManager {
     /// Tries to find errors in the token. If it finds an error, it will return the TokenTreeLocation of the error,
     /// relative to the token. If there is no error, this function will return nil.
-    private func findErrors(in token: any EquationToken) -> InsertionPoint? {
+    private func findErrors(in token: any EquationToken) -> EquationError? {
         if let groupRepresentation = token.groupRepresentation {
             // If the token is a group, check its childrens' individual validity
             var child = groupRepresentation.firstChild()
 
             // An empty group is always invalid
             guard child != nil else {
-                return InsertionPoint(
-                    treeLocation: .init(pathComponents: []),
-                    insertionLocation: .within
+                return .init(
+                    insertionPoint: .init(
+                        treeLocation: .init(pathComponents: []),
+                        insertionLocation: .within
+                    ),
+                    error: .cannotBeEmpty(token.name)
                 )
             }
 
@@ -45,18 +80,24 @@ extension EquationManager {
 
             // check that left child can be on the extreme left
             if let leftChild, leftChild.canSucceed(nil) == false {
-                return InsertionPoint(
-                    treeLocation: .init(pathComponents: [leftChild.id]),
-                    insertionLocation: .trailing
+                return .init(
+                    insertionPoint: .init(
+                        treeLocation: .init(pathComponents: [leftChild.id]),
+                        insertionLocation: .trailing
+                    ),
+                    error: .cannotStartGroup(leftChild.name)
                 )
             }
 
             while let validLeftChild = leftChild, let validRightChild = rightChild {
                 if validLeftChild.canPrecede(validRightChild) == false ||
                    validRightChild.canSucceed(validLeftChild) == false {
-                    return InsertionPoint(
-                        treeLocation: .init(pathComponents: [validLeftChild.id]),
-                        insertionLocation: .trailing
+                    return .init(
+                        insertionPoint: .init(
+                            treeLocation: .init(pathComponents: [validLeftChild.id]),
+                            insertionLocation: .trailing
+                        ),
+                        error: .cannotCoexist(validLeftChild.name, validRightChild.name)
                     )
                 }
 
@@ -67,9 +108,12 @@ extension EquationManager {
             // check that right child can be on the extreme right
             if let lastChild = groupRepresentation.lastChild(),
                lastChild.canPrecede(nil) == false {
-                return InsertionPoint(
-                    treeLocation: .init(pathComponents: [lastChild.id]),
-                    insertionLocation: .trailing
+                return .init(
+                    insertionPoint: .init(
+                        treeLocation: .init(pathComponents: [lastChild.id]),
+                        insertionLocation: .trailing
+                    ),
+                    error: .cannotEndGroup(lastChild.name)
                 )
             }
         }

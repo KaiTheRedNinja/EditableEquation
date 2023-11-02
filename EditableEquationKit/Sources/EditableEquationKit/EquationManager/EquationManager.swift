@@ -16,7 +16,7 @@ public class EquationManager: ObservableObject {
     @Published public var insertionPoint: InsertionPoint?
 
     /// The location of any error
-    @Published public internal(set) var error: InsertionPoint?
+    @Published public internal(set) var error: EquationError?
 
     public init(root: LinearGroup) {
         self.root = (root.optimised() as? LinearGroup) ?? root
