@@ -19,6 +19,8 @@ public struct EquationError {
     public var error: EquationErrorDetails
 
     public enum EquationErrorDetails {
+        case unknownSingleToken(String)
+
         case cannotBeEmpty(String)
         case cannotStartGroup(String)
         case cannotEndGroup(String)
@@ -26,6 +28,8 @@ public struct EquationError {
 
         public var description: String {
             switch self {
+            case .unknownSingleToken(let string):
+                "unknown token: \(string)"
             case .cannotBeEmpty(let string):
                 "\(string) cannot be empty"
             case .cannotStartGroup(let string):
