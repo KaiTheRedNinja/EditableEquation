@@ -19,9 +19,4 @@ public struct NumberToken: EquationToken {
         self.id = id
         self.digit = digit
     }
-
-    // number tokens can go pretty much anywhere
-    public func canPrecede(_ other: (any EquationToken)?) -> Bool { true }
-
-    public func canSucceed(_ other: (any EquationToken)?) -> Bool { true }
 }

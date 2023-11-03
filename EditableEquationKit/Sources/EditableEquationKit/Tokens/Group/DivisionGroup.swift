@@ -31,20 +31,6 @@ public struct DivisionGroup: GroupEquationToken {
     // no special rules apply
     public func canPrecede(_ other: (any EquationToken)?) -> Bool { true }
     public func canSucceed(_ other: (any EquationToken)?) -> Bool { true }
-    public func validWhenChildrenValid() -> Bool { true }
-    public func canDirectlyMultiply() -> Bool { false }
-
-    public func optimised() -> any EquationToken {
-        guard let numeratorOptimised = numerator.optimised() as? LinearGroup,
-              let denominatorOptimised = denominator.optimised() as? LinearGroup
-        else { return self }
-
-        return DivisionGroup(
-            id: self.id,
-            numerator: numeratorOptimised,
-            denominator: denominatorOptimised
-        )
-    }
 
     public func canInsert(at insertionLocation: InsertionPoint.InsertionLocation) -> Bool {
         // only `within` is poorly defined, the rest are fine

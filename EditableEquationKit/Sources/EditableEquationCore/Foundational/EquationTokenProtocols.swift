@@ -21,12 +21,21 @@ public protocol EquationToken: Identifiable, Codable where ID == UUID {
     var name: String { get }
 
     /// Returns a boolean representing if this token can go before another toke
-    /// If the other token is nil, it is asking if the token can be last in the group
+    /// If the other token is nil, it is asking if the token can be last in the group.
+    ///
+    /// Defaults to true
     func canPrecede(_ other: (any EquationToken)?) -> Bool
 
     /// Returns a boolean representing if this token can go after another token
-    /// If the other token is nil, it is asking if the token can be first in the group
+    /// If the other token is nil, it is asking if the token can be first in the group.
+    ///
+    /// Defaults to true
     func canSucceed(_ other: (any EquationToken)?) -> Bool
+}
+
+public extension EquationToken {
+    func canPrecede(_ other: (any EquationToken)?) -> Bool { true }
+    func canSucceed(_ other: (any EquationToken)?) -> Bool { true }
 }
 
 public extension EquationToken {
@@ -43,18 +52,6 @@ public extension EquationToken {
 ///
 /// Implement this protocol to add custom tokens that contain other tokens.
 public protocol GroupEquationToken: EquationToken {
-    // TODO: Make these Optional functions
-
-    /// Returns a boolean representing, given all children token are valid, this token is valid.
-    /// If `true` is returned, `canPrecede` and `canSucceed` will not be called on this token's children.
-    func validWhenChildrenValid() -> Bool
-
-    /// If the token can be multiplied with other tokens without a `*` in a LinearGroup.
-    func canDirectlyMultiply() -> Bool
-
-    /// Modifies the token to optimise its data representation, safe to call during any equation edit
-    func optimised() -> any EquationToken
-
     // MARK: Mandatory functions
 
     /// Returns a boolean representing if the insertion location is valid. If it is invalid, it will be moved until it reaches a valid location.
@@ -96,4 +93,53 @@ public protocol GroupEquationToken: EquationToken {
 
     /// Returns the last child, if one exists
     func lastChild() -> (any EquationToken)?
+
+
+    // MARK: Optional methods
+
+    /// Returns a boolean representing, given all children token are valid, this token is valid.
+    /// If `true` is returned, `canPrecede` and `canSucceed` will not be called on this token's children.
+    ///
+    /// Defaults to true
+    func validWhenChildrenValid() -> Bool
+
+    /// If the token can be multiplied with other tokens without a `*` in a LinearGroup.
+    ///
+    /// Defaults to false
+    func canDirectlyMultiply() -> Bool
+
+    /// Modifies the token to optimise its data representation, safe to call during any equation edit
+    ///
+    /// Defaults to optimising and replacing all the children
+    func optimised() -> any EquationToken
+}
+
+public extension GroupEquationToken {
+    func validWhenChildrenValid() -> Bool { true }
+
+    func canDirectlyMultiply() -> Bool { false }
+
+    func optimised() -> any EquationToken {
+        var newChildren: [(UUID, any EquationToken)] = []
+
+        var mutableSelf: any EquationToken = self
+
+        // optimise the children
+        var child = firstChild()
+        while let validChild = child {
+            newChildren.append((
+                validChild.id,
+                validChild.groupRepresentation?.optimised() ?? validChild
+            ))
+
+            child = self.child(rightOf: validChild.id)
+        }
+
+        // replace the children
+        for (originalID, newChild) in newChildren {
+            mutableSelf = mutableSelf.groupRepresentation?.replacing(originalTokenID: originalID, with: newChild) ?? mutableSelf
+        }
+
+        return mutableSelf
+    }
 }
