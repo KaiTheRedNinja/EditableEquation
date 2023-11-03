@@ -7,6 +7,8 @@
 
 import Foundation
 
+// TODO: Solving the equation
+
 /// A protocol for a token in an equation.
 ///
 /// It is not advised to implement this protocol. Instead, implement ``GroupEquationToken``.
@@ -41,6 +43,8 @@ public extension EquationToken {
 ///
 /// Implement this protocol to add custom tokens that contain other tokens.
 public protocol GroupEquationToken: EquationToken {
+    // TODO: Make these Optional functions
+
     /// Returns a boolean representing, given all children token are valid, this token is valid.
     /// If `true` is returned, `canPrecede` and `canSucceed` will not be called on this token's children.
     func validWhenChildrenValid() -> Bool
@@ -51,17 +55,32 @@ public protocol GroupEquationToken: EquationToken {
     /// Modifies the token to optimise its data representation, safe to call during any equation edit
     func optimised() -> any EquationToken
 
+    // MARK: Mandatory functions
+
     /// Returns a boolean representing if the insertion location is valid. If it is invalid, it will be moved until it reaches a valid location.
     func canInsert(at insertionLocation: InsertionPoint.InsertionLocation) -> Bool
 
-    /// Inserts a token at an insertion point relative to the token
-    func inserting(token: any EquationToken, at insertionPoint: InsertionPoint) -> any EquationToken
+    /// Inserts a token at an insertion point relative to a child in the token
+    ///
+    /// If the `insertionLocation` is `.within`, *DISREGARD* the `referenceTokenID`, as it is referring to the token itself, not any children.
+    /// This case will only occur when there are no children, and as such `referenceTokenID` will be `nil`.
+    func inserting(
+        token: any EquationToken,
+        at insertionLocation: InsertionPoint.InsertionLocation,
+        relativeToID referenceTokenID: UUID!
+    ) -> any EquationToken
 
-    /// Removes a token at a location relative to the token
-    func removing(at location: TokenTreeLocation) -> any EquationToken
+    /// Removes a child token.
+    /// If the action of removing the child token removes the token itself, return `nil`
+    func removing(
+        childID: UUID
+    ) -> (any EquationToken)?
 
-    /// Replaces the token at `location` with `token`
-    func replacing(token: any EquationToken, at location: TokenTreeLocation) -> any EquationToken
+    /// Replaces the child token with ID `originalTokenID` with `newToken`
+    func replacing(
+        originalTokenID: UUID,
+        with newToken: any EquationToken
+    ) -> any EquationToken
 
     /// Returns the token for an ID representing a direct child within this group token, if it exists
     func child(with id: UUID) -> (any EquationToken)?

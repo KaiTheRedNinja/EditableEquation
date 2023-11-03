@@ -59,10 +59,7 @@ struct ContentView: View {
             Spacer().frame(height: 100)
 
             Text("42")
-                .draggable({ () -> Data in
-                    let token = NumberToken(digit: 42)
-                    return (try? JSONEncoder().encode(token)) ?? .init()
-                }())
+                .tokenDragSource(for: NumberToken(digit: 42))
                 .onTapGesture {
                     guard let insertionPoint = manager.insertionPoint else { return }
                     withAnimation {

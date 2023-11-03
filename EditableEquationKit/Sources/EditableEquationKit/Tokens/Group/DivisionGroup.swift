@@ -51,116 +51,44 @@ public struct DivisionGroup: GroupEquationToken {
         return insertionLocation != .within
     }
 
-    public func inserting(token: any EquationToken, at insertionPoint: InsertionPoint) -> any EquationToken {
-        guard insertionPoint.treeLocation.pathComponents.count >= 2,
-              let firstItem = insertionPoint.treeLocation.pathComponents.first
-        else {
-            print("Not enough components to insert")
-            return self
+    public func inserting(
+        token: any EquationToken,
+        at insertionLocation: InsertionPoint.InsertionLocation,
+        relativeToID referenceTokenID: UUID!
+    ) -> any EquationToken {
+        fatalError("Cannot insert in `DivisionGroup`")
+    }
+
+    public func removing(childID: UUID) -> (any EquationToken)? {
+        if childID == numerator.id || childID == denominator.id {
+            return nil
         }
 
-        let nextInsertionPoint = InsertionPoint(
-            treeLocation: insertionPoint.treeLocation.removingFirstParent(),
-            insertionLocation: insertionPoint.insertionLocation
-        )
+        fatalError("Tried to remove a child that does not belong to DivisionGroup")
+    }
 
-        if numerator.id == firstItem, 
-            let newNumerator = numerator.inserting(
-                token: token,
-                at: nextInsertionPoint
-            ) as? LinearGroup {
+    public func replacing(originalTokenID: UUID, with newToken: any EquationToken) -> any EquationToken {
+        guard let newTokenLinearGroup = newToken as? LinearGroup else {
+            fatalError("Tried to set a non-linergroup as a child of DivisionGroup")
+        }
+
+        if originalTokenID == numerator.id {
             return DivisionGroup(
                 id: self.id,
-                numerator: newNumerator,
+                numerator: newTokenLinearGroup,
                 denominator: denominator
             )
         }
 
-        if denominator.id == firstItem,
-            let newDenominator = denominator.inserting(
-              token: token,
-              at: nextInsertionPoint
-            ) as? LinearGroup {
+        if originalTokenID == denominator.id {
             return DivisionGroup(
                 id: self.id,
                 numerator: numerator,
-                denominator: newDenominator
+                denominator: newTokenLinearGroup
             )
         }
 
-        print("Is not in numerator or denominator")
-        return self
-    }
-
-    public func removing(at location: TokenTreeLocation) -> any EquationToken {
-        guard location.pathComponents.count >= 2,
-              let firstItem = location.pathComponents.first
-        else { return self }
-
-        let nextLocation = location.removingFirstParent()
-
-        if numerator.id == firstItem,
-            let newNumerator = numerator.removing(at: nextLocation) as? LinearGroup {
-            return DivisionGroup(
-                id: self.id,
-                numerator: newNumerator,
-                denominator: denominator
-            )
-        }
-
-        if denominator.id == firstItem,
-            let newDenominator = denominator.removing(at: nextLocation) as? LinearGroup {
-            return DivisionGroup(
-                id: self.id,
-                numerator: numerator,
-                denominator: newDenominator
-            )
-        }
-
-        return self
-    }
-
-    public func replacing(token: any EquationToken, at location: TokenTreeLocation) -> any EquationToken {
-        guard let firstItem = location.pathComponents.first else { return self }
-
-        let nextLocation = location.removingFirstParent()
-
-        if location.pathComponents.count >= 2 {
-            if numerator.id == firstItem,
-               let newNumerator = numerator.replacing(token: token, at: nextLocation) as? LinearGroup {
-                return DivisionGroup(
-                    id: self.id,
-                    numerator: newNumerator,
-                    denominator: denominator
-                )
-            }
-
-            if denominator.id == firstItem,
-               let newDenominator = denominator.replacing(token: token, at: nextLocation) as? LinearGroup {
-                return DivisionGroup(
-                    id: self.id,
-                    numerator: numerator,
-                    denominator: newDenominator
-                )
-            }
-        } else {
-            guard let linearGroup = token as? LinearGroup else { return self }
-            if numerator.id == firstItem {
-                return DivisionGroup(
-                    id: self.id,
-                    numerator: linearGroup,
-                    denominator: denominator
-                )
-            } else if denominator.id == firstItem {
-                return DivisionGroup(
-                    id: self.id,
-                    numerator: numerator,
-                    denominator: linearGroup
-                )
-            }
-        }
-
-        return self
+        fatalError("Tried to replace a child that does not belong to DivisionGroup")
     }
 
     public func child(with id: UUID) -> (any EquationToken)? {

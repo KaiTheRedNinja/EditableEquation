@@ -57,13 +57,10 @@ struct SimpleDropOverlay: View {
                 }
                 return true
             } isTargeted: { isTargeted in
-                print("Is targeted: \(isTargeted)")
                 if isTargeted {
                     withAnimation {
                         manager.insertionPoint = insertionPoint
                     }
-                } else {
-                    manager.insertionPoint = nil
                 }
             }
             .onTapGesture {
@@ -80,5 +77,21 @@ struct SimpleDropOverlay: View {
         case .within:
             return .center
         }
+    }
+}
+
+extension View {
+    public func tokenDragSource<T: EquationToken>(for token: T) -> some View {
+        self
+            .draggable({ () -> Data in
+                return (try? JSONEncoder().encode(token)) ?? .init()
+            }())
+    }
+
+    public func tokenDragSource<T: EquationToken, C: View>(for token: T, preview: () -> C) -> some View {
+        self
+            .draggable({ () -> Data in
+                return (try? JSONEncoder().encode(token)) ?? .init()
+            }(), preview: preview)
     }
 }

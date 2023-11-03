@@ -142,89 +142,45 @@ public struct LinearGroup: GroupEquationToken {
         }
     }
 
-    public func inserting(token: any EquationToken, at insertionPoint: InsertionPoint) -> any EquationToken {
+    public func inserting(
+        token: any EquationToken,
+        at insertionLocation: InsertionPoint.InsertionLocation,
+        relativeToID referenceTokenID: UUID!
+    ) -> any EquationToken {
         var mutableSelf = self
-
-        guard let id = insertionPoint.treeLocation.pathComponents.first,
-              let insertionIndex = contents.firstIndex(where: { $0.id == id })
-        else {
-            // If there are no items in the path, it must be a `within`
-            if insertionPoint.treeLocation.pathComponents.isEmpty &&
-               insertionPoint.insertionLocation == .within &&
-               mutableSelf.contents.isEmpty {
-                mutableSelf.contents = [token]
+        guard insertionLocation != .within else {
+            // if its within, its only valid if we have no children
+            guard self.contents.isEmpty else {
+                fatalError("Tried to assign `.within` of a non-empty LinearGroup")
             }
+            mutableSelf.contents = [token]
             return mutableSelf
         }
 
-        // If theres only one item in the path, its a direct child of this linear group
-        // Except `within`, that is handled by the child itself.
-        if insertionPoint.treeLocation.pathComponents.count == 1 && insertionPoint.insertionLocation != .within {
-            switch insertionPoint.insertionLocation {
-            case .leading:
-                mutableSelf.contents.insert(token, at: insertionIndex)
-            case .trailing:
-                mutableSelf.contents.insert(token, at: insertionIndex+1)
-            default: fatalError() // should never reach here
-            }
-
-            return mutableSelf
+        guard let referenceTokenID, let refIndex = contents.firstIndex(where: { $0.id == referenceTokenID }) else {
+            fatalError("Tried to insert relative to a non-child of LinearGroup")
         }
 
-        // Else, there must be more. Recursively call the function.
-        mutableSelf.contents[insertionIndex] = mutableSelf.contents[insertionIndex].groupRepresentation?.inserting(
-            token: token,
-            at: .init(
-                treeLocation: insertionPoint.treeLocation.removingFirstParent(),
-                insertionLocation: insertionPoint.insertionLocation
-            )
-        ) ?? mutableSelf.contents[insertionIndex]
-
+        // If its trailing, add one to the index. Else, its leading, and we use the index itself
+        mutableSelf.contents.insert(token, at: refIndex + (insertionLocation == .trailing ? 1 : 0))
         return mutableSelf
     }
 
-    public func removing(at location: TokenTreeLocation) -> any EquationToken {
+    public func removing(childID: UUID) -> (any EquationToken)? {
         var mutableSelf = self
-
-        guard let id = location.pathComponents.first,
-              let removalIndex = mutableSelf.contents.firstIndex(where: { $0.id == id })
-        else { return mutableSelf }
-
-        // If theres only one item in the path, its a direct child of this linear group
-        if location.pathComponents.count == 1 {
-            mutableSelf.contents.remove(at: removalIndex)
-
-            return mutableSelf
-        }
-
-        // Else, there must be more. Recursively call the function.
-        mutableSelf.contents[removalIndex] = mutableSelf.contents[removalIndex].groupRepresentation?.removing(
-            at: location.removingFirstParent()
-        ) ?? mutableSelf.contents[removalIndex]
-
+        mutableSelf.contents.removeAll(where: { $0.id == childID })
         return mutableSelf
     }
 
-    public func replacing(token: any EquationToken, at location: TokenTreeLocation) -> any EquationToken {
+    public func replacing(
+        originalTokenID: UUID,
+        with newToken: any EquationToken
+    ) -> any EquationToken {
         var mutableSelf = self
-
-        guard let id = location.pathComponents.first,
-              let replacementIndex = mutableSelf.contents.firstIndex(where: { $0.id == id })
-        else { return mutableSelf }
-
-        // If theres only one item in the path, its a direct child of this linear group
-        if location.pathComponents.count == 1 {
-            mutableSelf.contents[replacementIndex] = token
-
-            return mutableSelf
+        guard let replacementIndex = contents.firstIndex(where: { $0.id == originalTokenID }) else {
+            fatalError("Tried to replace a token that is not a child of LinearGroup")
         }
-
-        // Else, there must be more. Recursively call the function.
-        mutableSelf.contents[replacementIndex] = mutableSelf.contents[replacementIndex].groupRepresentation?.replacing(
-            token: token,
-            at: location.removingFirstParent()
-        ) ?? mutableSelf.contents[replacementIndex]
-
+        mutableSelf.contents[replacementIndex] = newToken
         return mutableSelf
     }
 
