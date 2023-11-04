@@ -48,7 +48,7 @@ struct SimpleDropOverlay: View {
             }
             .dropDestination(for: Data.self) { items, location in
                 for item in items {
-                    withAnimation {
+                    withAnimation(.easeInOut(duration: 0.25)) {
                         manager.manage(
                             data: item,
                             droppedAt: insertionPoint
@@ -94,6 +94,20 @@ extension View {
         self
             .draggable({ () -> Data in
                 return (try? JSONEncoder().encode(token)) ?? .init()
+            }(), preview: preview)
+    }
+
+    public func tokenLocationDragSource(for location: TokenTreeLocation) -> some View {
+        self
+            .draggable({ () -> Data in
+                return (try? JSONEncoder().encode(location)) ?? .init()
+            }())
+    }
+
+    public func tokenLocationDragSource<C: View>(for location: TokenTreeLocation, preview: () -> C) -> some View {
+        self
+            .draggable({ () -> Data in
+                return (try? JSONEncoder().encode(location)) ?? .init()
             }(), preview: preview)
     }
 }

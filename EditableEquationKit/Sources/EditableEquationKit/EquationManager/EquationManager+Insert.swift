@@ -216,7 +216,9 @@ extension EquationManager {
 
     /// Moves a token from an initial location to an insertion point
     public func move(from initialLocation: TokenTreeLocation, to insertionPoint: InsertionPoint) {
-        guard let token = tokenAt(location: initialLocation) else { return }
+        guard initialLocation != insertionPoint.treeLocation, // can't move it to itself
+              let token = tokenAt(location: initialLocation) // the initial token must exist
+        else { return }
         remove(at: initialLocation)
         insert(token: token, at: insertionPoint)
         // no need to optimise or update errors, `remove` and `insert` do that for us

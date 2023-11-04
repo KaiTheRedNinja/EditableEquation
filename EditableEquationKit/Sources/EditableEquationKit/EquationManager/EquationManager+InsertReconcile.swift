@@ -112,11 +112,7 @@ extension EquationManager {
         guard rootToken.id != tokenID else { return .init(pathComponents: []) }
 
         // recursively search for the token using depth-first-search
-        var currentPath: [any GroupEquationToken] = [rootToken] {
-            didSet {
-                print("Current search path is now \(currentPath.map({ $0.name }))")
-            }
-        }
+        var currentPath: [any GroupEquationToken] = [rootToken]
         while true {
             // this will be turned to true if we should `continue` instead of remove an element
             var continueFlag: Bool = false
@@ -156,12 +152,12 @@ extension EquationManager {
                 while let validNextChild = nextChild {
                     // check if the child is what we're looking for
                     if validNextChild.id == tokenID {
-                        return .init(pathComponents: currentPath.dropFirst().map({ $0.id }) + [validNextChild.id])
+                        return .init(pathComponents: currentPath.dropFirst().dropLast().map({ $0.id }) + [validNextChild.id])
                     }
 
-                    // if not, see if the child is a group token. If it is, add it to `currentPath` and break out
+                    // if not, see if the child is a group token. If it is, replace it as the last item of `currentPath` and break out
                     if let validChild = validNextChild as? any GroupEquationToken {
-                        currentPath.append(validChild)
+                        currentPath[pathCount-1] = validChild
                         continueFlag = true
                         break
                     }

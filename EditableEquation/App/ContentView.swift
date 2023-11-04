@@ -173,7 +173,7 @@ struct FractionView: View {
         HStack(spacing: 0) {
             Text(String(fraction.numerator / fraction.denominator))
             VStack(spacing: 0) {
-                Text(String(fraction.numerator % fraction.denominator))
+                Text(String(abs(fraction.numerator % fraction.denominator)))
                     .overlay(alignment: .bottom) {
                         Color.black.frame(height: 2)
                             .offset(y: 1)
