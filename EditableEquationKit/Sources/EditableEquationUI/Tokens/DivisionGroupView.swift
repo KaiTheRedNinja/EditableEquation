@@ -13,6 +13,8 @@ struct DivisionGroupView: TokenView {
     var divisionGroup: DivisionGroup
     var treeLocation: TokenTreeLocation
 
+    @EnvironmentObject var manager: EquationManager
+
     var namespace: Namespace.ID
 
     var body: some View {
@@ -25,6 +27,9 @@ struct DivisionGroupView: TokenView {
             .overlay(alignment: .bottom) {
                 Color.black.frame(height: 2)
                     .offset(y: 1)
+                    .onTapGesture {
+                        convertToLinearDivision()
+                    }
             }
             LinearGroupView(
                 linearGroup: divisionGroup.denominator,
@@ -34,6 +39,9 @@ struct DivisionGroupView: TokenView {
             .overlay(alignment: .top) {
                 Color.black.frame(height: 2)
                     .offset(y: -1)
+                    .onTapGesture {
+                        convertToLinearDivision()
+                    }
             }
         }
         .padding(.horizontal, 2)
@@ -51,6 +59,35 @@ struct DivisionGroupView: TokenView {
                 )
                 .frame(width: 3)
             }
+        }
+        .background {
+            Color.black.opacity(0.001)
+                .onTapGesture {
+                    convertToLinearDivision()
+                }
+        }
+    }
+
+    func convertToLinearDivision() {
+        print("CONVERTING")
+        var leadingGroup = divisionGroup.numerator
+
+        leadingGroup.hasBrackets = leadingGroup.contents.count > 1
+
+        var trailingGroup = divisionGroup.denominator
+
+        trailingGroup.hasBrackets = trailingGroup.contents.count > 1
+
+        let newLinearGroup = LinearGroup(contents: [
+            leadingGroup,
+            LinearOperationToken(operation: .divide),
+            trailingGroup
+        ])
+
+        print("REPLACING")
+
+        withAnimation {
+            manager.replace(token: newLinearGroup, at: treeLocation)
         }
     }
 }
