@@ -50,13 +50,16 @@ struct ContentView: View {
         )
     )
 
+    @ObservedObject var numberEditor: NumberEditor = .init()
+
     @State var resultDisplayType: ResultDisplayType = .fraction
 
     var body: some View {
         VStack {
             ScrollView(.horizontal) {
                 EquationView(
-                    manager: manager
+                    manager: manager,
+                    numberEditor: numberEditor
                 )
                 .font(.title2)
             }
@@ -88,6 +91,11 @@ struct ContentView: View {
                         manager.moveRight()
                     }
                 }
+            }
+
+            if let editingLocation = numberEditor.editingNumber,
+               let numberToken = manager.tokenAt(location: editingLocation) as? NumberToken {
+                Text("Editing " + String(numberToken.digit))
             }
 
             if let error = manager.error?.error.description {

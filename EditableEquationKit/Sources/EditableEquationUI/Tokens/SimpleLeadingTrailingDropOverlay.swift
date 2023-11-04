@@ -64,7 +64,7 @@ struct SimpleDropOverlay: View {
                 }
             }
             .onTapGesture {
-                withAnimation {
+                withAnimation(.easeInOut(duration: 0.25)) {
                     manager.insertionPoint = insertionPoint
                 }
             }

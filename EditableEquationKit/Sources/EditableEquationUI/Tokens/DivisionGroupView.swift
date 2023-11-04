@@ -69,7 +69,6 @@ struct DivisionGroupView: TokenView {
     }
 
     func convertToLinearDivision() {
-        print("CONVERTING")
         var leadingGroup = divisionGroup.numerator
 
         leadingGroup.hasBrackets = leadingGroup.contents.count > 1
@@ -86,8 +85,6 @@ struct DivisionGroupView: TokenView {
             ),
             trailingGroup
         ])
-
-        print("REPLACING")
 
         withAnimation {
             manager.replace(token: newLinearGroup, at: treeLocation)
