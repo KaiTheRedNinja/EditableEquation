@@ -9,7 +9,11 @@ import Foundation
 import EditableEquationCore
 
 /// A token representing a number
-public struct NumberToken: EquationToken {
+public struct NumberToken: ValueEquationToken {
+    public func solved() throws -> Double {
+        Double(digit)
+    }
+    
     public var id: UUID = .init()
     public private(set) var name: String = "Number"
 

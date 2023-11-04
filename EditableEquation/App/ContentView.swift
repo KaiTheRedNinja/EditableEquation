@@ -31,7 +31,9 @@ struct ContentView: View {
                         ),
                         LinearOperationToken(operation: .times),
                         LinearGroup(
-                            contents: [],
+                            contents: [
+                                NumberToken(digit: 8)
+                            ],
                             hasBrackets: true
                         ),
                         LinearOperationToken(operation: .times),
@@ -87,6 +89,8 @@ struct ContentView: View {
 
             if let error = manager.error?.error.description {
                 Text("ERROR: \(error)")
+            } else {
+                Text("Solved: \((try? manager.root.solved()).debugDescription)")
             }
         }
     }

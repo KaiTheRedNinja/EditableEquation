@@ -10,7 +10,7 @@ import Foundation
 /// A protocol for a token containing other tokens
 ///
 /// Implement this protocol to add custom tokens that contain other tokens.
-public protocol GroupEquationToken: EquationToken {
+public protocol GroupEquationToken: ValueEquationToken {
     // MARK: Mandatory functions
 
     /// Returns a boolean representing if the insertion location is valid. If it is invalid, it will be moved until it reaches a valid location.

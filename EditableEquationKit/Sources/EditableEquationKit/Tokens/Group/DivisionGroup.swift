@@ -28,6 +28,10 @@ public struct DivisionGroup: GroupEquationToken {
         self.denominator = denominator
     }
 
+    public func solved() throws -> Double {
+        return (try numerator.solved()) / (try denominator.solved())
+    }
+
     // no special rules apply
     public func canPrecede(_ other: (any EquationToken)?) -> Bool { true }
     public func canSucceed(_ other: (any EquationToken)?) -> Bool { true }

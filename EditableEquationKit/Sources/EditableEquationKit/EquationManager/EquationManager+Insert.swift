@@ -99,7 +99,7 @@ extension EquationManager {
 
     /// Removes the item at a certain location
     public func remove(at location: TokenTreeLocation) {
-        guard var tokenToRemove: UUID = location.pathComponents.last else {
+        guard let tokenToRemove: UUID = location.pathComponents.last else {
             print("No token to remove")
             return
         }

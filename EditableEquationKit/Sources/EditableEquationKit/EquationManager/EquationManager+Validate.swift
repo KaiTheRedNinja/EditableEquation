@@ -14,7 +14,7 @@ public extension EquationManager {
     }
 }
 
-public struct EquationError {
+public struct EquationError: Error {
     public var insertionPoint: InsertionPoint
     public var error: EquationErrorDetails
 
