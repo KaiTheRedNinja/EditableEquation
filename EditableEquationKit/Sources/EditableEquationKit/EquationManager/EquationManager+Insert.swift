@@ -76,6 +76,9 @@ extension EquationManager {
             return
         }
 
+        if let insertionPoint = self.insertionPoint {
+            self.insertionPoint = reconcile(insertionPoint: insertionPoint, originalRoot: self.root, newRoot: newRoot)
+        }
         self.root = newRoot
         updateErrors()
     }
@@ -94,7 +97,6 @@ extension EquationManager {
             guard let insertionPoint = self.insertionPoint else { return }
             remove(at: insertionPoint.treeLocation)
         }
-        updateErrors()
     }
 
     /// Removes the item at a certain location
@@ -148,6 +150,9 @@ extension EquationManager {
             return
         }
 
+        if let insertionPoint {
+            self.insertionPoint = reconcile(insertionPoint: insertionPoint, originalRoot: self.root, newRoot: newRoot)
+        }
         self.root = newRoot
         updateErrors()
     }
@@ -202,6 +207,9 @@ extension EquationManager {
             return
         }
 
+        if let insertionPoint {
+            self.insertionPoint = reconcile(insertionPoint: insertionPoint, originalRoot: self.root, newRoot: newRoot)
+        }
         self.root = newRoot
         updateErrors()
     }

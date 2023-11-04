@@ -90,7 +90,11 @@ struct LinearOperationView: TokenView {
             elementAfter = trailingGroup
         }
 
-        let newDivisionGroup = DivisionGroup(numerator: [elementBefore], denominator: [elementAfter])
+        let newDivisionGroup = DivisionGroup(
+            id: linearOperation.id,
+            numerator: [elementBefore],
+            denominator: [elementAfter]
+        )
 
         withAnimation {
             manager.replace(token: newDivisionGroup, at: treeLocation)

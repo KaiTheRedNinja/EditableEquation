@@ -80,7 +80,10 @@ struct DivisionGroupView: TokenView {
 
         let newLinearGroup = LinearGroup(contents: [
             leadingGroup,
-            LinearOperationToken(operation: .divide),
+            LinearOperationToken(
+                id: divisionGroup.id,
+                operation: .divide
+            ),
             trailingGroup
         ])
 
