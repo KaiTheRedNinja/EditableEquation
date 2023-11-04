@@ -7,13 +7,14 @@
 
 import Foundation
 import EditableEquationCore
+import Rationals
 
 extension LinearGroup: ValueEquationToken {
-    public func solved() throws -> Double {
+    public func solved() throws -> Fraction<Int> {
         // solve each of the values
         enum SolveStep {
             case operation(LinearOperationToken)
-            case value(Double)
+            case value(Fraction<Int>)
 
             var description: String {
                 switch self {
@@ -80,7 +81,7 @@ extension LinearGroup: ValueEquationToken {
         for index in (0..<solvedWithOperations.count).reversed() {
             switch solvedWithOperations[index] {
             case .operation(let operation):
-                let result: Double
+                let result: Fraction<Int>
                 switch operation.operation {
                 case .times, .divide:
                     // multiply the terms to the left and right of the symbol
@@ -113,7 +114,7 @@ extension LinearGroup: ValueEquationToken {
         for index in (0..<solvedWithOperations.count).reversed() {
             switch solvedWithOperations[index] {
             case .operation(let operation):
-                let result: Double
+                let result: Fraction<Int>
                 switch operation.operation {
                 case .plus, .minus:
                     // multiply the terms to the left and right of the symbol

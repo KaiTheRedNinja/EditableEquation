@@ -8,6 +8,7 @@
 import SwiftUI
 import EditableEquationKit
 import EditableEquationUI
+import Rationals
 
 struct ContentView: View {
     @ObservedObject var manager: EquationManager = .init(
@@ -49,6 +50,8 @@ struct ContentView: View {
         )
     )
 
+    @State var resultDisplayType: ResultDisplayType = .fraction
+
     var body: some View {
         VStack {
             ScrollView(.horizontal) {
@@ -89,9 +92,105 @@ struct ContentView: View {
 
             if let error = manager.error?.error.description {
                 Text("ERROR: \(error)")
-            } else {
-                Text("Solved: \((try? manager.root.solved()).debugDescription)")
+            } else if let solution = try? manager.root.solved() {
+                VStack {
+                    FractionView(displayType: resultDisplayType, fraction: solution.normalized().simplified())
+                        .onTapGesture {
+                            withAnimation {
+                                resultDisplayType = resultDisplayType.next()
+                            }
+                        }
+                    Picker("", selection: $resultDisplayType) {
+                        ForEach(ResultDisplayType.allCases, id: \.rawValue) { displayType in
+                            Text("\(displayType.rawValue)")
+                                .tag(displayType)
+                        }
+                    }
+                }
             }
+        }
+        .font(.system(.body, design: .monospaced))
+    }
+}
+
+enum ResultDisplayType: String, CaseIterable {
+    case fraction = "Fraction"
+    case mixedFraction = "Mixed Fraction"
+    case decimal = "Decimal"
+
+    func next() -> ResultDisplayType {
+        switch self {
+        case .fraction: .mixedFraction
+        case .mixedFraction: .decimal
+        case .decimal: .fraction
+        }
+    }
+}
+
+struct FractionView: View {
+    var displayType: ResultDisplayType
+    var fraction: Fraction<Int>
+
+    var body: some View {
+        switch displayType {
+        case .fraction:
+            if fraction.numerator.isMultiple(of: fraction.denominator) {
+                decimalView
+            } else {
+                fractionView
+            }
+        case .mixedFraction:
+            if fraction.numerator.isMultiple(of: fraction.denominator) {
+                decimalView
+            } else if fraction.isProper {
+                fractionView
+            } else {
+                mixedFractionView
+            }
+        case .decimal:
+            decimalView
+        }
+    }
+
+    var fractionView: some View {
+        VStack(spacing: 0) {
+            Text("\(fraction.numerator)")
+                .overlay(alignment: .bottom) {
+                    Color.black.frame(height: 2)
+                        .offset(y: 1)
+                }
+            Text("\(fraction.denominator)")
+                .overlay(alignment: .top) {
+                    Color.black.frame(height: 2)
+                        .offset(y: -1)
+                }
+        }
+    }
+
+    var mixedFractionView: some View {
+        HStack(spacing: 0) {
+            Text("\(fraction.numerator / fraction.denominator)")
+            VStack(spacing: 0) {
+                Text("\(fraction.numerator % fraction.denominator)")
+                    .overlay(alignment: .bottom) {
+                        Color.black.frame(height: 2)
+                            .offset(y: 1)
+                    }
+                Text("\(fraction.denominator)")
+                    .overlay(alignment: .top) {
+                        Color.black.frame(height: 2)
+                            .offset(y: -1)
+                    }
+            }
+        }
+    }
+
+    @ViewBuilder var decimalView: some View {
+        let value = Double(fraction.numerator)/Double(fraction.denominator)
+        if value%1 == 0 {
+            Text("\(Int(value))")
+        } else {
+            Text("\(value)")
         }
     }
 }

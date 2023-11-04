@@ -7,6 +7,7 @@
 
 import Foundation
 import EditableEquationCore
+import Rationals
 
 /// A group token representing a fraction
 public struct DivisionGroup: GroupEquationToken {
@@ -28,7 +29,7 @@ public struct DivisionGroup: GroupEquationToken {
         self.denominator = denominator
     }
 
-    public func solved() throws -> Double {
+    public func solved() throws -> Fraction<Int> {
         return (try numerator.solved()) / (try denominator.solved())
     }
 

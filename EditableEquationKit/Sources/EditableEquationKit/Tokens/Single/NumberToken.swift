@@ -7,11 +7,12 @@
 
 import Foundation
 import EditableEquationCore
+import Rationals
 
 /// A token representing a number
 public struct NumberToken: ValueEquationToken {
-    public func solved() throws -> Double {
-        Double(digit)
+    public func solved() throws -> Fraction<Int> {
+        Fraction(integerLiteral: digit)
     }
     
     public var id: UUID = .init()

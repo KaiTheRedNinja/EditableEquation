@@ -21,7 +21,7 @@ public struct GeneralTokenView: TokenView {
 
     public var namespace: Namespace.ID
 
-    init(token: any EquationToken, treeLocation: TokenTreeLocation, namespace: Namespace.ID) {
+    public init(token: any EquationToken, treeLocation: TokenTreeLocation, namespace: Namespace.ID) {
         self.token = token
         self.treeLocation = treeLocation
         self.namespace = namespace

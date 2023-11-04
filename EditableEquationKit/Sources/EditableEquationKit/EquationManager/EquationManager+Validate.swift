@@ -98,8 +98,8 @@ extension EquationManager {
                    validRightChild.canSucceed(validLeftChild) == false {
                     return .init(
                         insertionPoint: .init(
-                            treeLocation: .init(pathComponents: [validLeftChild.id]),
-                            insertionLocation: .trailing
+                            treeLocation: .init(pathComponents: [validRightChild.id]),
+                            insertionLocation: .leading
                         ),
                         error: .cannotCoexist(validLeftChild.name, validRightChild.name)
                     )

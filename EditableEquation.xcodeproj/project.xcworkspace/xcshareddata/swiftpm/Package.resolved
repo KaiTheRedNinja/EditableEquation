@@ -1,0 +1,23 @@
+{
+  "pins" : [
+    {
+      "identity" : "swift-numeric-protocols",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/alexandrehsaad/swift-numeric-protocols.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "63dab85c1fe8fb14cdfeb4f0ac04988699a25bfd"
+      }
+    },
+    {
+      "identity" : "swift-rationals",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/alexandrehsaad/swift-rationals.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "bc73b7115a8b2ff0f5f4fc9fd28ffb856b165d86"
+      }
+    }
+  ],
+  "version" : 2
+}
