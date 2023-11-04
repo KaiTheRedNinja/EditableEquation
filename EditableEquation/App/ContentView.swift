@@ -23,7 +23,7 @@ struct ContentView: View {
                         DivisionGroup(
                             numerator: [
                                 NumberToken(digit: 4),
-                                LinearOperationToken(operation: .minus),
+                                LinearOperationToken(operation: .times),
                                 NumberToken(digit: 9)
                             ],
                             denominator: [
