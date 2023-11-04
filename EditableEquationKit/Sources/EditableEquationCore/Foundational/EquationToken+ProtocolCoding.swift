@@ -18,6 +18,7 @@ public enum EquationTokenCoding: ProtocolCoding {
     public struct MinimalEquationToken: EquationToken {
         public var id: UUID
         public var name: String
+        public func getLatex() -> String { "" }
         public func canPrecede(_ other: (any EquationToken)?) -> Bool { fatalError() }
         public func canSucceed(_ other: (any EquationToken)?) -> Bool { fatalError() }
     }

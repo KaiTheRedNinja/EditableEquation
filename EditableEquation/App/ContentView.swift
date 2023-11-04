@@ -94,6 +94,8 @@ struct ContentView: View {
                 Text("ERROR: \(error)")
             } else if let solution = try? manager.root.solved() {
                 VStack {
+                    Text(manager.root.getLatex())
+                        .textSelection(.enabled)
                     FractionView(displayType: resultDisplayType, fraction: solution.normalized().simplified())
                         .onTapGesture {
                             withAnimation {
@@ -154,12 +156,12 @@ struct FractionView: View {
 
     var fractionView: some View {
         VStack(spacing: 0) {
-            Text("\(fraction.numerator)")
+            Text(String(fraction.numerator))
                 .overlay(alignment: .bottom) {
                     Color.black.frame(height: 2)
                         .offset(y: 1)
                 }
-            Text("\(fraction.denominator)")
+            Text(String(fraction.denominator))
                 .overlay(alignment: .top) {
                     Color.black.frame(height: 2)
                         .offset(y: -1)
@@ -169,14 +171,14 @@ struct FractionView: View {
 
     var mixedFractionView: some View {
         HStack(spacing: 0) {
-            Text("\(fraction.numerator / fraction.denominator)")
+            Text(String(fraction.numerator / fraction.denominator))
             VStack(spacing: 0) {
-                Text("\(fraction.numerator % fraction.denominator)")
+                Text(String(fraction.numerator % fraction.denominator))
                     .overlay(alignment: .bottom) {
                         Color.black.frame(height: 2)
                             .offset(y: 1)
                     }
-                Text("\(fraction.denominator)")
+                Text(String(fraction.denominator))
                     .overlay(alignment: .top) {
                         Color.black.frame(height: 2)
                             .offset(y: -1)
@@ -188,9 +190,9 @@ struct FractionView: View {
     @ViewBuilder var decimalView: some View {
         let value = Double(fraction.numerator)/Double(fraction.denominator)
         if value%1 == 0 {
-            Text("\(Int(value))")
+            Text(String(Int(value)))
         } else {
-            Text("\(value)")
+            Text(String(value))
         }
     }
 }

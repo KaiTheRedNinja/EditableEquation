@@ -18,6 +18,9 @@ public protocol EquationToken: Identifiable, Codable where ID == UUID {
     /// `name` cannot be a computed property nor immutable, as it needs to be encoded and decoded.
     var name: String { get }
 
+    /// Generates latex for a token
+    func getLatex() -> String
+
     /// Returns a boolean representing if this token can go before another toke
     /// If the other token is nil, it is asking if the token can be last in the group.
     ///

@@ -29,6 +29,10 @@ public struct DivisionGroup: GroupEquationToken {
         self.denominator = denominator
     }
 
+    public func getLatex() -> String {
+        "\\frac{\(numerator.getLatex())}{\(denominator.getLatex())}"
+    }
+
     public func solved() throws -> Fraction<Int> {
         return (try numerator.solved()) / (try denominator.solved())
     }

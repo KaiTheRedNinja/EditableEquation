@@ -16,7 +16,7 @@ struct NumberTokenView: TokenView {
     var namespace: Namespace.ID
 
     var body: some View {
-        Text("\(number.digit)")
+        Text(String(number.digit))
             .padding(.horizontal, 3)
             .overlay {
                 SimpleLeadingTrailingDropOverlay(treeLocation: treeLocation, namespace: namespace)

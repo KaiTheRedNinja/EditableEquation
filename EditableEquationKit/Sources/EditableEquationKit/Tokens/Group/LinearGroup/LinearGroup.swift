@@ -22,6 +22,14 @@ public struct LinearGroup: EquationToken {
         self.hasBrackets = hasBrackets
     }
 
+    public func getLatex() -> String {
+        if hasBrackets {
+            "(\(contents.map({ $0.getLatex() }).joined()))"
+        } else {
+            contents.map({ $0.getLatex() }).joined()
+        }
+    }
+
     public func canPrecede(_ other: (any EquationToken)?) -> Bool {
         guard let other else { return true } // LinearGroups can always start or end groups
         if !hasBrackets { return false } // LinearGroups need brackets to go before others

@@ -11,6 +11,10 @@ import Rationals
 
 /// A token representing a number
 public struct NumberToken: ValueEquationToken {
+    public func getLatex() -> String {
+        String(digit)
+    }
+
     public func solved() throws -> Fraction<Int> {
         Fraction(integerLiteral: digit)
     }

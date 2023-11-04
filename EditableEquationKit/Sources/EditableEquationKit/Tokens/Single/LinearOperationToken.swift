@@ -24,6 +24,15 @@ public struct LinearOperationToken: EquationToken {
         case plus, minus, times, divide
     }
 
+    public func getLatex() -> String {
+        switch operation {
+        case .plus: "+"
+        case .minus: "-"
+        case .times: "*"
+        case .divide: "/"
+        }
+    }
+
     public func canPrecede(_ other: (any EquationToken)?) -> Bool {
         if let other {
             if let linearOperation = other as? LinearOperationToken {
