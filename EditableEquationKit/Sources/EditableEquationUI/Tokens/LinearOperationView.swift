@@ -18,7 +18,7 @@ struct LinearOperationView: TokenView {
     @EnvironmentObject var manager: EquationManager
 
     var body: some View {
-        Text(operationText)
+        Text(operationText(op: linearOperation.operation))
             .padding(.horizontal, 3)
             .overlay {
                 HStack(spacing: 0) {
@@ -27,24 +27,54 @@ struct LinearOperationView: TokenView {
                     SimpleDropOverlay(insertionPoint: .init(treeLocation: treeLocation, insertionLocation: .trailing), namespace: namespace)
                 }
             }
+            .contextMenu {
+                ForEach(LinearOperationToken.LinearOperation.allCases, id: \.hashValue) { op in
+                    Button(operationText(op: op)) {
+                        withAnimation {
+                            manager.replace(
+                                token: LinearOperationToken(
+                                    id: linearOperation.id,
+                                    operation: op
+                                ),
+                                at: treeLocation
+                            )
+                        }
+                    }
+                }
+            }
     }
 
     var transformTapSection: some View {
-        Color.red.opacity(0.0001).onTapGesture {
-            withAnimation {
-                manager.replace(
-                    token: LinearOperationToken(
-                        id: linearOperation.id,
-                        operation: linearOperation.operation.next()
-                    ),
-                    at: treeLocation
-                )
+        Color.red.opacity(0.0001)
+            .onTapGesture {
+                guard linearOperation.operation == .divide,
+                      let parent = manager.tokenAt(location: treeLocation.removingLastChild()) as? any GroupEquationToken,
+                      var elementBefore = parent.child(leftOf: linearOperation.id),
+                      var elementAfter = parent.child(rightOf: linearOperation.id)
+                else { return }
+
+                if var leadingGroup = elementBefore as? LinearGroup {
+                    leadingGroup.hasBrackets = false
+                    elementBefore = leadingGroup
+                }
+
+                if var trailingGroup = elementAfter as? LinearGroup {
+                    trailingGroup.hasBrackets = false
+                    elementAfter = trailingGroup
+                }
+
+                let newDivisionGroup = DivisionGroup(numerator: [elementBefore], denominator: [elementAfter])
+
+                withAnimation {
+                    manager.replace(token: newDivisionGroup, at: treeLocation)
+                    manager.remove(at: treeLocation.removingLastChild().appending(child: elementBefore.id))
+                    manager.remove(at: treeLocation.removingLastChild().appending(child: elementAfter.id))
+                }
             }
-        }
     }
 
-    var operationText: String {
-        switch linearOperation.operation {
+    func operationText(op: LinearOperationToken.LinearOperation) -> String {
+        switch op {
         case .plus:
             "+"
         case .minus:

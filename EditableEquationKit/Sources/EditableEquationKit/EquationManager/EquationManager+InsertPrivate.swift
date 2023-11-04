@@ -9,7 +9,7 @@ import Foundation
 import EditableEquationCore
 
 extension EquationManager {
-    internal func tokenAt(location: TokenTreeLocation) -> (any EquationToken)? {
+    public func tokenAt(location: TokenTreeLocation) -> (any EquationToken)? {
         var currentToken: any EquationToken = root
 
         // If theres no last item, the path components is empty and it refers to root

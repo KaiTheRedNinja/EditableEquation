@@ -20,7 +20,7 @@ public struct LinearOperationToken: EquationToken {
         self.operation = operation
     }
 
-    public enum LinearOperation: Codable {
+    public enum LinearOperation: Codable, CaseIterable {
         case plus, minus, times, divide
     }
 
