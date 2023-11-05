@@ -42,7 +42,7 @@ struct NumberEditSectionView: View {
 
             deleteView
         }
-        .frame(height: 35)
+        .frame(height: 75)
     }
 
     var arrowView: some View {
@@ -52,14 +52,14 @@ struct NumberEditSectionView: View {
                     manager.moveLeft()
                 }
             } label: {
-                Image(systemName: "arrowtriangle.left.fill").frame(height: 30)
+                Image(systemName: "arrowtriangle.left.fill").frame(height: 70)
             }
             Button {
                 withAnimation(.easeInOut(duration: 0.25)) {
                     manager.moveRight()
                 }
             } label: {
-                Image(systemName: "arrowtriangle.right.fill").frame(height: 30)
+                Image(systemName: "arrowtriangle.right.fill").frame(height: 70)
             }
         }
         .font(.system(.largeTitle))
@@ -68,19 +68,24 @@ struct NumberEditSectionView: View {
     }
 
     func numberEditView(for numberToken: NumberToken) -> some View {
-        GroupBox {
-            HStack {
-                Spacer()
-                Text(String(numberToken.digit))
-                    .lineLimit(1)
-                Button {
-                    numberEditor.editingNumber = nil
-                } label: {
-                    Image(systemName: "xmark")
+        RoundedRectangle(cornerRadius: 16)
+            .fill(.ultraThickMaterial)
+            .overlay {
+                HStack {
+                    Spacer()
+                    Text(String(numberToken.digit))
+                        .lineLimit(1)
+                    Button {
+                        numberEditor.editingNumber = nil
+                    } label: {
+                        Image(systemName: "xmark")
+                    }
                 }
+                .frame(maxHeight: .infinity)
+                .padding(.horizontal, 10)
             }
-            .padding(-3)
-        }
+            .padding(.vertical, -5)
+            .font(.system(.title))
     }
 
     var deleteView: some View {
@@ -89,7 +94,7 @@ struct NumberEditSectionView: View {
                 manager.backspace()
             }
         } label: {
-            Image(systemName: "delete.left").frame(height: 30)
+            Image(systemName: "delete.left").frame(height: 75)
         }
         .font(.system(.title))
         .buttonStyle(.bordered)

@@ -30,7 +30,7 @@ struct MainView: View {
                 equationDisplaySection
             }
             NumberEditSectionView(manager: manager, numberEditor: numberEditor)
-            inputPadSection
+            InputPadSectionView(manager: manager)
         }
         .animation(.easeOut(duration: 0.25), value: numberEditor.editingNumber.debugDescription)
         .padding(.horizontal, 14)
@@ -78,19 +78,6 @@ struct MainView: View {
             }
             .bold()
         }
-    }
-
-    @ViewBuilder var inputPadSection: some View {
-        Text("42")
-            .tokenDragSource(for: NumberToken(digit: 42))
-            .onTapGesture {
-                guard let insertionPoint = manager.insertionPoint else { return }
-                withAnimation {
-                    manager.insert(token: NumberToken(digit: 42), at: insertionPoint)
-                }
-            }
-
-        Spacer()
     }
 }
 
