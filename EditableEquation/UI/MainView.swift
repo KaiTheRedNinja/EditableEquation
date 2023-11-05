@@ -14,9 +14,9 @@ struct MainView: View {
 
     @ObservedObject var numberEditor: NumberEditor
 
-    init() {
+    init(initialRoot: LinearGroup) {
         self.manager = .init(
-            root: defaultRoot
+            root: initialRoot
         )
         self.numberEditor = .init()
         manager.numberEditor = self.numberEditor
@@ -25,11 +25,11 @@ struct MainView: View {
     @State var resultDisplayType: ResultDisplayType = .fraction
 
     var body: some View {
-        VStack {
+        VStack(spacing: 14) {
             GroupBox {
                 equationDisplaySection
             }
-            numberEditSection
+            NumberEditSectionView(manager: manager, numberEditor: numberEditor)
             inputPadSection
         }
         .animation(.easeOut(duration: 0.25), value: numberEditor.editingNumber.debugDescription)
@@ -80,41 +80,7 @@ struct MainView: View {
         }
     }
 
-    @ViewBuilder var numberEditSection: some View {
-        if let editingLocation = numberEditor.editingNumber,
-           let numberToken = manager.tokenAt(location: editingLocation) as? NumberToken {
-            GroupBox {
-                HStack {
-                    Spacer()
-                    Text(String(numberToken.digit))
-                    Button {
-                        numberEditor.editingNumber = nil
-                    } label: {
-                        Image(systemName: "xmark")
-                    }
-                }
-            }
-        }
-    }
-
     @ViewBuilder var inputPadSection: some View {
-        HStack {
-            Button("<") {
-                withAnimation(.easeInOut(duration: 0.25)) {
-                    manager.moveLeft()
-                }
-            }
-            Button("-") {
-                withAnimation {
-                    manager.backspace()
-                }
-            }
-            Button(">") {
-                withAnimation(.easeInOut(duration: 0.25)) {
-                    manager.moveRight()
-                }
-            }
-        }
         Text("42")
             .tokenDragSource(for: NumberToken(digit: 42))
             .onTapGesture {
@@ -129,5 +95,5 @@ struct MainView: View {
 }
 
 #Preview {
-    MainView()
+    MainView(initialRoot: defaultRoot)
 }

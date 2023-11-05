@@ -50,7 +50,11 @@ struct NumberTokenView: TokenView {
     var editTapSection: some View {
         Color.red.opacity(0.0001)
             .onTapGesture {
-                manager.numberEditor?.editingNumber = treeLocation
+                if manager.numberEditor?.editingNumber == treeLocation {
+                    manager.numberEditor?.editingNumber = nil
+                } else {
+                    manager.numberEditor?.editingNumber = treeLocation
+                }
             }
     }
 

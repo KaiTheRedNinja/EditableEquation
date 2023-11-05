@@ -49,7 +49,7 @@ let defaultRoot = LinearGroup(
 
 struct ContentView: View {
     var body: some View {
-        MainView()
+        MainView(initialRoot: defaultRoot)
     }
 }
 
