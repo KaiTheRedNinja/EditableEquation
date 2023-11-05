@@ -9,21 +9,13 @@ import SwiftUI
 import EditableEquationCore
 import EditableEquationKit
 
-public class NumberEditor: ObservableObject {
-    @Published public var editingNumber: TokenTreeLocation?
-
-    public init(editingNumber: TokenTreeLocation? = nil) {
-        self.editingNumber = editingNumber
-    }
-}
-
 struct NumberTokenView: TokenView {
     var number: NumberToken
     var treeLocation: TokenTreeLocation
 
     var namespace: Namespace.ID
 
-    @EnvironmentObject var editor: NumberEditor
+    @EnvironmentObject var manager: EquationManager
 
     var body: some View {
         Text(String(number.digit))
@@ -35,12 +27,30 @@ struct NumberTokenView: TokenView {
                     SimpleDropOverlay(insertionPoint: .init(treeLocation: treeLocation, insertionLocation: .trailing), namespace: namespace)
                 }
             }
+            .background {
+                if let numberEditor = manager.numberEditor {
+                    BackgroundHighlightView(numberEditor: numberEditor, treeLocation: treeLocation)
+                }
+            }
+    }
+
+    struct BackgroundHighlightView: View {
+        @ObservedObject var numberEditor: NumberEditor
+        var treeLocation: TokenTreeLocation
+
+        var body: some View {
+            if numberEditor.editingNumber == treeLocation {
+                RoundedRectangle(cornerRadius: 3)
+                    .fill(Color.accentColor)
+                    .opacity(0.7)
+            }
+        }
     }
 
     var editTapSection: some View {
         Color.red.opacity(0.0001)
             .onTapGesture {
-                editor.editingNumber = treeLocation
+                manager.numberEditor?.editingNumber = treeLocation
             }
     }
 

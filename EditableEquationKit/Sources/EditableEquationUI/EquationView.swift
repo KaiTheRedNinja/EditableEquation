@@ -11,18 +11,16 @@ import EditableEquationKit
 /// A view that manages an Equation
 public struct EquationView: View {
     @ObservedObject var equationManager: EquationManager
-    @ObservedObject var numberEditor: NumberEditor
 
     @Namespace var namespace
 
     public init(root: LinearGroup, numberEditor: NumberEditor? = nil) {
         self.equationManager = .init(root: root)
-        self.numberEditor = numberEditor ?? .init()
+        equationManager.numberEditor = numberEditor
     }
 
-    public init(manager: EquationManager, numberEditor: NumberEditor? = nil) {
+    public init(manager: EquationManager) {
         self.equationManager = manager
-        self.numberEditor = numberEditor ?? .init()
     }
 
     public var body: some View {
@@ -32,6 +30,5 @@ public struct EquationView: View {
             namespace: namespace
         )
         .environmentObject(equationManager)
-        .environmentObject(numberEditor)
     }
 }

@@ -21,7 +21,11 @@ extension EquationManager {
     }
 
     /// Insert a token at an insertion point
-    public func insert(token: any EquationToken, at insertionPoint: InsertionPoint) {
+    public func insert(
+        token: any EquationToken,
+        at insertionPoint: InsertionPoint,
+        editIfNumberToken: Bool = false
+    ) {
         guard let insertionReferenceID = insertionPoint.treeLocation.pathComponents.last else {
             print("Invalid insertion point")
             return
@@ -76,11 +80,14 @@ extension EquationManager {
             return
         }
 
-        if let insertionPoint = self.insertionPoint {
-            self.insertionPoint = reconcile(insertionPoint: insertionPoint, originalRoot: self.root, newRoot: newRoot)
+        updateRoot(newRoot: newRoot)
+
+        if editIfNumberToken,
+           token is NumberToken,
+           numberEditor != nil,
+           let tokenPath = findPath(for: token.id, in: root) {
+            numberEditor?.editingNumber = tokenPath
         }
-        self.root = newRoot
-        updateErrors()
     }
 
     /// Deletes the item to the left of the insertion point
@@ -150,11 +157,7 @@ extension EquationManager {
             return
         }
 
-        if let insertionPoint {
-            self.insertionPoint = reconcile(insertionPoint: insertionPoint, originalRoot: self.root, newRoot: newRoot)
-        }
-        self.root = newRoot
-        updateErrors()
+        updateRoot(newRoot: newRoot)
     }
 
     /// Replaces the contents of a location with another token
@@ -207,11 +210,7 @@ extension EquationManager {
             return
         }
 
-        if let insertionPoint {
-            self.insertionPoint = reconcile(insertionPoint: insertionPoint, originalRoot: self.root, newRoot: newRoot)
-        }
-        self.root = newRoot
-        updateErrors()
+        updateRoot(newRoot: newRoot)
     }
 
     /// Moves a token from an initial location to an insertion point

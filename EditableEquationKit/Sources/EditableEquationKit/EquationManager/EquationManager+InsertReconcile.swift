@@ -107,7 +107,7 @@ extension EquationManager {
         )
     }
 
-    private func findPath(for tokenID: UUID, in rootToken: any GroupEquationToken) -> TokenTreeLocation? {
+    internal func findPath(for tokenID: UUID, in rootToken: any GroupEquationToken) -> TokenTreeLocation? {
         // if rootToken is tokenID, return an empty location
         guard rootToken.id != tokenID else { return .init(pathComponents: []) }
 
