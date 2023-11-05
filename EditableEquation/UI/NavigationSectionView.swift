@@ -1,5 +1,5 @@
 //
-//  NumberEditSectionView.swift
+//  NavigationSectionView.swift
 //  EditableEquation
 //
 //  Created by Kai Quan Tay on 5/11/23.
@@ -9,7 +9,7 @@ import SwiftUI
 import EditableEquationKit
 import EditableEquationCore
 
-struct NumberEditSectionView: View {
+struct NavigationSectionView: View {
     @ObservedObject var manager: EquationManager
     @ObservedObject var numberEditor: NumberEditor
 
@@ -18,28 +18,10 @@ struct NumberEditSectionView: View {
         self.numberEditor = numberEditor
     }
 
-    var editingLocation: TokenTreeLocation? { numberEditor.editingNumber }
-    var numberToken: NumberToken? {
-        guard let editingLocation else { return nil }
-        return manager.tokenAt(location: editingLocation) as? NumberToken
-    }
-
     var body: some View {
         HStack {
-            if numberToken == nil {
-                deleteView
-                    .opacity(0)
-                Spacer()
-            }
-
             arrowView
-
-            if let numberToken {
-                numberEditView(for: numberToken)
-            } else {
-                Spacer()
-            }
-
+            numberEditView
             deleteView
         }
         .frame(height: 75)
@@ -67,18 +49,20 @@ struct NumberEditSectionView: View {
         .foregroundStyle(.primary)
     }
 
-    func numberEditView(for numberToken: NumberToken) -> some View {
-        RoundedRectangle(cornerRadius: 16)
+    @ViewBuilder var numberEditView: some View {
+        if let editingLocation = numberEditor.editingNumber,
+           let numberToken = manager.tokenAt(location: editingLocation) as? NumberToken {
+            RoundedRectangle(
+                cornerRadius: 16
+            )
             .fill(.ultraThickMaterial)
             .overlay {
                 HStack {
-                    Spacer()
-                    Text(String(numberToken.digit))
-                        .lineLimit(1)
+                    NumberEditView(manager: manager, path: editingLocation, token: numberToken)
                     Button {
                         numberEditor.editingNumber = nil
                     } label: {
-                        Image(systemName: "xmark")
+                        Image(systemName: "checkmark")
                     }
                 }
                 .frame(maxHeight: .infinity)
@@ -86,6 +70,14 @@ struct NumberEditSectionView: View {
             }
             .padding(.vertical, -5)
             .font(.system(.title))
+        } else {
+            RoundedRectangle(
+                cornerRadius: 16
+            )
+            .fill(.ultraThickMaterial)
+            .opacity(0.7)
+            .padding(.vertical, -5)
+        }
     }
 
     var deleteView: some View {

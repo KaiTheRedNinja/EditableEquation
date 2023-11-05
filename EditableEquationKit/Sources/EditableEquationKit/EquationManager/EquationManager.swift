@@ -53,8 +53,10 @@ public class EquationManager: ObservableObject {
     }
 
     internal func updateRoot(newRoot: LinearGroup) {
-        if let insertionPoint = self.insertionPoint {
-            self.insertionPoint = reconcile(insertionPoint: insertionPoint, originalRoot: self.root, newRoot: newRoot)
+        if let insertionPoint = self.insertionPoint,
+           let newPoint = reconcile(insertionPoint: insertionPoint, originalRoot: self.root, newRoot: newRoot),
+           newPoint != insertionPoint {
+            self.insertionPoint = newPoint
         }
         self.root = newRoot
         updateErrors()

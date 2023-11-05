@@ -29,7 +29,7 @@ struct MainView: View {
             GroupBox {
                 equationDisplaySection
             }
-            NumberEditSectionView(manager: manager, numberEditor: numberEditor)
+            NavigationSectionView(manager: manager, numberEditor: numberEditor)
             InputPadSectionView(manager: manager)
         }
         .animation(.easeOut(duration: 0.25), value: numberEditor.editingNumber.debugDescription)
