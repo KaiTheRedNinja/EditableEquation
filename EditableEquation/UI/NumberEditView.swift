@@ -29,7 +29,7 @@ struct NumberEditView: View {
                 manager.numberEditor?.editingNumber = nil
             }
             .submitLabel(.done)
-            .onChange(of: token.digit) { _, newValue in
+            .onChange(of: token.digit) { _, _ in
                 manager.replace(token: token, at: path)
             }
             .lineLimit(1)

@@ -11,7 +11,7 @@ public enum EquationTokenCoding: ProtocolCoding {
     public typealias WrappedProtocol = any EquationToken
     public typealias MinimalWrappedProtocol = MinimalEquationToken
 
-    public static var registeredProviders: [String : ProtocolCodingProvider<WrappedProtocol>] = [:]
+    public static var registeredProviders: [String: ProtocolCodingProvider<WrappedProtocol>] = [:]
 
     public static var name: KeyPath<WrappedProtocol, String> = \.name
 
@@ -38,4 +38,3 @@ public extension Array<any EquationToken> {
         }
     }
 }
-

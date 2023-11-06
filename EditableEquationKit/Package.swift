@@ -19,7 +19,7 @@ let package = Package(
             targets: ["EditableEquationKit", "EditableEquationCore"]),
         .library(
             name: "EditableEquationUI",
-            targets: ["EditableEquationUI"]),
+            targets: ["EditableEquationUI"])
     ],
     dependencies: [
         .package(url: "https://github.com/alexandrehsaad/swift-rationals.git", branch: "main")
@@ -40,7 +40,6 @@ let package = Package(
             dependencies: ["EditableEquationKit", "EditableEquationCore"]),
         .testTarget(
             name: "EditableEquationKitTests",
-            dependencies: ["EditableEquationKit"]),
+            dependencies: ["EditableEquationKit"])
     ]
 )
-

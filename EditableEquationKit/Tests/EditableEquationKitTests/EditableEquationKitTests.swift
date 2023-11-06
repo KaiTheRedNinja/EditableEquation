@@ -45,9 +45,9 @@ final class LinearGroupTests: XCTestCase {
         )
 
         let optimised = initialGroup.optimised()
-        XCTAssertTrue(optimised is LinearGroup)
-        let optimisedGroup = optimised as! LinearGroup
-        XCTAssertEqual("\(optimisedGroup)", "\(finalGroup)")
+        let optimisedGroup = optimised as? LinearGroup
+        XCTAssertNotNil(optimisedGroup)
+        XCTAssertEqual("\(optimisedGroup!)", "\(finalGroup)")
     }
 
     func testLinearGroupAdvancedOptimisation() throws {
@@ -66,7 +66,7 @@ final class LinearGroupTests: XCTestCase {
                                 NumberToken(id: uuids[5], digit: 5)
                             ],
                             hasBrackets: false
-                        ),
+                        )
                     ],
                     hasBrackets: false
                 ),
@@ -77,7 +77,7 @@ final class LinearGroupTests: XCTestCase {
                         NumberToken(id: uuids[8], digit: 9)
                     ],
                     hasBrackets: true
-                ),
+                )
             ],
             hasBrackets: false
         )
@@ -101,8 +101,8 @@ final class LinearGroupTests: XCTestCase {
         )
 
         let optimised = initialGroup.optimised()
-        XCTAssertTrue(optimised is LinearGroup)
-        let optimisedGroup = optimised as! LinearGroup
-        XCTAssertEqual("\(optimisedGroup)", "\(finalGroup)")
+        let optimisedGroup = optimised as? LinearGroup
+        XCTAssertNotNil(optimisedGroup)
+        XCTAssertEqual("\(optimisedGroup!)", "\(finalGroup)")
     }
 }

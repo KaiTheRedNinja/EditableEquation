@@ -13,12 +13,14 @@ import Foundation
 public protocol GroupEquationToken: ValueEquationToken {
     // MARK: Mandatory functions
 
-    /// Returns a boolean representing if the insertion location is valid. If it is invalid, it will be moved until it reaches a valid location.
+    /// Returns a boolean representing if the insertion location is valid. If it is invalid, it will be moved until it
+    /// reaches a valid location.
     func canInsert(at insertionLocation: InsertionPoint.InsertionLocation) -> Bool
 
     /// Inserts a token at an insertion point relative to a child in the token
     ///
-    /// If the `insertionLocation` is `.within`, *DISREGARD* the `referenceTokenID`, as it is referring to the token itself, not any children.
+    /// If the `insertionLocation` is `.within`, *DISREGARD* the `referenceTokenID`, as it 
+    /// is referring to the token itself, not any children.
     /// This case will only occur when there are no children, and as such `referenceTokenID` will be `nil`.
     func inserting(
         token: any EquationToken,
@@ -44,7 +46,8 @@ public protocol GroupEquationToken: ValueEquationToken {
     /// Returns the token for an ID representing the child left of a direct child within this group token, if one exists
     func child(leftOf id: UUID) -> (any EquationToken)?
 
-    /// Returns the token for an ID representing the child right of a direct child within this group token, if one exists
+    /// Returns the token for an ID representing the child right of a direct child within 
+    /// this group token, if one exists
     func child(rightOf id: UUID) -> (any EquationToken)?
 
     /// Returns the first child, if one exists
@@ -52,7 +55,6 @@ public protocol GroupEquationToken: ValueEquationToken {
 
     /// Returns the last child, if one exists
     func lastChild() -> (any EquationToken)?
-
 
     // MARK: Optional methods
 
@@ -96,7 +98,10 @@ public extension GroupEquationToken {
 
         // replace the children
         for (originalID, newChild) in newChildren {
-            mutableSelf = mutableSelf.groupRepresentation?.replacing(originalTokenID: originalID, with: newChild) ?? mutableSelf
+            mutableSelf = mutableSelf.groupRepresentation?.replacing(
+                originalTokenID: originalID,
+                with: newChild
+            ) ?? mutableSelf
         }
 
         return mutableSelf

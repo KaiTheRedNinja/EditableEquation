@@ -9,7 +9,11 @@ import Foundation
 import EditableEquationCore
 
 extension EquationManager {
-    internal func reconcile(insertionPoint: InsertionPoint, originalRoot: any EquationToken, newRoot: any EquationToken) -> InsertionPoint? {
+    internal func reconcile(
+        insertionPoint: InsertionPoint,
+        originalRoot: any EquationToken,
+        newRoot: any EquationToken
+    ) -> InsertionPoint? {
         guard let originalRoot = originalRoot.groupRepresentation,
               let newRoot = newRoot.groupRepresentation,
               exists(location: insertionPoint.treeLocation, in: originalRoot)
@@ -71,7 +75,10 @@ extension EquationManager {
         return currentToken.child(with: location.pathComponents.last!) != nil
     }
 
-    private func alternativeRepresentation(for insertionPoint: InsertionPoint, in rootToken: any GroupEquationToken) -> InsertionPoint? {
+    private func alternativeRepresentation(
+        for insertionPoint: InsertionPoint,
+        in rootToken: any GroupEquationToken
+    ) -> InsertionPoint? {
         // if its a .within or the path is empty, there is no alternative form
         guard insertionPoint.insertionLocation != .within,
               !insertionPoint.treeLocation.pathComponents.isEmpty
@@ -90,7 +97,7 @@ extension EquationManager {
         let newChildId: UUID?
         let newPosition: InsertionPoint.InsertionLocation
         switch insertionPoint.insertionLocation {
-        case .leading: 
+        case .leading:
             newChildId = currentToken.child(leftOf: lastComponent)?.id
             newPosition = .trailing
         case .trailing:
@@ -107,7 +114,10 @@ extension EquationManager {
         )
     }
 
-    internal func findPath(for tokenID: UUID, in rootToken: any GroupEquationToken) -> TokenTreeLocation? {
+    internal func findPath(
+        for tokenID: UUID,
+        in rootToken: any GroupEquationToken
+    ) -> TokenTreeLocation? {
         // if rootToken is tokenID, return an empty location
         guard rootToken.id != tokenID else { return .init(pathComponents: []) }
 
@@ -140,7 +150,8 @@ extension EquationManager {
                 continue
             }
 
-            // if we reach the end of `currentPath` without finding the token, try accessing the siblings to the right of the current path.
+            // if we reach the end of `currentPath` without finding the token, try accessing the siblings to 
+            // the right of the current path.
             // if the siblings don't contain the token, we remove an element from `currentPath` and try again
             // if we are left with just 1 item, it isn't possible and the token doesn't exist
 
@@ -152,10 +163,13 @@ extension EquationManager {
                 while let validNextChild = nextChild {
                     // check if the child is what we're looking for
                     if validNextChild.id == tokenID {
-                        return .init(pathComponents: currentPath.dropFirst().dropLast().map({ $0.id }) + [validNextChild.id])
+                        return .init(
+                            pathComponents: currentPath.dropFirst().dropLast().map({ $0.id }) + [validNextChild.id]
+                        )
                     }
 
-                    // if not, see if the child is a group token. If it is, replace it as the last item of `currentPath` and break out
+                    // if not, see if the child is a group token. If it is, replace it as 
+                    // the last item of `currentPath` and break out
                     if let validChild = validNextChild as? any GroupEquationToken {
                         currentPath[pathCount-1] = validChild
                         continueFlag = true

@@ -9,6 +9,7 @@ import Foundation
 import EditableEquationCore
 
 extension EquationManager {
+    /// Gets the token at a location relative to root, if it exists
     public func tokenAt(location: TokenTreeLocation) -> (any EquationToken)? {
         var currentToken: any EquationToken = root
 
@@ -121,7 +122,10 @@ extension EquationManager {
                let childGroup = prevChild.groupRepresentation {
                 if let lastChild = childGroup.lastChild() {
                     return .init(
-                        treeLocation: insertionPoint.treeLocation.removingLastChild().appending(child: prevChild.id).appending(child: lastChild.id),
+                        treeLocation: insertionPoint.treeLocation
+                            .removingLastChild()
+                            .appending(child: prevChild.id)
+                            .appending(child: lastChild.id),
                         insertionLocation: .trailing
                     )
                 } else {
@@ -223,7 +227,10 @@ extension EquationManager {
                let childGroup = nextChild.groupRepresentation {
                 if let firstChild = childGroup.firstChild() {
                     return .init(
-                        treeLocation: insertionPoint.treeLocation.removingLastChild().appending(child: nextChild.id).appending(child: firstChild.id),
+                        treeLocation: insertionPoint.treeLocation
+                            .removingLastChild()
+                            .appending(child: nextChild.id)
+                            .appending(child: firstChild.id),
                         insertionLocation: .leading
                     )
                 } else {
@@ -255,4 +262,3 @@ extension EquationManager {
         }
     }
 }
-

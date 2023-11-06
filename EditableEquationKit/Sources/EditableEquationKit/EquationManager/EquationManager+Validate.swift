@@ -9,6 +9,7 @@ import Foundation
 import EditableEquationCore
 
 public extension EquationManager {
+    /// Updates the ``error`` value
     func updateErrors() {
         error = findErrors(in: root)
     }
@@ -36,7 +37,7 @@ public struct EquationError: Error {
                 "\(string) cannot be at the start"
             case .cannotEndGroup(let string):
                 "\(string) cannot be at the end"
-            case .cannotCoexist(let string1, let string2):
+            case let .cannotCoexist(string1, string2):
                 "\(string1) and \(string2) cannot be next to each other"
             }
         }

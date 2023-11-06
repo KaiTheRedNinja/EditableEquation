@@ -22,9 +22,21 @@ struct NumberTokenView: TokenView {
             .padding(.horizontal, 3)
             .overlay {
                 HStack(spacing: 0) {
-                    SimpleDropOverlay(insertionPoint: .init(treeLocation: treeLocation, insertionLocation: .leading), namespace: namespace)
+                    SimpleDropOverlay(
+                        insertionPoint: .init(
+                            treeLocation: treeLocation,
+                            insertionLocation: .leading
+                        ),
+                        namespace: namespace
+                    )
                     editTapSection
-                    SimpleDropOverlay(insertionPoint: .init(treeLocation: treeLocation, insertionLocation: .trailing), namespace: namespace)
+                    SimpleDropOverlay(
+                        insertionPoint: .init(
+                            treeLocation: treeLocation,
+                            insertionLocation: .trailing
+                        ),
+                        namespace: namespace
+                    )
                 }
             }
             .background {

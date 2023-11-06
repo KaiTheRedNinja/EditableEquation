@@ -18,8 +18,20 @@ struct SimpleLeadingTrailingDropOverlay: View {
 
     var body: some View {
         HStack(spacing: 0) {
-            SimpleDropOverlay(insertionPoint: .init(treeLocation: treeLocation, insertionLocation: .leading), namespace: namespace)
-            SimpleDropOverlay(insertionPoint: .init(treeLocation: treeLocation, insertionLocation: .trailing), namespace: namespace)
+            SimpleDropOverlay(
+                insertionPoint: .init(
+                    treeLocation: treeLocation,
+                    insertionLocation: .leading
+                ),
+                namespace: namespace
+            )
+            SimpleDropOverlay(
+                insertionPoint: .init(
+                    treeLocation: treeLocation,
+                    insertionLocation: .trailing
+                ),
+                namespace: namespace
+            )
         }
     }
 }
@@ -46,7 +58,7 @@ struct SimpleDropOverlay: View {
                         .matchedGeometryEffect(id: "cursor", in: namespace)
                 }
             }
-            .dropDestination(for: Data.self) { items, location in
+            .dropDestination(for: Data.self) { items, _ in
                 for item in items {
                     withAnimation(.easeInOut(duration: 0.25)) {
                         manager.manage(

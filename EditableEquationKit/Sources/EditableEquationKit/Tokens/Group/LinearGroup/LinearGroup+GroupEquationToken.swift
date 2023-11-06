@@ -12,8 +12,9 @@ extension LinearGroup: GroupEquationToken {
     public func validWhenChildrenValid() -> Bool { false }
     public func canDirectlyMultiply() -> Bool { hasBrackets }
 
-    /// Optimises the LinearGroup's representation. It returns a modified version of this instance, keeping the ID the same.
-    /// This function is to be called every time the equation is modified, and has no effects on the equation's appearance.
+    /// Optimises the LinearGroup's representation. It returns a modified version of this instance, 
+    /// keeping the ID the same. This function is to be called every time the equation is modified,
+    /// and has no effects on the equation's appearance.
     public func optimised() -> any EquationToken {
         var contentsCopy = contents
 
@@ -38,7 +39,7 @@ extension LinearGroup: GroupEquationToken {
         }
 
         // Turn consecutive number tokens into a single token
-        var lastNumberToken: Int? = nil
+        var lastNumberToken: Int?
         for index in (0..<contentsCopy.count).reversed() {
             if let number = contentsCopy[index] as? NumberToken {
                 if let lastNumberToken {

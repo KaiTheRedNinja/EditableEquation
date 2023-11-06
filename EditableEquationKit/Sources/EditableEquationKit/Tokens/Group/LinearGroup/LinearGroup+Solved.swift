@@ -10,22 +10,22 @@ import EditableEquationCore
 import Rationals
 
 extension LinearGroup: ValueEquationToken {
-    public func solved() throws -> Fraction<Int> {
-        // solve each of the values
-        enum SolveStep {
-            case operation(LinearOperationToken)
-            case value(Fraction<Int>)
+    private enum SolveStep {
+        case operation(LinearOperationToken)
+        case value(Fraction<Int>)
 
-            var description: String {
-                switch self {
-                case .operation(let linearOperationToken):
-                    "\(linearOperationToken.operation)"
-                case .value(let solution):
-                    "\(solution)"
-                }
+        var description: String {
+            switch self {
+            case .operation(let linearOperationToken):
+                "\(linearOperationToken.operation)"
+            case .value(let solution):
+                "\(solution)"
             }
         }
+    }
 
+    public func solved() throws -> Fraction<Int> {
+        // solve each of the values
         var solvedWithOperations: [SolveStep] = []
         for item in contents {
             if let operation = item as? LinearOperationToken {
@@ -92,7 +92,8 @@ extension LinearGroup: ValueEquationToken {
                             if operation.operation == .times {
                                 result = rightValue * leftValue
                             } else {
-                                result = rightValue / leftValue // the "right" value is actually left, since we flipped it
+                                // the "right" value is actually left, since we flipped it
+                                result = rightValue / leftValue
                             }
                         default: fatalError("Internal inconsistency")
                         }

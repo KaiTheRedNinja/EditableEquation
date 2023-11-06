@@ -33,7 +33,7 @@ public struct LinearGroup: EquationToken {
     public func canPrecede(_ other: (any EquationToken)?) -> Bool {
         guard let other else { return true } // LinearGroups can always start or end groups
         if !hasBrackets { return false } // LinearGroups need brackets to go before others
-        
+
         // LinearGroups can always precede operations
         if other is LinearOperationToken {
             return true

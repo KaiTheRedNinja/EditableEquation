@@ -15,7 +15,7 @@ struct InputPadSectionView: View {
         VStack {
             HStack {
                 Button {
-                    
+
                 } label: {
                     Color.clear
                         .overlay {
@@ -156,7 +156,7 @@ struct InputPadSectionView: View {
                 }
 
                 Button {
-                    
+
                 } label: {
                     Image(systemName: "plus").frame(maxWidth: .infinity, maxHeight: .infinity)
                 }

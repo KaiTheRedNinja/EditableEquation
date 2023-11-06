@@ -34,4 +34,3 @@ public struct InsertionPoint: Hashable {
         return mutableSelf
     }
 }
-

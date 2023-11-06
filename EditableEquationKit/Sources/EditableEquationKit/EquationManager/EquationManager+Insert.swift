@@ -64,8 +64,9 @@ extension EquationManager {
         // work the way back up the tree, updating it along the way
         for index in (0..<lastIndex).reversed() {
             let prevTokenIndex = index+1
+            // we use prevTokenIndex-1 here because pathComponents doesn't contain root
             guard let newToken = parents[index].groupRepresentation?.replacing(
-                originalTokenID: parentLocation.pathComponents[prevTokenIndex-1], // we use -1 here because pathComponents doesn't contain root
+                originalTokenID: parentLocation.pathComponents[prevTokenIndex-1],
                 with: parents[prevTokenIndex]
             ) else {
                 print("Could not rebuild tree")
@@ -142,7 +143,8 @@ extension EquationManager {
             // if this is not the last item, start rebuilding the tree
             let prevTokenIndex = index+1
             guard let newToken = parents[index].groupRepresentation?.replacing(
-                originalTokenID: parentLocation.pathComponents[prevTokenIndex-1], // we use -1 here because pathComponents doesn't contain root
+                // we use -1 here because pathComponents doesn't contain root
+                originalTokenID: parentLocation.pathComponents[prevTokenIndex-1],
                 with: parents[prevTokenIndex]
             ) else {
                 print("Could not rebuild tree")
@@ -195,7 +197,8 @@ extension EquationManager {
         for index in (0..<lastIndex).reversed() {
             let prevTokenIndex = index+1
             guard let newToken = parents[index].groupRepresentation?.replacing(
-                originalTokenID: parentLocation.pathComponents[prevTokenIndex-1], // we use -1 here because pathComponents doesn't contain root
+                // we use -1 here because pathComponents doesn't contain root
+                originalTokenID: parentLocation.pathComponents[prevTokenIndex-1],
                 with: parents[prevTokenIndex]
             ) else {
                 print("Could not rebuild tree")

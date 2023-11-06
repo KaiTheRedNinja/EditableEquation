@@ -18,7 +18,7 @@ public struct NumberToken: ValueEquationToken {
     public func solved() throws -> Fraction<Int> {
         Fraction(integerLiteral: digit)
     }
-    
+
     public var id: UUID = .init()
     public private(set) var name: String = "Number"
 

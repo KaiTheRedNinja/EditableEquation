@@ -42,7 +42,8 @@ public struct ProtocolCodingProvider<P> {
 /// are to be decoded by `ProtocolCoding` must be registered by ``register(type:for:)``.
 public protocol ProtocolCoding {
     associatedtype WrappedProtocol
-    /// A type conforming to `WrappedProtocol` that can be decoded and type casted to `WrappedProtocol`. Only needs to contain the name.
+    /// A type conforming to `WrappedProtocol` that can be decoded and type casted 
+    /// to `WrappedProtocol`. Only needs to contain the name.
     associatedtype MinimalWrappedProtocol: Codable
     /// A dictionary of providers to their names
     static var registeredProviders: [String: ProtocolCodingProvider<WrappedProtocol>] { get set }
@@ -122,4 +123,3 @@ public extension ProtocolCoding {
         return result
     }
 }
-

@@ -30,20 +30,36 @@ public struct GeneralTokenView: TokenView {
     public var body: some View {
         Group {
             if let numberToken = token as? NumberToken {
-                NumberTokenView(number: numberToken, treeLocation: treeLocation, namespace: namespace)
-                    .matchedGeometryEffect(id: token.id, in: namespace)
+                NumberTokenView(
+                    number: numberToken,
+                    treeLocation: treeLocation,
+                    namespace: namespace
+                )
+                .matchedGeometryEffect(id: token.id, in: namespace)
             }
             if let linearOperationToken = token as? LinearOperationToken {
-                LinearOperationView(linearOperation: linearOperationToken, treeLocation: treeLocation, namespace: namespace)
-                    .matchedGeometryEffect(id: token.id, in: namespace)
+                LinearOperationView(
+                    linearOperation: linearOperationToken,
+                    treeLocation: treeLocation,
+                    namespace: namespace
+                )
+                .matchedGeometryEffect(id: token.id, in: namespace)
             }
             if let linearGroup = token as? LinearGroup {
-                LinearGroupView(linearGroup: linearGroup, treeLocation: treeLocation, namespace: namespace)
-                    .matchedGeometryEffect(id: token.id, in: namespace)
+                LinearGroupView(
+                    linearGroup: linearGroup,
+                    treeLocation: treeLocation,
+                    namespace: namespace
+                )
+                .matchedGeometryEffect(id: token.id, in: namespace)
             }
             if let divisionGroup = token as? DivisionGroup {
-                DivisionGroupView(divisionGroup: divisionGroup, treeLocation: treeLocation, namespace: namespace)
-                    .matchedGeometryEffect(id: token.id, in: namespace)
+                DivisionGroupView(
+                    divisionGroup: divisionGroup,
+                    treeLocation: treeLocation,
+                    namespace: namespace
+                )
+                .matchedGeometryEffect(id: token.id, in: namespace)
             }
         }
         .tokenLocationDragSource(for: treeLocation)

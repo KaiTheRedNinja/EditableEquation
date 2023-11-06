@@ -37,7 +37,11 @@ struct LinearGroupView: TokenView {
             } else {
                 ForEach(0..<linearGroup.contents.count, id: \.self) { index in
                     let content = linearGroup.contents[index]
-                    GeneralTokenView(token: content, treeLocation: self.treeLocation.appending(child: content.id), namespace: namespace)
+                    GeneralTokenView(
+                        token: content,
+                        treeLocation: self.treeLocation.appending(child: content.id),
+                        namespace: namespace
+                    )
                 }
             }
             if linearGroup.hasBrackets {
