@@ -91,5 +91,20 @@ struct NavigationSectionView: View {
         .font(.system(.title))
         .buttonStyle(.bordered)
         .foregroundStyle(.primary)
+        .onLongPressGesture {
+            withAnimation {
+                manager.reset()
+            }
+        }
+        .dropDestination(for: Data.self) { items, _ in
+            for item in items {
+                guard let location = try? JSONDecoder().decode(TokenTreeLocation.self, from: item) else { continue }
+                withAnimation {
+                    manager.remove(at: location)
+                }
+                return true
+            }
+            return false
+        }
     }
 }

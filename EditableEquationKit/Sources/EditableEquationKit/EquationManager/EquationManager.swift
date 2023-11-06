@@ -52,6 +52,10 @@ public class EquationManager: ObservableObject {
         EquationTokenCoding.register(type: DivisionGroup.self, for: "DivisionGroup")
     }
 
+    public func reset() {
+        root.contents = [NumberToken(digit: 1)]
+    }
+
     internal func updateRoot(newRoot: LinearGroup) {
         if let insertionPoint = self.insertionPoint,
            let newPoint = reconcile(insertionPoint: insertionPoint, originalRoot: self.root, newRoot: newRoot),
