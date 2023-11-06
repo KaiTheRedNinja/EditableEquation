@@ -44,16 +44,13 @@ struct InputPadButton: View {
     var options: [InputPadOption]
 
     @EnvironmentObject var manager: EquationManager
+    @State var height: Double = 0
 
-    init(
-        @InputPadOptionBuilder options: () -> [InputPadOption]
-    ) {
+    init(@InputPadOptionBuilder options: () -> [InputPadOption]) {
         self.options = options()
     }
 
-    init(
-        _ optionsVerbatim: [InputPadOption]
-    ) {
+    init(_ optionsVerbatim: [InputPadOption]) {
         self.options = optionsVerbatim
     }
 
@@ -73,6 +70,17 @@ struct InputPadButton: View {
             }
         } label: {
             Color.clear
+                .background {
+                    GeometryReader { geom in
+                        Color.clear
+                            .onAppear {
+                                height = geom.size.height
+                            }
+                            .onChange(of: geom.size.height) { _, _ in
+                                height = geom.size.height
+                            }
+                    }
+                }
                 .overlay {
                     if let mainContent = options.first?.view {
                         mainContent
@@ -80,7 +88,7 @@ struct InputPadButton: View {
                     }
                 }
                 .overlay(alignment: .topLeading) {
-                    if options.count >= 2 {
+                    if height > 85, options.count >= 2 {
                         options[1].view
                             .font(.title3)
                             .padding(5)
@@ -88,7 +96,7 @@ struct InputPadButton: View {
                     }
                 }
                 .overlay(alignment: .topTrailing) {
-                    if options.count >= 3 {
+                    if height > 85, options.count >= 3 {
                         options[2].view
                             .font(.title3)
                             .padding(5)
