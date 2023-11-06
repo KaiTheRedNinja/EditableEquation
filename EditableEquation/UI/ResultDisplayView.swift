@@ -51,12 +51,12 @@ struct ResultDisplayView: View {
         VStack(spacing: 0) {
             Text(String(fraction.numerator))
                 .overlay(alignment: .bottom) {
-                    Color.black.frame(height: 2)
+                    Color.primary.frame(height: 2)
                         .offset(y: 1)
                 }
             Text(String(fraction.denominator))
                 .overlay(alignment: .top) {
-                    Color.black.frame(height: 2)
+                    Color.primary.frame(height: 2)
                         .offset(y: -1)
                 }
         }
@@ -68,12 +68,12 @@ struct ResultDisplayView: View {
             VStack(spacing: 0) {
                 Text(String(abs(fraction.numerator % fraction.denominator)))
                     .overlay(alignment: .bottom) {
-                        Color.black.frame(height: 2)
+                        Color.primary.frame(height: 2)
                             .offset(y: 1)
                     }
                 Text(String(fraction.denominator))
                     .overlay(alignment: .top) {
-                        Color.black.frame(height: 2)
+                        Color.primary.frame(height: 2)
                             .offset(y: -1)
                     }
             }

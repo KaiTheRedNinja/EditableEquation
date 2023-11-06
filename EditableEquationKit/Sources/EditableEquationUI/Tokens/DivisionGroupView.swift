@@ -31,7 +31,7 @@ struct DivisionGroupView: TokenView {
                 namespace: namespace
             )
             .overlay(alignment: .bottom) {
-                Color.black.frame(height: 2)
+                Color.primary.frame(height: 2)
                     .offset(y: 1)
                     .onTapGesture {
                         convertToLinearDivision()
@@ -43,7 +43,7 @@ struct DivisionGroupView: TokenView {
                 namespace: namespace
             )
             .overlay(alignment: .top) {
-                Color.black.frame(height: 2)
+                Color.primary.frame(height: 2)
                     .offset(y: -1)
                     .onTapGesture {
                         convertToLinearDivision()
