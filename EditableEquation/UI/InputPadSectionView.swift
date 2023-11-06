@@ -31,193 +31,143 @@ struct InputPadSectionView: View {
                 minusButton
             }
         }
+        .environmentObject(manager)
     }
 
     var trigButton: some View {
-        InputPadButton(
-            dragToken: NumberToken(digit: 69)
-        ) {
-            // TODO: Implement trig
-        } onLongHold: {
-            Button("sin") {
-
-            }.disabled(true)
-            Button("cos") {
-
-            }.disabled(true)
-            Button("tan") {
-
-            }.disabled(true)
-        } mainContent: {
-            Text("sin")
-        } alt1: {
-            Text("cos")
-        } alt2: {
-            Text("tan")
+        InputPadButton {
+            InputPadOption(token: NumberToken(digit: 69)) {
+                Text("sin")
+            }
+            InputPadOption(token: NumberToken(digit: 69)) {
+                Text("cos")
+            }
+            InputPadOption(token: NumberToken(digit: 69)) {
+                Text("tan")
+            }
         }
     }
 
     var logButton: some View {
-        InputPadButton(
-            dragToken: NumberToken(digit: 69)
-        ) {
-            // TODO: implement logarithms
-        } onLongHold: {
-            Button("Log10") {
+        InputPadButton {
+            InputPadOption(token: NumberToken(digit: 69)) {
+                Text("log")
+                    .padding(.bottom, 8)
+                    .padding(.trailing, 18)
+                    .overlay(alignment: .bottomTrailing) {
+                        Text("10")
+                            .font(.system(.title3, design: .serif))
+                    }
+            } minimalView: {
+                Text("Log10")
+            }
 
-            }.disabled(true)
-            Button("Ln") {
+            InputPadOption(token: NumberToken(digit: 69)) {
+                Text("ln")
+            }
 
-            }.disabled(true)
-            Button("Logn") {
-
-            }.disabled(true)
-        } mainContent: {
-            Text("log")
-                .padding(.bottom, 8)
-                .padding(.trailing, 18)
-                .overlay(alignment: .bottomTrailing) {
-                    Text("10")
-                        .font(.system(.title3, design: .serif))
-                }
-        } alt1: {
-            Text("ln")
-        } alt2: {
-            Text("log")
-                .font(.system(.title3))
-                .padding(.bottom, 6)
-                .padding(.trailing, 10)
-                .overlay(alignment: .bottomTrailing) {
-                    Text("n")
-                        .font(.system(.footnote, design: .serif))
-                }
-                .padding(.trailing, -2)
+            InputPadOption(token: NumberToken(digit: 69)) {
+                Text("log")
+                    .font(.system(.title3))
+                    .padding(.bottom, 6)
+                    .padding(.trailing, 10)
+                    .overlay(alignment: .bottomTrailing) {
+                        Text("n")
+                            .font(.system(.footnote, design: .serif))
+                    }
+                    .padding(.trailing, -2)
+            }
         }
     }
 
     var exponentButton: some View {
-        InputPadButton(
-            dragToken: NumberToken(digit: 69)
-        ) {
-            // TODO: implement exponentials
-        } onLongHold: {
-            Button("x^2") {
+        InputPadButton {
+            InputPadOption(token: NumberToken(digit: 69)) {
+                Text("x")
+                    .font(.system(.largeTitle, design: .serif))
+                    .padding(.top, 8)
+                    .padding(.trailing, 14)
+                    .overlay(alignment: .topTrailing) {
+                        Text("2")
+                            .font(.system(.title3, design: .serif))
+                    }
+            } minimalView: {
+                Text("x^2")
+            }
 
-            }.disabled(true)
-            Button("x^n") {
+            InputPadOption(token: NumberToken(digit: 69)) {
+                Text("x^n")
+            }
 
-            }.disabled(true)
-            Button("sqrt(x)") {
-
-            }.disabled(true)
-        } mainContent: {
-            Text("x")
-                .font(.system(.largeTitle, design: .serif))
-                .padding(.top, 8)
-                .padding(.trailing, 14)
-                .overlay(alignment: .topTrailing) {
-                    Text("2")
-                        .font(.system(.title3, design: .serif))
-                }
-        } alt1: {
-            Text("x")
-                .font(.system(.title3, design: .serif))
-                .padding(.top, 6)
-                .padding(.trailing, 8)
-                .overlay(alignment: .topTrailing) {
-                    Text("n")
-                        .font(.system(.footnote, design: .serif))
-                }
-                .padding(.top, -6)
-        } alt2: {
-            Image(systemName: "x.squareroot")
-                .font(.system(.title2, design: .serif))
+            InputPadOption(token: NumberToken(digit: 69)) {
+                Image(systemName: "x.squareroot")
+                    .font(.system(.title2, design: .serif))
+            } minimalView: {
+                Text("sqrt(x)")
+            }
         }
     }
 
     var numberButton: some View {
-        InputPadButton(
-            dragToken: NumberToken(digit: 1)
-        ) {
-            guard let insertionPoint = manager.insertionPoint else { return }
-            withAnimation {
-                manager.insert(token: NumberToken(digit: 1), at: insertionPoint)
+        InputPadButton {
+            InputPadOption(token: NumberToken(digit: 1)) {
+                Text("1")
             }
-        } onLongHold: {
-            Button("Number") {
 
+            InputPadOption(token: NumberToken(digit: 1)) {
+                Text("Ans")
+                    .lineLimit(1)
             }
-            Button("Prev Answer") {
-
-            }.disabled(true)
-        } mainContent: {
-            Text("1")
-        } alt1: {
-            Text("Ans")
-                .lineLimit(1)
         }
     }
 
     var multiplyButton: some View {
-        InputPadButton(
-            dragToken: LinearOperationToken(operation: .times)
-        ) {
-            // TODO: this
-        } mainContent: {
-            Image(systemName: "multiply").frame(maxWidth: .infinity, maxHeight: .infinity)
+        InputPadButton {
+            InputPadOption(token: LinearOperationToken(operation: .times)) {
+                Image(systemName: "multiply")
+            }
         }
     }
 
     var divideButton: some View {
-        InputPadButton(
-            dragToken: LinearOperationToken(operation: .divide)
-        ) {
-            // TODO: this
-        } onLongHold: {
-            Button {
-
-            } label: {
+        InputPadButton {
+            InputPadOption(token: LinearOperationToken(operation: .divide)) {
+                Image(systemName: "divide")
+            } minimalView: {
                 Label("Divide", systemImage: "divide")
             }
-            Button {
 
-            } label: {
+            InputPadOption(token: DivisionGroup(numerator: [], denominator: [])) {
+                Image(systemName: "rectangle.grid.1x2")
+            } minimalView: {
                 Label("Fraction", systemImage: "rectangle.grid.1x2")
             }
-        } mainContent: {
-            Image(systemName: "divide").frame(maxWidth: .infinity, maxHeight: .infinity)
-        } alt1: {
-            Image(systemName: "rectangle.grid.1x2")
         }
     }
 
     var bracketButton: some View {
-        InputPadButton(
-            dragToken: LinearGroup(contents: [], hasBrackets: true)
-        ) {
-            // TODO: this
-        } mainContent: {
-            Image(systemName: "parentheses").frame(maxWidth: .infinity, maxHeight: .infinity)
+        InputPadButton {
+            InputPadOption(token: LinearGroup(contents: [], hasBrackets: true)) {
+                Image(systemName: "parentheses")
+            } minimalView: {
+                Label("Brackets", systemImage: "parentheses")
+            }
         }
     }
 
     var plusButton: some View {
-        InputPadButton(
-            dragToken: LinearOperationToken(operation: .plus)
-        ) {
-            // TODO: this
-        } mainContent: {
-            Image(systemName: "plus").frame(maxWidth: .infinity, maxHeight: .infinity)
+        InputPadButton {
+            InputPadOption(token: LinearOperationToken(operation: .plus)) {
+                Image(systemName: "plus")
+            }
         }
     }
 
     var minusButton: some View {
-        InputPadButton(
-            dragToken: LinearOperationToken(operation: .minus)
-        ) {
-            // TODO: this
-        } mainContent: {
-            Image(systemName: "minus").frame(maxWidth: .infinity, maxHeight: .infinity)
+        InputPadButton {
+            InputPadOption(token: LinearOperationToken(operation: .minus)) {
+                Image(systemName: "minus")
+            }
         }
     }
 }

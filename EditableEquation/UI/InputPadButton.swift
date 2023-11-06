@@ -7,89 +7,106 @@
 
 import SwiftUI
 import EditableEquationCore
+import EditableEquationKit
 
-struct InputPadButton<Token: EquationToken, CT: View, Main: View, Alt1: View, Alt2: View>: View {
-    var dragToken: Token
-    var onTap: () -> Void
-    var onLongHold: () -> CT
+@resultBuilder
+enum InputPadOptionBuilder {
+    static func buildBlock(
+        _ content: InputPadOption...
+    ) -> [InputPadOption] {
+        content
+    }
+}
 
-    var mainContent: () -> Main
-    var alt1: () -> Alt1
-    var alt2: () -> Alt2
+struct InputPadOption {
+    var token: any EquationToken
+    var view: AnyView
+    var minimalView: AnyView
 
-    init(
-        dragToken: Token,
-        onTap: @escaping () -> Void,
-        @ViewBuilder onLongHold: @escaping () -> CT,
-        @ViewBuilder mainContent: @escaping () -> Main,
-        @ViewBuilder alt1: @escaping () -> Alt1,
-        @ViewBuilder alt2: @escaping () -> Alt2
+    init<V: View, M: View>(
+        token: any EquationToken,
+        @ViewBuilder view: @escaping () -> V,
+        @ViewBuilder minimalView: @escaping () -> M
     ) {
-        self.dragToken = dragToken
-        self.onTap = onTap
-        self.onLongHold = onLongHold
-        self.mainContent = mainContent
-        self.alt1 = alt1
-        self.alt2 = alt2
+        self.token = token
+        self.view = AnyView(view())
+        self.minimalView = AnyView(minimalView())
     }
 
-    init(
-        dragToken: Token,
-        onTap: @escaping () -> Void,
-        @ViewBuilder onLongHold: @escaping () -> CT,
-        @ViewBuilder mainContent: @escaping () -> Main,
-        @ViewBuilder alt1: @escaping () -> Alt1
-    ) where Alt2 == EmptyView {
-        self.dragToken = dragToken
-        self.onTap = onTap
-        self.onLongHold = onLongHold
-        self.mainContent = mainContent
-        self.alt1 = alt1
-        self.alt2 = { EmptyView() }
+    init<V: View>(token: any EquationToken, @ViewBuilder view: @escaping () -> V) {
+        self.token = token
+        self.view = AnyView(view())
+        self.minimalView = AnyView(view())
     }
+}
+
+struct InputPadButton: View {
+    var options: [InputPadOption]
+
+    @EnvironmentObject var manager: EquationManager
 
     init(
-        dragToken: Token,
-        onTap: @escaping () -> Void,
-        @ViewBuilder mainContent: @escaping () -> Main
-    ) where CT == EmptyView, Alt1 == EmptyView, Alt2 == EmptyView {
-        self.dragToken = dragToken
-        self.onTap = onTap
-        self.onLongHold = { EmptyView() }
-        self.mainContent = mainContent
-        self.alt1 = { EmptyView() }
-        self.alt2 = { EmptyView() }
+        @InputPadOptionBuilder options: () -> [InputPadOption]
+    ) {
+        self.options = options()
     }
 
     var body: some View {
+//        if let token = dataTuple.getToken(at: 0), let mainContent = dataTuple.getMainView(at: 0) {
+//            content
+//                .tokenDragSource(for: token, preview: { mainContent })
+//        } else {
+            content
+//        }
+    }
+
+    var content: some View {
         Button {
-            onTap()
+            if let token = options.first?.token {
+                insert(token: token)
+            }
         } label: {
             Color.clear
                 .overlay {
-                    mainContent()
-                        .font(.largeTitle)
+                    if let mainContent = options.first?.view {
+                        mainContent
+                            .font(.largeTitle)
+                    }
                 }
                 .overlay(alignment: .topLeading) {
-                    alt1()
-                        .font(.title3)
-                        .padding(5)
-                        .opacity(0.4)
+                    if options.count >= 2 {
+                        options[1].view
+                            .font(.title3)
+                            .padding(5)
+                            .opacity(0.4)
+                    }
                 }
                 .overlay(alignment: .topTrailing) {
-                    alt2()
-                        .font(.title3)
-                        .padding(5)
-                        .opacity(0.4)
+                    if options.count >= 3 {
+                        options[2].view
+                            .font(.title3)
+                            .padding(5)
+                            .opacity(0.4)
+                    }
                 }
         }
         .buttonStyle(.bordered)
         .foregroundStyle(.primary)
         .contextMenu {
-            onLongHold()
+            ForEach(0..<options.count, id: \.self) { index in
+                Button {
+                    insert(token: options[index].token)
+                } label: {
+                    options[index].minimalView
+                }
+            }
         }
-        .tokenDragSource(for: dragToken) {
-            mainContent()
+    }
+
+    func insert(token: any EquationToken) {
+        guard let insertionPoint = manager.insertionPoint else { return }
+        withAnimation {
+            manager.insert(token: token, at: insertionPoint, editIfNumberToken: true)
         }
     }
 }
