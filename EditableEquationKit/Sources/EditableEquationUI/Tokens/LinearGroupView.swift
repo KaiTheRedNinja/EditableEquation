@@ -10,14 +10,20 @@ import EditableEquationCore
 import EditableEquationKit
 
 struct LinearGroupView: TokenView {
-    var linearGroup: LinearGroup
+    var token: LinearGroup
     var treeLocation: TokenTreeLocation
 
     var namespace: Namespace.ID
 
+    init(token: LinearGroup, treeLocation: EditableEquationCore.TokenTreeLocation, namespace: Namespace.ID) {
+        self.token = token
+        self.treeLocation = treeLocation
+        self.namespace = namespace
+    }
+
     var body: some View {
         HStack(spacing: 0) {
-            if linearGroup.hasBrackets {
+            if token.hasBrackets {
                 Text("(")
                     .overlay {
                         SimpleDropOverlay(
@@ -26,7 +32,7 @@ struct LinearGroupView: TokenView {
                         )
                     }
             }
-            if linearGroup.contents.isEmpty {
+            if token.contents.isEmpty {
                 Text("_")
                     .overlay {
                         SimpleDropOverlay(
@@ -35,8 +41,8 @@ struct LinearGroupView: TokenView {
                         )
                     }
             } else {
-                ForEach(0..<linearGroup.contents.count, id: \.self) { index in
-                    let content = linearGroup.contents[index]
+                ForEach(0..<token.contents.count, id: \.self) { index in
+                    let content = token.contents[index]
                     GeneralTokenView(
                         token: content,
                         treeLocation: self.treeLocation.appending(child: content.id),
@@ -44,7 +50,7 @@ struct LinearGroupView: TokenView {
                     )
                 }
             }
-            if linearGroup.hasBrackets {
+            if token.hasBrackets {
                 Text(")")
                     .overlay {
                         SimpleDropOverlay(

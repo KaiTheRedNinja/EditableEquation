@@ -10,18 +10,24 @@ import EditableEquationCore
 import EditableEquationKit
 
 struct DivisionGroupView: TokenView {
-    var divisionGroup: DivisionGroup
+    var token: DivisionGroup
     var treeLocation: TokenTreeLocation
+
+    var namespace: Namespace.ID
 
     @EnvironmentObject var manager: EquationManager
 
-    var namespace: Namespace.ID
+    init(token: DivisionGroup, treeLocation: EditableEquationCore.TokenTreeLocation, namespace: Namespace.ID) {
+        self.token = token
+        self.treeLocation = treeLocation
+        self.namespace = namespace
+    }
 
     var body: some View {
         VStack(spacing: 0) {
             LinearGroupView(
-                linearGroup: divisionGroup.numerator,
-                treeLocation: treeLocation.appending(child: divisionGroup.numerator.id),
+                token: token.numerator,
+                treeLocation: treeLocation.appending(child: token.numerator.id),
                 namespace: namespace
             )
             .overlay(alignment: .bottom) {
@@ -32,8 +38,8 @@ struct DivisionGroupView: TokenView {
                     }
             }
             LinearGroupView(
-                linearGroup: divisionGroup.denominator,
-                treeLocation: treeLocation.appending(child: divisionGroup.denominator.id),
+                token: token.denominator,
+                treeLocation: treeLocation.appending(child: token.denominator.id),
                 namespace: namespace
             )
             .overlay(alignment: .top) {
@@ -69,18 +75,18 @@ struct DivisionGroupView: TokenView {
     }
 
     func convertToLinearDivision() {
-        var leadingGroup = divisionGroup.numerator
+        var leadingGroup = token.numerator
 
         leadingGroup.hasBrackets = leadingGroup.contents.count > 1
 
-        var trailingGroup = divisionGroup.denominator
+        var trailingGroup = token.denominator
 
         trailingGroup.hasBrackets = trailingGroup.contents.count > 1
 
         let newLinearGroup = LinearGroup(contents: [
             leadingGroup,
             LinearOperationToken(
-                id: divisionGroup.id,
+                id: token.id,
                 operation: .divide
             ),
             trailingGroup
@@ -94,7 +100,7 @@ struct DivisionGroupView: TokenView {
 
 #Preview {
     DivisionGroupView(
-        divisionGroup: .init(
+        token: .init(
             numerator: [
                 NumberToken(digit: 69),
                 LinearOperationToken(operation: .minus),

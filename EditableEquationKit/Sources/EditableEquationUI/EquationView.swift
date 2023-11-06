@@ -17,10 +17,22 @@ public struct EquationView: View {
     public init(root: LinearGroup, numberEditor: NumberEditor? = nil) {
         self.equationManager = .init(root: root)
         equationManager.numberEditor = numberEditor
+
+        // Init the views
+        TokenViewProvider.register(factory: NumberTokenView.init, for: "Number")
+        TokenViewProvider.register(factory: LinearOperationView.init, for: "LinearOperation")
+        TokenViewProvider.register(factory: LinearGroupView.init, for: "LinearGroup")
+        TokenViewProvider.register(factory: DivisionGroupView.init, for: "DivisionGroup")
     }
 
     public init(manager: EquationManager) {
         self.equationManager = manager
+
+        // Init the views
+        TokenViewProvider.register(factory: NumberTokenView.init, for: "Number")
+        TokenViewProvider.register(factory: LinearOperationView.init, for: "LinearOperation")
+        TokenViewProvider.register(factory: LinearGroupView.init, for: "LinearGroup")
+        TokenViewProvider.register(factory: DivisionGroupView.init, for: "DivisionGroup")
     }
 
     public var body: some View {

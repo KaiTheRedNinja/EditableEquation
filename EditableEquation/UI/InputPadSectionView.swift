@@ -45,6 +45,16 @@ struct InputPadSectionView: View {
         InputPadOption(token: NumberToken(digit: 69)) {
             Text("tan")
         }
+
+        InputPadOption(token: NumberToken(digit: 69)) {
+            Text("asin")
+        }
+        InputPadOption(token: NumberToken(digit: 69)) {
+            Text("acos")
+        }
+        InputPadOption(token: NumberToken(digit: 69)) {
+            Text("atan")
+        }
     }
 
     @InputPadOptionBuilder

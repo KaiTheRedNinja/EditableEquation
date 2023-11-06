@@ -10,15 +10,21 @@ import EditableEquationCore
 import EditableEquationKit
 
 struct NumberTokenView: TokenView {
-    var number: NumberToken
+    var token: NumberToken
     var treeLocation: TokenTreeLocation
 
     var namespace: Namespace.ID
 
     @EnvironmentObject var manager: EquationManager
 
+    init(token: NumberToken, treeLocation: EditableEquationCore.TokenTreeLocation, namespace: Namespace.ID) {
+        self.token = token
+        self.treeLocation = treeLocation
+        self.namespace = namespace
+    }
+
     var body: some View {
-        Text(String(number.digit))
+        Text(String(token.digit))
             .padding(.horizontal, 3)
             .overlay {
                 HStack(spacing: 0) {

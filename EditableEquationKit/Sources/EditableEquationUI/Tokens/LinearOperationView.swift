@@ -11,15 +11,21 @@ import EditableEquationKit
 import Rationals
 
 struct LinearOperationView: TokenView {
-    var linearOperation: LinearOperationToken
+    var token: LinearOperationToken
     var treeLocation: TokenTreeLocation
 
     var namespace: Namespace.ID
 
     @EnvironmentObject var manager: EquationManager
 
+    init(token: LinearOperationToken, treeLocation: EditableEquationCore.TokenTreeLocation, namespace: Namespace.ID) {
+        self.token = token
+        self.treeLocation = treeLocation
+        self.namespace = namespace
+    }
+
     var body: some View {
-        Text(operationText(operation: linearOperation.operation))
+        Text(operationText(operation: token.operation))
             .padding(.horizontal, 3)
             .overlay {
                 HStack(spacing: 0) {
@@ -46,7 +52,7 @@ struct LinearOperationView: TokenView {
                         withAnimation {
                             manager.replace(
                                 token: LinearOperationToken(
-                                    id: linearOperation.id,
+                                    id: token.id,
                                     operation: operation
                                 ),
                                 at: treeLocation
@@ -78,9 +84,9 @@ struct LinearOperationView: TokenView {
     }
 
     func convertSelf() {
-        if linearOperation.operation == .divide {
+        if token.operation == .divide {
             convertToFraction()
-        } else if linearOperation.operation == .times {
+        } else if token.operation == .times {
             shuffleFactors()
         }
     }
@@ -88,8 +94,8 @@ struct LinearOperationView: TokenView {
     /// Converts this operation and  the items to the left and right into a fraction
     func convertToFraction() {
         guard let parent = manager.tokenAt(location: treeLocation.removingLastChild()) as? any GroupEquationToken,
-              var elementBefore = parent.child(leftOf: linearOperation.id),
-              var elementAfter = parent.child(rightOf: linearOperation.id)
+              var elementBefore = parent.child(leftOf: token.id),
+              var elementAfter = parent.child(rightOf: token.id)
         else { return }
 
         if var leadingGroup = elementBefore as? LinearGroup {
@@ -103,7 +109,7 @@ struct LinearOperationView: TokenView {
         }
 
         let newDivisionGroup = DivisionGroup(
-            id: linearOperation.id,
+            id: token.id,
             numerator: [elementBefore],
             denominator: [elementAfter]
         )
@@ -118,10 +124,10 @@ struct LinearOperationView: TokenView {
     /// Shuffles the terms on the left and right to cycle through the factors of the product
     func shuffleFactors() {
         guard let parent = manager.tokenAt(location: treeLocation.removingLastChild()) as? any GroupEquationToken,
-              var elementBefore = parent.child(leftOf: linearOperation.id) as? NumberToken,
+              var elementBefore = parent.child(leftOf: token.id) as? NumberToken,
               let leadingValue = try? elementBefore.solved(),
               leadingValue%1 == 0,
-              var elementAfter = parent.child(rightOf: linearOperation.id) as? NumberToken,
+              var elementAfter = parent.child(rightOf: token.id) as? NumberToken,
               let trailingValue = try? elementAfter.solved(),
               trailingValue%1 == 0
         else { return }
