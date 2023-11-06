@@ -44,6 +44,8 @@ public extension EquationToken {
     }
 
     // default implementations
+
+    /// Default implementation for if a token can precede another token
     func canPrecede(_ other: (any EquationToken)?) -> Bool {
         guard let other, // if other is nil, then its last element and its okay
                          // if other isn't either of these, its an operation and so its okay
@@ -53,6 +55,8 @@ public extension EquationToken {
         // if you can directly multiply the other item, then sure
         return other.groupRepresentation?.canDirectlyMultiply() ?? false
     }
+
+    /// Default implementation for if a token can succeed another token
     func canSucceed(_ other: (any EquationToken)?) -> Bool {
         guard let other, // if other is nil, then its first element and its probably okay
                          // if other isn't either of these, its an operation and so its okay

@@ -25,10 +25,12 @@ public enum EquationTokenCoding: ProtocolCoding {
 }
 
 public extension Array<any EquationToken> {
+    /// Encodes the array as a JSON string
     func stringEncoded() -> String? {
         try? EquationTokenCoding.encode(package: self)
     }
 
+    /// Decodes the array from a JSON string
     init?(decoding source: String) {
         if let decoded = try? EquationTokenCoding.decode(source: source) {
             self = decoded

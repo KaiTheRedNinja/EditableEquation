@@ -76,10 +76,13 @@ public protocol GroupEquationToken: ValueEquationToken {
 }
 
 public extension GroupEquationToken {
+    /// Default implementation of `validWhenChildrenValid`, returns true
     func validWhenChildrenValid() -> Bool { true }
 
+    /// Default implementation of `canDirectlyMultiply`, returns true
     func canDirectlyMultiply() -> Bool { false }
 
+    /// Default implementation of `optimised`, returns the item with optimised children
     func optimised() -> any EquationToken {
         var newChildren: [(UUID, any EquationToken)] = []
 

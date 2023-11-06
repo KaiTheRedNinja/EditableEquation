@@ -95,6 +95,7 @@ struct SimpleDropOverlay: View {
 }
 
 extension View {
+    /// Marks the view as draggable for a token
     public func tokenDragSource<T: EquationToken>(for token: T) -> some View {
         self
             .draggable({ () -> Data in
@@ -102,6 +103,7 @@ extension View {
             }())
     }
 
+    /// Marks the view as draggable for a token, with a preview
     public func tokenDragSource<T: EquationToken, C: View>(for token: T, preview: () -> C) -> some View {
         self
             .draggable({ () -> Data in
@@ -109,6 +111,7 @@ extension View {
             }(), preview: preview)
     }
 
+    /// Marks the view as draggable for a token location
     public func tokenLocationDragSource(for location: TokenTreeLocation) -> some View {
         self
             .draggable({ () -> Data in
@@ -116,6 +119,7 @@ extension View {
             }())
     }
 
+    /// Marks the view as draggable for a token location, with a preview
     public func tokenLocationDragSource<C: View>(for location: TokenTreeLocation, preview: () -> C) -> some View {
         self
             .draggable({ () -> Data in

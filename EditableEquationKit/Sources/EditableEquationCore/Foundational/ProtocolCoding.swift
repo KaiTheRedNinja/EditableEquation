@@ -19,6 +19,7 @@ public enum ProtocolCodingError: Error {
 ///
 /// `P` is an associated generic, wheras `T`, used in the initialiser, is discarded once `init` returns.
 public struct ProtocolCodingProvider<P> {
+    /// Creates a provider that manages a given type `T`
     public init<T: Codable>(type _: T.Type) {
         encode = { item in
             guard let item = item as? T else { throw ProtocolCodingError.typeMismatch }
@@ -41,6 +42,7 @@ public struct ProtocolCodingProvider<P> {
 /// Protocols using `ProtocolCoding` must have a property to identify its type, and all types that
 /// are to be decoded by `ProtocolCoding` must be registered by ``register(type:for:)``.
 public protocol ProtocolCoding {
+    /// The `any Protocol` that the `ProtocolCoding` wraps
     associatedtype WrappedProtocol
     /// A type conforming to `WrappedProtocol` that can be decoded and type casted 
     /// to `WrappedProtocol`. Only needs to contain the name.
