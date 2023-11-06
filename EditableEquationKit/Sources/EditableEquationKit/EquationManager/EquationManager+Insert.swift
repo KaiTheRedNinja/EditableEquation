@@ -83,11 +83,12 @@ extension EquationManager {
 
         updateRoot(newRoot: newRoot)
 
-        if editIfNumberToken,
-           token is NumberToken,
-           numberEditor != nil,
-           let tokenPath = findPath(for: token.id, in: root) {
-            numberEditor?.editingNumber = tokenPath
+        if let tokenPath = findPath(for: token.id, in: root) {
+            self.insertionPoint = .init(treeLocation: tokenPath, insertionLocation: .trailing)
+
+            if editIfNumberToken, token is NumberToken, numberEditor != nil {
+                numberEditor?.editingNumber = tokenPath
+            }
         }
     }
 

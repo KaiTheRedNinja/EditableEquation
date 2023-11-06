@@ -52,9 +52,9 @@ struct InputPadButton: View {
     }
 
     init(
-        optionsVerbatim: () -> [InputPadOption]
+        _ optionsVerbatim: [InputPadOption]
     ) {
-        self.options = optionsVerbatim()
+        self.options = optionsVerbatim
     }
 
     var body: some View {

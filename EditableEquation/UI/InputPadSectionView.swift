@@ -14,21 +14,21 @@ struct InputPadSectionView: View {
     var body: some View {
         VStack {
             HStack {
-                InputPadButton { trigButton }
-                InputPadButton { logButton }
-                InputPadButton { exponentButton }
+                InputPadButton(trigButton)
+                InputPadButton(logButton)
+                InputPadButton(exponentButton)
             }
 
             HStack {
-                InputPadButton { numberButton }
-                InputPadButton { multiplyButton }
-                InputPadButton { divideButton }
+                InputPadButton(numberButton)
+                InputPadButton(multiplyButton)
+                InputPadButton(divideButton)
             }
 
             HStack {
-                InputPadButton { bracketButton }
-                InputPadButton { plusButton }
-                InputPadButton { minusButton }
+                InputPadButton(bracketButton)
+                InputPadButton(plusButton)
+                InputPadButton(minusButton)
             }
         }
         .environmentObject(manager)
