@@ -42,28 +42,20 @@ struct MainView: View {
             EquationView(
                 manager: manager
             )
-            .font(.title2)
-            .padding(.horizontal, 20)
+            .font(.title)
+            .padding(.horizontal, 14)
         }
         .frame(maxWidth: .infinity)
         .frame(height: 130)
-        .safeAreaInset(edge: .bottom) {
+        .overlay(alignment: .bottomTrailing) {
             HStack {
                 if let error = manager.error?.error.description {
-                    Spacer().frame(height: 3)
-                        .layoutPriority(0)
-                    Text("\(error)")
-                        .layoutPriority(1)
-                } else if let solution = try? manager.root.solved() {
-                    Spacer().frame(height: 3)
-                        .layoutPriority(0)
-                    Picker("", selection: $resultDisplayType) {
-                        ForEach(ResultDisplayType.allCases, id: \.rawValue) { displayType in
-                            Text("\(displayType.rawValue)")
-                                .tag(displayType)
-                        }
+                    ScrollView(.horizontal) {
+                        Text("\(error)")
+                            .multilineTextAlignment(.trailing)
+                            .lineLimit(1)
                     }
-                    .layoutPriority(1)
+                } else if let solution = try? manager.root.solved() {
                     ResultDisplayView(
                         displayType: resultDisplayType,
                         fraction: solution.normalized().simplified()
@@ -73,10 +65,23 @@ struct MainView: View {
                             resultDisplayType = resultDisplayType.next()
                         }
                     }
-                    .layoutPriority(2)
+                    .contextMenu {
+                        ForEach(ResultDisplayType.allCases, id: \.rawValue) { displayType in
+                            Button("\(displayType.rawValue)") {
+                                resultDisplayType = displayType
+                            }
+                        }
+                    }
                 }
             }
             .bold()
+            .padding(5)
+            .background {
+                GroupBox {
+                    Color.clear
+                }
+                .backgroundStyle(.thinMaterial)
+            }
         }
     }
 }
