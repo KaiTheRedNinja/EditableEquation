@@ -15,6 +15,7 @@
 		935682242AF7A3DA0058E9EC /* NavigationSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 935682232AF7A3DA0058E9EC /* NavigationSectionView.swift */; };
 		935682262AF7A7150058E9EC /* InputPadSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 935682252AF7A7150058E9EC /* InputPadSectionView.swift */; };
 		935682282AF7C75C0058E9EC /* NumberEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 935682272AF7C75C0058E9EC /* NumberEditView.swift */; };
+		9356822F2AF89ACB0058E9EC /* InputPadButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9356822E2AF89ACB0058E9EC /* InputPadButton.swift */; };
 		93E9F97E2AECB666006FF515 /* EditableEquationApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E9F97D2AECB666006FF515 /* EditableEquationApp.swift */; };
 		93E9F9802AECB666006FF515 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E9F97F2AECB666006FF515 /* ContentView.swift */; };
 		93E9F9822AECB667006FF515 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 93E9F9812AECB667006FF515 /* Assets.xcassets */; };
@@ -28,6 +29,7 @@
 		935682232AF7A3DA0058E9EC /* NavigationSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationSectionView.swift; sourceTree = "<group>"; };
 		935682252AF7A7150058E9EC /* InputPadSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputPadSectionView.swift; sourceTree = "<group>"; };
 		935682272AF7C75C0058E9EC /* NumberEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberEditView.swift; sourceTree = "<group>"; };
+		9356822E2AF89ACB0058E9EC /* InputPadButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputPadButton.swift; sourceTree = "<group>"; };
 		93C2D86E2AF2434600E714B9 /* EditableEquationKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = EditableEquationKit; sourceTree = "<group>"; };
 		93E9F97A2AECB666006FF515 /* EditableEquation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EditableEquation.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		93E9F97D2AECB666006FF515 /* EditableEquationApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditableEquationApp.swift; sourceTree = "<group>"; };
@@ -72,6 +74,7 @@
 				935682232AF7A3DA0058E9EC /* NavigationSectionView.swift */,
 				935682272AF7C75C0058E9EC /* NumberEditView.swift */,
 				935682252AF7A7150058E9EC /* InputPadSectionView.swift */,
+				9356822E2AF89ACB0058E9EC /* InputPadButton.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -222,6 +225,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9356822F2AF89ACB0058E9EC /* InputPadButton.swift in Sources */,
 				935682202AF753580058E9EC /* ResultDisplayView.swift in Sources */,
 				935682222AF779CB0058E9EC /* MainView.swift in Sources */,
 				935682282AF7C75C0058E9EC /* NumberEditView.swift in Sources */,

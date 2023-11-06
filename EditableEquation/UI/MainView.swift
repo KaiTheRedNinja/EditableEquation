@@ -46,7 +46,7 @@ struct MainView: View {
             .padding(.horizontal, 20)
         }
         .frame(maxWidth: .infinity)
-        .frame(height: 100)
+        .frame(height: 130)
         .safeAreaInset(edge: .bottom) {
             HStack {
                 if let error = manager.error?.error.description {
