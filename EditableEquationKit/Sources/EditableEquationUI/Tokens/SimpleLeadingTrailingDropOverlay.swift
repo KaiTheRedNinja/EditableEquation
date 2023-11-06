@@ -96,18 +96,20 @@ struct SimpleDropOverlay: View {
 
 extension View {
     /// Marks the view as draggable for a token
-    public func tokenDragSource<T: EquationToken>(for token: T) -> some View {
+    public func tokenDragSource(for token: any EquationToken) -> some View {
         self
             .draggable({ () -> Data in
-                return (try? JSONEncoder().encode(token)) ?? .init()
+                guard let string = try? EquationTokenCoding.encodeSingle(item: token) else { return Data() }
+                return string.data(using: .utf8) ?? Data()
             }())
     }
 
     /// Marks the view as draggable for a token, with a preview
-    public func tokenDragSource<T: EquationToken, C: View>(for token: T, preview: () -> C) -> some View {
+    public func tokenDragSource<C: View>(for token: any EquationToken, preview: () -> C) -> some View {
         self
             .draggable({ () -> Data in
-                return (try? JSONEncoder().encode(token)) ?? .init()
+                guard let string = try? EquationTokenCoding.encodeSingle(item: token) else { return Data() }
+                return string.data(using: .utf8) ?? Data()
             }(), preview: preview)
     }
 

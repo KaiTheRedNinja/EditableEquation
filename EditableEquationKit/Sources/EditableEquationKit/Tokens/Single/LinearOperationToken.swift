@@ -58,7 +58,7 @@ public struct LinearOperationToken: EquationToken {
             }
         } else {
             switch operation {
-            case .plus, .minus:
+            case .minus: // only minus can be at the start
                 return true
             default:
                 return false

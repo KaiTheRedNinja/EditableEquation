@@ -51,13 +51,19 @@ struct InputPadButton: View {
         self.options = options()
     }
 
+    init(
+        optionsVerbatim: () -> [InputPadOption]
+    ) {
+        self.options = optionsVerbatim()
+    }
+
     var body: some View {
-//        if let token = dataTuple.getToken(at: 0), let mainContent = dataTuple.getMainView(at: 0) {
-//            content
-//                .tokenDragSource(for: token, preview: { mainContent })
-//        } else {
+        if let main = options.first {
             content
-//        }
+                .tokenDragSource(for: main.token, preview: { main.view })
+        } else {
+            content
+        }
     }
 
     var content: some View {
