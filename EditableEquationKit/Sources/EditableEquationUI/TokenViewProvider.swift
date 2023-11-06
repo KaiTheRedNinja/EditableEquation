@@ -30,9 +30,9 @@ public enum TokenViewProvider {
         @ViewBuilder factory: @escaping (T, TokenTreeLocation, Namespace.ID) -> V,
         for key: String
     ) {
-        registeredProviders[key] = {
-            guard let item = $0 as? T else { return nil }
-            return AnyView(factory(item, $1, $2))
+        registeredProviders[key] = { (item, location, namespace) in
+            guard let item = item as? T else { return nil }
+            return AnyView(factory(item, location, namespace).matchedGeometryEffect(id: item.id, in: namespace))
         }
     }
 
