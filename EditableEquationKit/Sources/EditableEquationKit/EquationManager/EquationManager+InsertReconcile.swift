@@ -150,42 +150,12 @@ extension EquationManager {
                 continue
             }
 
-            // if we reach the end of `currentPath` without finding the token, try accessing the siblings to 
-            // the right of the current path.
-            // if the siblings don't contain the token, we remove an element from `currentPath` and try again
-            // if we are left with just 1 item, it isn't possible and the token doesn't exist
-
-            while currentPath.count >= 2 {
-                let pathCount = currentPath.count
-
-                // access the siblings
-                var nextChild = currentPath[pathCount-2].child(rightOf: currentPath[pathCount-1].id)
-                while let validNextChild = nextChild {
-                    // check if the child is what we're looking for
-                    if validNextChild.id == tokenID {
-                        return .init(
-                            pathComponents: currentPath.dropFirst().dropLast().map({ $0.id }) + [validNextChild.id]
-                        )
-                    }
-
-                    // if not, see if the child is a group token. If it is, replace it as 
-                    // the last item of `currentPath` and break out
-                    if let validChild = validNextChild as? any GroupEquationToken {
-                        currentPath[pathCount-1] = validChild
-                        continueFlag = true
-                        break
-                    }
-
-                    // try and get the next child
-                    nextChild = currentPath.last?.child(rightOf: validNextChild.id)
-                }
-
-                if continueFlag == true {
-                    break
-                }
-
-                // remove an element and keep on going
-                currentPath = currentPath.dropLast()
+            if let location = findNextSibling(
+                currentPath: &currentPath,
+                targetID: tokenID,
+                continueFlag: &continueFlag
+            ) {
+                return location
             }
 
             if continueFlag == true {
@@ -195,5 +165,53 @@ extension EquationManager {
             // if we went through it all and didn't find anything, just return nil
             return nil
         }
+    }
+
+    /// Function that tries to find the next sibling of a token in a path
+    /// If it finds the target tokenID, it returns the locatino
+    /// If not, it modifies `currentPath` to be the next sibling to search
+    fileprivate func findNextSibling(
+        currentPath: inout [any GroupEquationToken],
+        targetID tokenID: UUID,
+        continueFlag: inout Bool) -> TokenTreeLocation? {
+        // if we reach the end of `currentPath` without finding the token, try accessing the siblings to
+        // the right of the current path.
+        // if the siblings don't contain the token, we remove an element from `currentPath` and try again
+        // if we are left with just 1 item, it isn't possible and the token doesn't exist
+
+        while currentPath.count >= 2 {
+            let pathCount = currentPath.count
+
+            // access the siblings
+            var nextChild = currentPath[pathCount-2].child(rightOf: currentPath[pathCount-1].id)
+            while let validNextChild = nextChild {
+                // check if the child is what we're looking for
+                if validNextChild.id == tokenID {
+                    return .init(
+                        pathComponents: currentPath.dropFirst().dropLast().map({ $0.id }) + [validNextChild.id]
+                    )
+                }
+
+                // if not, see if the child is a group token. If it is, replace it as
+                // the last item of `currentPath` and break out
+                if let validChild = validNextChild as? any GroupEquationToken {
+                    currentPath[pathCount-1] = validChild
+                    continueFlag = true
+                    break
+                }
+
+                // try and get the next child
+                nextChild = currentPath.last?.child(rightOf: validNextChild.id)
+            }
+
+            if continueFlag == true {
+                break
+            }
+
+            // remove an element and keep on going
+            currentPath = currentPath.dropLast()
+        }
+
+        return nil
     }
 }
