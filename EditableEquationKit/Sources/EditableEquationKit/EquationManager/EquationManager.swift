@@ -54,6 +54,10 @@ public class EquationManager: ObservableObject {
 
     public func reset() {
         root.contents = [NumberToken(digit: 1)]
+        insertionPoint = .init(
+            treeLocation: .init(pathComponents: [root.contents.first!.id]),
+            insertionLocation: .trailing
+        )
     }
 
     internal func updateRoot(newRoot: LinearGroup) {

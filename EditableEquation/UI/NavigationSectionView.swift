@@ -77,6 +77,11 @@ struct NavigationSectionView: View {
             .fill(.ultraThickMaterial)
             .opacity(0.7)
             .padding(.vertical, -5)
+            .overlay {
+                if numberEditor.editingNumber != nil {
+                    Text("???")
+                }
+            }
         }
     }
 
@@ -91,9 +96,11 @@ struct NavigationSectionView: View {
         .font(.system(.title))
         .buttonStyle(.bordered)
         .foregroundStyle(.primary)
-        .onLongPressGesture {
-            withAnimation {
-                manager.reset()
+        .contextMenu {
+            Button("Clear") {
+                withAnimation {
+                    manager.reset()
+                }
             }
         }
         .dropDestination(for: Data.self) { items, _ in

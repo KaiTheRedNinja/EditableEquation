@@ -37,6 +37,15 @@ struct NumberEditView: View {
             .onAppear {
                 focusedField = true
             }
+            .onChange(of: focusedField) { _, focus in
+                if focus == true {
+                    DispatchQueue.main.async {
+                        UIApplication.shared.sendAction(
+                            #selector(UIResponder.selectAll(_:)), to: nil, from: nil, for: nil
+                        )
+                    }
+                }
+            }
     }
 
     var formatter: NumberFormatter = {
