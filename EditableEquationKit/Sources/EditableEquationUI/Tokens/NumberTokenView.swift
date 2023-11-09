@@ -24,32 +24,36 @@ struct NumberTokenView: TokenView {
     }
 
     var body: some View {
-        Text(String(token.digit))
-            .padding(.horizontal, 3)
-            .overlay {
-                HStack(spacing: 0) {
-                    SimpleDropOverlay(
-                        insertionPoint: .init(
-                            treeLocation: treeLocation,
-                            insertionLocation: .leading
-                        ),
-                        namespace: namespace
-                    )
-                    editTapSection
-                    SimpleDropOverlay(
-                        insertionPoint: .init(
-                            treeLocation: treeLocation,
-                            insertionLocation: .trailing
-                        ),
-                        namespace: namespace
-                    )
-                }
+        HStack(spacing: 0) {
+            ForEach(Array(String(token.digit).enumerated()), id: \.offset) { (_, digit) in
+                Text(String(digit))
             }
-            .background {
-                if let numberEditor = manager.numberEditor {
-                    BackgroundHighlightView(numberEditor: numberEditor, treeLocation: treeLocation)
-                }
+        }
+        .padding(.horizontal, 3)
+        .overlay {
+            HStack(spacing: 0) {
+                SimpleDropOverlay(
+                    insertionPoint: .init(
+                        treeLocation: treeLocation,
+                        insertionLocation: .leading
+                    ),
+                    namespace: namespace
+                )
+                editTapSection
+                SimpleDropOverlay(
+                    insertionPoint: .init(
+                        treeLocation: treeLocation,
+                        insertionLocation: .trailing
+                    ),
+                    namespace: namespace
+                )
             }
+        }
+        .background {
+            if let numberEditor = manager.numberEditor {
+                BackgroundHighlightView(numberEditor: numberEditor, treeLocation: treeLocation)
+            }
+        }
     }
 
     struct BackgroundHighlightView: View {
